@@ -1,4 +1,4 @@
-package sqltojava;
+package bn.blaszczyk.rose.model;
 
 public class EntityMember {
 	

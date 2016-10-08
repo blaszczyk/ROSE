@@ -1,10 +1,12 @@
 // ROSE : Relational-Object-tranSlator-rosE
-package sqltojava;
+package bn.blaszczyk.rose;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import bn.blaszczyk.rose.model.Entity;
 
 public class Rose {
 	

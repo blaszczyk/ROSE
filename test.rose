@@ -1,7 +1,8 @@
 set annotations true
 set modelpackage test
-set modelpath src/
+set srcpath src/
 set sqlpath sql/
+set foreignkeys true
 
 begin entity TEST
 	TEST_VARCHAR varchar(50) 

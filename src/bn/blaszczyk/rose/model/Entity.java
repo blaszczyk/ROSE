@@ -1,4 +1,4 @@
-package sqltojava;
+package bn.blaszczyk.rose.model;
 
 import java.text.ParseException;
 import java.util.ArrayList;

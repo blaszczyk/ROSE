@@ -1,10 +1,17 @@
-package sqltojava;
+package bn.blaszczyk.rose;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Scanner;
+
+import bn.blaszczyk.rose.creators.CreateJavaModel;
+import bn.blaszczyk.rose.creators.CreateSQL;
+import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EntityMember;
+import bn.blaszczyk.rose.model.Member;
+import bn.blaszczyk.rose.model.MemberType;
 
 public class RoseParser {
 	
@@ -19,44 +26,55 @@ public class RoseParser {
 		{
 			split = scanner.nextLine().trim().split("\\s+");
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
-				switch(split[1].toLowerCase())
-				{
-				case "modelpackage":
-					metadata.setModelpackage( split[2] );
-					break;
-				case "annotations":
-					metadata.setUsingAnnotations( Boolean.parseBoolean( split[2] ) );
-					break;
-				case "modelpath":
-					metadata.setModelpath( split[2] );
-					break;
-				case "sqlpath":
-					metadata.setSqlpath( split[2] );
-					break;
-				// more to come
-				}
+				setProperty(split[1], split[2], metadata);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
-				entities.add( parseEntity(split[2], scanner));
+				parseEntity(split[2], entities, scanner);
 			else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
-				switch(split[1].toLowerCase())
-				{
-				case "sqlcreate":
-					CreateSQL.createCreateTables(entities, metadata);
-					break;
-				case "sqldelete":
-					CreateSQL.createDeleteTables(entities, metadata);
-					break;
-				case "javamodels":
-					for(Entity entity : entities)
-						CreateJavaModel.createModel(entity, metadata);
-					break;
-				// TODO: java CRUD, hibernate.cfg.xml
-				}
+				createFile(split[1], entities, metadata);				
 		}
 	}
 	
+	private static void setProperty( String propertyName, String propertyValue, MetaData metadata)
+	{switch(propertyName.toLowerCase())
+		{
+		case "modelpackage":
+			metadata.setModelpackage( propertyValue );
+			break;
+		case "annotations":
+			metadata.setUsingAnnotations( Boolean.parseBoolean( propertyValue ) );
+			break;
+		case "srcpath":
+			metadata.setSrcpath( propertyValue );
+			break;
+		case "sqlpath":
+			metadata.setSqlpath( propertyValue );
+			break;
+		case "foreignkeys":
+			metadata.setUsingForeignKeys( Boolean.parseBoolean(propertyValue));
+			break;
+		// more to come
+		}		
+	}
 	
-	private static Entity parseEntity(String sqlname, Scanner scanner) throws ParseException
+	private static void createFile( String filetype, List<Entity> entities, MetaData metadata )
+	{
+		switch(filetype.toLowerCase())
+		{
+		case "sqlcreate":
+			CreateSQL.createCreateTables(entities, metadata);
+			break;
+		case "sqldelete":
+			CreateSQL.createDeleteTables(entities, metadata);
+			break;
+		case "javamodels":
+			for(Entity entity : entities)
+				CreateJavaModel.createModel(entity, metadata);
+			break;
+		// TODO: java CRUD, hibernate.cfg.xml
+		}
+	}
+	
+	private static void parseEntity(String sqlname, List<Entity> entities, Scanner scanner) throws ParseException
 	{
 		Entity entity = new Entity(sqlname);
 		Entity subentity;
@@ -77,7 +95,7 @@ public class RoseParser {
 			else
 				throw new ParseException("Invalid Member: " + line, 0);
 		}
-		return entity;
+		entities.add(entity);
 	}
 	
 	private static boolean isMemberType(String sqltype)

@@ -1,10 +1,15 @@
-package sqltojava;
+package bn.blaszczyk.rose.creators;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+
+import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EntityMember;
+import bn.blaszczyk.rose.model.Member;
 
 public class CreateSQL {
 	
@@ -64,12 +69,12 @@ public class CreateSQL {
 		writer.write(" )");
 		
 		//foreign keys
-		for(EntityMember entityMember : entity.getEntityMembers())
-			if(!entityMember.isMany())
-				writer.write( ",\n\tconstraint fk_" + entity.getSqlname().toLowerCase() + "_" + entityMember.getEntity().getSqlname().toLowerCase()
-							+ " foreign key ( " + entityMember.getSqlname() + " ) references "
-							+ entityMember.getEntity().getSqlname() + "( " + entityMember.getEntity().getPrimary().getSqlname() + " )");
-		
+		if(metadata.isUsingForeignKeys())
+			for(EntityMember entityMember : entity.getEntityMembers())
+				if(!entityMember.isMany())
+					writer.write( ",\n\tconstraint fk_" + entity.getSqlname().toLowerCase() + "_" + entityMember.getEntity().getSqlname().toLowerCase()
+								+ " foreign key ( " + entityMember.getSqlname() + " ) references "
+								+ entityMember.getEntity().getSqlname() + "( " + entityMember.getEntity().getPrimary().getSqlname() + " )");		
 		//fin
 		writer.write( "\n);\n\n" );
 	}

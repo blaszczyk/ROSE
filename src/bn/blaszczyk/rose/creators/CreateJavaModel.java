@@ -1,8 +1,12 @@
-package sqltojava;
+package bn.blaszczyk.rose.creators;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.Member;
 
 
 public class CreateJavaModel {
@@ -10,7 +14,7 @@ public class CreateJavaModel {
 	public static void createModel(Entity entity, MetaData metadata)
 	{
 		String classname = firstCaseUp(entity.getJavaname());
-		String fullpath = metadata.getModelpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
+		String fullpath = metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();

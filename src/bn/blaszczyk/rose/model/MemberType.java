@@ -1,4 +1,4 @@
-package sqltojava;
+package bn.blaszczyk.rose.model;
 
 public enum MemberType {
 	VARCHAR("varchar","String"),

@@ -1,9 +1,10 @@
-package sqltojava;
+package bn.blaszczyk.rose;
 
 public class MetaData {
 	private String modelpackage = "";
-	private String modelpath = "";
-	private String sqlpath = "";
+	private String srcpath = "src/";
+	private String sqlpath = "sql/";
+	private boolean usingForeignKeys = false;
 	private boolean usingAnnotations = false;
 	
 	public MetaData()
@@ -21,14 +22,14 @@ public class MetaData {
 		this.modelpackage = modelpackage;
 	}
 
-	public String getModelpath()
+	public String getSrcpath()
 	{
-		return modelpath;
+		return srcpath;
 	}
 
-	public void setModelpath(String modelpath)
+	public void setSrcpath(String srcpath)
 	{
-		this.modelpath = modelpath;
+		this.srcpath = srcpath;
 	}
 
 	public String getSqlpath()
@@ -39,6 +40,16 @@ public class MetaData {
 	public void setSqlpath(String sqlpath)
 	{
 		this.sqlpath = sqlpath;
+	}
+	
+	public boolean isUsingForeignKeys()
+	{
+		return usingForeignKeys;
+	}
+
+	public void setUsingForeignKeys(boolean usingForeignKeys)
+	{
+		this.usingForeignKeys = usingForeignKeys;
 	}
 
 	public boolean isUsingAnnotations()
