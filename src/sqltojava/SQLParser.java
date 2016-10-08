@@ -11,11 +11,11 @@ public class SQLParser {
 
 	private static String javapackage;
 	
-	public static List<Pojotable> parsePojotables(String filename) throws FileNotFoundException, ParseException
+	public static List<Entity> parseEntities(String filename) throws FileNotFoundException, ParseException
 	{
 		Scanner scanner = new Scanner(new FileInputStream(filename));
 		String[] split;
-		List<Pojotable> pojotables = new ArrayList<>();
+		List<Entity> Entities = new ArrayList<>();
 		while(scanner.hasNextLine())
 		{
 			split = scanner.nextLine().split("\\s+");
@@ -30,15 +30,15 @@ public class SQLParser {
 				}
 			}
 			else if(split.length > 2 && split[0].equalsIgnoreCase("create") && split[1].equalsIgnoreCase("table"))
-				pojotables.add( parsePojotable(split[2], scanner));			
+				Entities.add( parseEntity(split[2], scanner));			
 		}
-		return pojotables;
+		return Entities;
 	}
 	
 	
-	private static Pojotable parsePojotable(String sqlname, Scanner scanner) throws ParseException
+	private static Entity parseEntity(String sqlname, Scanner scanner) throws ParseException
 	{
-		Pojotable pojotable = new Pojotable(sqlname,javapackage);
+		Entity Entity = new Entity(sqlname,javapackage);
 		String line;
 		String[] split;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine() ).trim().startsWith( ")" ) )
@@ -53,7 +53,7 @@ public class SQLParser {
 				switch((split[2]+split[3]).toLowerCase())
 				{
 				case "primarykey":
-					pojotable.setPrimaryKey(split[4]);
+					Entity.setPrimaryKey(split[4]);
 					break;
 				case "foreignkey":
 					break;
@@ -62,9 +62,9 @@ public class SQLParser {
 				}				
 			}
 			else
-				pojotable.addMember(new Member(split[0], split[1]));
+				Entity.addMember(new Member(split[0], split[1]));
 		}
-		return pojotable;
+		return Entity;
 	}
 	
 }

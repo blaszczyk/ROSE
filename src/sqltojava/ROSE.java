@@ -6,22 +6,21 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.List;
 
-public class SQLtoJava {
-
+public class ROSE {
 
 	
 	public static void main(String... args)
 	{
 		if(args.length == 0)
 		{
-			System.out.println("Use: SQLtoJava.jar filename");
+			System.out.println("Use:java -jar ROSE.jar filename");
 			return;
 		}
 		try
 		{
-			List<Pojotable> pojotables = SQLParser.parsePojotables(args[0]);
-			for(Pojotable pojotable : pojotables)
-				CreateJavaModel.createModel(pojotable, "src/" , false);
+			List<Entity> entities = SQLParser.parseEntities(args[0]);
+			for(Entity entity : entities)
+				CreateJavaModel.createModel(entity, "src/",true);
 		}
 		catch (FileNotFoundException | ParseException e)
 		{

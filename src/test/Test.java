@@ -1,8 +1,12 @@
 package test;
 
+import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Entity
+@Table(name="TEST")
 public class Test
 {
 
@@ -16,15 +20,17 @@ public class Test
 	{
 	}
 
-	public Test( int test_id, String test_varchar, Date test_date, BigDecimal test_numeric, String test_char )
+	public Test( String test_varchar, Date test_date, BigDecimal test_numeric, String test_char )
 	{
-		this.test_id = test_id;
 		this.test_varchar = test_varchar;
 		this.test_date = test_date;
 		this.test_numeric = test_numeric;
 		this.test_char = test_char;
 	}
 
+	@Id
+	@GeneratedValue
+	@Column(name="TEST_ID")
 	public int getTest_id()
 	{
 		return test_id;
@@ -35,6 +41,7 @@ public class Test
 		this.test_id = test_id;
 	}
 
+	@Column(name="TEST_VARCHAR")
 	public String getTest_varchar()
 	{
 		return test_varchar;
@@ -45,6 +52,7 @@ public class Test
 		this.test_varchar = test_varchar;
 	}
 
+	@Column(name="TEST_DATE")
 	public Date getTest_date()
 	{
 		return test_date;
@@ -55,6 +63,7 @@ public class Test
 		this.test_date = test_date;
 	}
 
+	@Column(name="TEST_NUMERIC")
 	public BigDecimal getTest_numeric()
 	{
 		return test_numeric;
@@ -65,6 +74,7 @@ public class Test
 		this.test_numeric = test_numeric;
 	}
 
+	@Column(name="TEST_CHAR")
 	public String getTest_char()
 	{
 		return test_char;

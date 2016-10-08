@@ -6,13 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class Pojotable implements Iterable<Member>{
+public class Entity implements Iterable<Member>{
 	private String sqlname;
 	private String javaname;
 	private String javapackage;
 	private List<Member> members = new ArrayList<>();
 		
-	public Pojotable(String sqlname, String javapackage)
+	public Entity(String sqlname, String javapackage)
 	{
 		this.sqlname = sqlname;
 		this.javaname = sqlname.toLowerCase();
@@ -42,7 +42,7 @@ public class Pojotable implements Iterable<Member>{
 	public void setPrimaryKey(String membername)
 	{
 		for(Member member : members)
-			if(membername.toLowerCase().contains(member.getSqlname()))
+			if(membername.toLowerCase().contains(member.getSqlname().toLowerCase()))
 				member.setPrimary(true);
 			else
 				member.setPrimary(false);

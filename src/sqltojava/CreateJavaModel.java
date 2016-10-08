@@ -7,12 +7,12 @@ import java.io.IOException;
 
 public class CreateJavaModel {
 
-	public static void createModel(Pojotable pojotable, String path, boolean usingJPA)
+	public static void createModel(Entity entity, String path, boolean usingJPA)
 	{
 		if(path == null)
 			path = "";
-		String classname = firstCaseUp(pojotable.getJavaname());
-		String fullpath = path + pojotable.getJavapackage().replaceAll("\\.", "/") + "/" + classname + ".java";
+		String classname = firstCaseUp(entity.getJavaname());
+		String fullpath = path + entity.getJavapackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		System.out.println(fullpath);
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
@@ -20,28 +20,36 @@ public class CreateJavaModel {
 		try(FileWriter writer = new FileWriter(file))
 		{
 			// package declaration
-			writer.write("package " + pojotable.getJavapackage() + ";\n\n");
+			writer.write("package " + entity.getJavapackage() + ";\n\n");
+			
 			// imports
 			if(usingJPA)
 				writer.write("import javax.persistence.*;\n\n");
-			for(String importpackage : pojotable.getImports())
+			for(String importpackage : entity.getImports())
 				if(importpackage != null)
 					writer.write("import " + importpackage + ";\n");
+			
 			// annotations
 			if(usingJPA)
-				writer.write("\n@Entity\n@Table(name=\"" + pojotable.getSqlname() + "\")");
+				writer.write("\n@Entity\n@Table(name=\"" + entity.getSqlname() + "\")");
+			
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n");
+			
 			// member variables
-			for(Member member : pojotable)
+			for(Member member : entity)
 				writer.write("\n\tprivate " + member.getType().getJavaname() + " " + member.getJavaname() + ";");
+			
 			// default constructor
 			writer.write("\n\n\tpublic " + classname + "()\n\t{\n\t}\n");
+			
 			// constructor for non-primaries
 			writer.write("\n\tpublic " + classname + "( ");
 			boolean first = true;
-			for(Member member : pojotable)
+			for(Member member : entity)
 			{
+				if(member.isPrimary())
+					continue;
 				if(!first)
 					writer.write(", ");
 				else
@@ -49,12 +57,15 @@ public class CreateJavaModel {
 				writer.write( member.getType().getJavaname() + " " + member.getJavaname());
 			}
 			writer.write(" )\n\t{\n");
-			for(Member member : pojotable)
-				writer.write("\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n");
+			for(Member member : entity)
+				if(!member.isPrimary())
+					writer.write("\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n");
 			writer.write("\t}\n\n");
+			
 			// for each member:
-			for(Member member : pojotable)
+			for(Member member : entity)
 			{
+				
 				// annotations
 				if(usingJPA)
 				{
@@ -62,13 +73,16 @@ public class CreateJavaModel {
 						writer.write("\t@Id\n\t@GeneratedValue\n");
 					writer.write("\t@Column(name=\"" + member.getSqlname() + "\")\n");	
 				}
+				
 				// getter
 				writer.write("\tpublic " + member.getType().getJavaname() + " get" + firstCaseUp(member.getJavaname()) 
 							+ "()\n\t{\n\t\treturn " + member.getJavaname() + ";\n\t}\n" );
+				
 				// setter
 				writer.write("\n\tpublic void set" + firstCaseUp(member.getJavaname()) + "( " + member.getType().getJavaname() + " " 
 							+ member.getJavaname() + " )\n\t{\n\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n\t}\n\n" );
 			}
+			
 			// TODO? toString, equals, hashValue	
 			// fin
 			writer.write("}\n");
