@@ -1,0 +1,1 @@
+java -jar SQLtoJava.jar test.sql
