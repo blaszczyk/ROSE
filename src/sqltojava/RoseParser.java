@@ -50,7 +50,10 @@ public class RoseParser {
 			split = line.split("\\s+"); // Split at any number of Whilespaces
 			if(split.length < 2)
 				throw new ParseException("Invalid Member: " + line, 0);
-			Entity.addMember(new Member(split[0], split[1],false));
+			else if( split.length > 2)
+				Entity.addMember(new Member(split[0], split[1], split[2],false));
+			else
+				Entity.addMember(new Member(split[0], split[1],false));
 		}
 		return Entity;
 	}

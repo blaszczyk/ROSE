@@ -4,15 +4,18 @@ import java.text.ParseException;
 
 public class Member {
 	private String sqlname;
+	private String sqltype;
 	private String javaname;
 	private MemberType type = null;
 	private boolean primary = false;
 	private String defvalue = null;
 	
-	public Member(String sqlname, String sqltype, boolean primary) throws ParseException
+	public Member(String sqlname, String sqltype, String defvalue, boolean primary) throws ParseException
 	{
 		this.sqlname = sqlname;
+		this.sqltype = sqltype;
 		this.primary = primary;
+		this.defvalue = defvalue;
 		javaname = sqlname.toLowerCase();
 		for(MemberType memberType : MemberType.values() )
 			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
@@ -21,6 +24,11 @@ public class Member {
 			throw new ParseException("Unknown SQL type: " + sqltype, 0);
 	}
 
+	public Member(String sqlname, String sqltype, boolean primary) throws ParseException
+	{
+		this(sqlname,sqltype,null,primary);
+	}
+	
 	public boolean isPrimary()
 	{
 		return primary;
@@ -44,6 +52,11 @@ public class Member {
 	public String getSqlname()
 	{
 		return sqlname;
+	}
+
+	public String getSqltype()
+	{
+		return sqltype;
 	}
 
 	public String getJavaname()

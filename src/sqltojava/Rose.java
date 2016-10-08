@@ -20,6 +20,8 @@ public class Rose {
 			List<Entity> entities = new ArrayList<>();
 			MetaData metadata = new MetaData();
 			RoseParser.parse(args[0],entities,metadata);
+			CreateSQL.createDeleteTables(entities, metadata);
+			CreateSQL.createCreateTables(entities, metadata);
 			for(Entity entity : entities)
 				CreateJavaModel.createModel(entity, metadata);
 		}

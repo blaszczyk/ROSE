@@ -1,13 +1,13 @@
 set annotations true
 set modelpackage test
 set modelpath src/
-set slqpath sql/
+set sqlpath sql/
 
 begin entity TEST
-	TEST_VARCHAR varchar 50 
-	TEST_DATE date
-	TEST_NUMERIC numeric 9,2
-	TEST_CHAR char 5
+	TEST_VARCHAR varchar(50) 
+	TEST_DATE date getDate()
+	TEST_NUMERIC numeric(9,2) 1234567.89
+	TEST_CHAR char(5) 'def'
 end entity
 
 begin entity TEST2
