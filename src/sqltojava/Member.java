@@ -9,9 +9,10 @@ public class Member {
 	private boolean primary = false;
 	private String defvalue = null;
 	
-	public Member(String sqlname, String sqltype) throws ParseException
+	public Member(String sqlname, String sqltype, boolean primary) throws ParseException
 	{
 		this.sqlname = sqlname;
+		this.primary = primary;
 		javaname = sqlname.toLowerCase();
 		for(MemberType memberType : MemberType.values() )
 			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )

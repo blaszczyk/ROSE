@@ -1,1 +1,1 @@
-java -jar SQLtoJava.jar test.sql
+java -jar rose.jar test.rose

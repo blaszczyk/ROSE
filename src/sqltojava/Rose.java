@@ -1,15 +1,14 @@
 // ROSE : Relational-Object-tranSlator-rosE
-
 package sqltojava;
 
 import java.io.FileNotFoundException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ROSE {
-
+public class Rose {
 	
-	public static void main(String... args)
+	public static void main(String[] args)
 	{
 		if(args.length == 0)
 		{
@@ -18,9 +17,11 @@ public class ROSE {
 		}
 		try
 		{
-			List<Entity> entities = SQLParser.parseEntities(args[0]);
+			List<Entity> entities = new ArrayList<>();
+			MetaData metadata = new MetaData();
+			RoseParser.parse(args[0],entities,metadata);
 			for(Entity entity : entities)
-				CreateJavaModel.createModel(entity, "src/",true);
+				CreateJavaModel.createModel(entity, metadata);
 		}
 		catch (FileNotFoundException | ParseException e)
 		{

@@ -7,12 +7,10 @@ import java.io.IOException;
 
 public class CreateJavaModel {
 
-	public static void createModel(Entity entity, String path, boolean usingJPA)
+	public static void createModel(Entity entity, MetaData metadata)
 	{
-		if(path == null)
-			path = "";
 		String classname = firstCaseUp(entity.getJavaname());
-		String fullpath = path + entity.getJavapackage().replaceAll("\\.", "/") + "/" + classname + ".java";
+		String fullpath = metadata.getModelpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		System.out.println(fullpath);
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
@@ -20,17 +18,17 @@ public class CreateJavaModel {
 		try(FileWriter writer = new FileWriter(file))
 		{
 			// package declaration
-			writer.write("package " + entity.getJavapackage() + ";\n\n");
+			writer.write("package " + metadata.getModelpackage() + ";\n\n");
 			
 			// imports
-			if(usingJPA)
+			if(metadata.isUsingAnnotations())
 				writer.write("import javax.persistence.*;\n\n");
 			for(String importpackage : entity.getImports())
 				if(importpackage != null)
 					writer.write("import " + importpackage + ";\n");
 			
 			// annotations
-			if(usingJPA)
+			if(metadata.isUsingAnnotations())
 				writer.write("\n@Entity\n@Table(name=\"" + entity.getSqlname() + "\")");
 			
 			// class declaration
@@ -67,7 +65,7 @@ public class CreateJavaModel {
 			{
 				
 				// annotations
-				if(usingJPA)
+				if(metadata.isUsingAnnotations())
 				{
 					if(member.isPrimary())
 						writer.write("\t@Id\n\t@GeneratedValue\n");
