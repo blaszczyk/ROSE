@@ -10,6 +10,7 @@ public class Entity {
 	private String sqlname;
 	private String javaname;
 	private Member primary;
+	private Set<String> imports = new HashSet<>();
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
  
@@ -35,6 +36,11 @@ public class Entity {
 	{
 		return javaname;
 	}
+	
+	public String getClassname()
+	{
+		return javaname.substring(0, 1).toUpperCase() + javaname.substring(1);
+	}
 
 	public Member getPrimary()
 	{
@@ -54,11 +60,26 @@ public class Entity {
 	public void addMember(Member member)
 	{
 		members.add(member);
+		for(MemberType memberType : MemberType.values())
+			if(member.getType().equals(memberType))
+				imports.add(memberType.getJavapackage());
 	}
 	
 	public void addEntityMember(EntityMember entitymember)
 	{
 		entitymembers.add(entitymember);
+		if(entitymember.isMany())
+		{
+			imports.add("java.util.Set");
+			imports.add("java.util.HashSet");
+		}
+		else
+		{
+			EntityMember counterpart = new EntityMember(this, getSqlname(), getJavaname(), true);
+			counterpart.setCouterpart(entitymember);
+			entitymember.setCouterpart(counterpart);
+			entitymember.getEntity().addEntityMember( counterpart );
+		}
 	}
 	
 //	public void setPrimaryKey(String membername)
@@ -72,11 +93,6 @@ public class Entity {
 	
 	public Set<String> getImports()
 	{
-		Set<String> imports = new HashSet<>();
-		for(MemberType memberType : MemberType.values())
-			for(Member member : members)
-				if(member.getType().equals(memberType))
-					imports.add(memberType.getJavapackage());
 		return imports;
 	}
 	

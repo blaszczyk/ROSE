@@ -11,6 +11,9 @@
 #
 
 src/test/
+src/foo/
+src/bar/
+src/foobar/
 sql/
 
 #

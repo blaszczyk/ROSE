@@ -6,10 +6,12 @@ public class EntityMember {
 	private String sqlname;
 	private String javaname;
 	private boolean many = false;
-	
+	private EntityMember couterpart = null;
+
 	public EntityMember(Entity entity, String sqlname, boolean many)
 	{
 		this.entity = entity;
+		this.many = many;
 		if(sqlname != null)
 		{
 			this.sqlname = sqlname;
@@ -20,7 +22,12 @@ public class EntityMember {
 			this.sqlname = entity.getPrimary().getSqlname();
 			this.javaname = entity.getJavaname();
 		}
-		this.many = many;
+	}
+	
+	public EntityMember(Entity entity, String sqlname, String javaname, boolean many)
+	{
+		this(entity, sqlname, many);
+		this.javaname = javaname;
 	}
 	
 	public Entity getEntity()
@@ -42,5 +49,17 @@ public class EntityMember {
 	{
 		return many;
 	}
+
+	public EntityMember getCouterpart()
+	{
+		return couterpart;
+	}
+
+	public void setCouterpart(EntityMember couterpart)
+	{
+		this.couterpart = couterpart;
+	}
+	
+	
 	
 }

@@ -4,9 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.Member;
+import bn.blaszczyk.rose.*;
+import bn.blaszczyk.rose.model.*;
 
 
 public class CreateJavaModel {
@@ -38,46 +37,64 @@ public class CreateJavaModel {
 				writer.write("\n@Entity\n@Table(name=\"" + entity.getSqlname() + "\")");
 			
 			// class declaration
-			writer.write("\npublic class " + classname + "\n{\n");
+			writer.write("\npublic class " + classname + "\n{");
 			
 			// member variables
 			for(Member member : entity.getMembers())
-				writer.write("\n\tprivate " + member.getType().getJavaname() + " " + member.getJavaname() + ";");
-			
-			// default constructor
-			writer.write("\n\n\tpublic " + classname + "()\n\t{\n\t}\n");
-			
-			// constructor for non-primaries
-			writer.write("\n\tpublic " + classname + "( ");
-			boolean first = true;
-			for(Member member : entity.getMembers())
 			{
-				if(member.isPrimary())
-					continue;
-				if(!first)
-					writer.write(", ");
-				else
-					first = false;
-				writer.write( member.getType().getJavaname() + " " + member.getJavaname());
-			}
-			writer.write(" )\n\t{\n");
-			for(Member member : entity.getMembers())
-				if(!member.isPrimary())
-					writer.write("\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n");
-			writer.write("\t}\n\n");
-			
-			// for each member:
-			for(Member member : entity.getMembers())
-			{
-				
-				// annotations
 				if(metadata.isUsingAnnotations())
 				{
 					if(member.isPrimary())
-						writer.write("\t@Id\n\t@GeneratedValue\n");
-					writer.write("\t@Column(name=\"" + member.getSqlname() + "\")\n");	
+						writer.write("\n\t@Id\n\t@GeneratedValue");
+					writer.write("\n\t@Column(name=\"" + member.getSqlname() + "\")");	
 				}
-				
+				writer.write("\n\tprivate " + member.getType().getJavaname() + " " + member.getJavaname() + ";\n");
+			}
+			
+			// entitymember variables
+			for(EntityMember entitymember : entity.getEntityMembers())
+			{
+				if(metadata.isUsingAnnotations())
+				{
+					if(entitymember.isMany())
+						writer.write("\n\t@OneToMany(mappedBy=\"" + entitymember.getCouterpart().getJavaname() + "\")");
+					else
+						writer.write("\n\t@ManyToOne\n\t@JoinColumn(name=\"" + entitymember.getSqlname() + "\")" );
+				}
+				if(entitymember.isMany())
+					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getJavaname() + "s = new HashSet<>();\n");
+				else
+					writer.write("\n\tprivate " + entitymember.getEntity().getClassname() + " " + entitymember.getJavaname() + ";\n");
+			}
+	
+			// default constructor
+			writer.write("\n\n\tpublic " + classname + "()\n\t{\n\t}\n\n");
+			
+			// constructor for non-primaries
+			if( entity.getMembers().size() > 1 )
+			{
+				writer.write("\tpublic " + classname + "( ");
+				boolean first = true;
+				for(Member member : entity.getMembers())
+				{
+					if(member.isPrimary())
+						continue;
+					if(!first)
+						writer.write(", ");
+					else
+						first = false;
+					writer.write( member.getType().getJavaname() + " " + member.getJavaname());
+				}
+				writer.write(" )\n\t{\n");
+				for(Member member : entity.getMembers())
+					if(!member.isPrimary())
+						writer.write("\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n");
+				writer.write("\t}\n\n");
+			}
+
+			// for each member:
+			for(Member member : entity.getMembers())
+			{				
 				// getter
 				writer.write("\tpublic " + member.getType().getJavaname() + " get" + firstCaseUp(member.getJavaname()) 
 							+ "()\n\t{\n\t\treturn " + member.getJavaname() + ";\n\t}\n" );
@@ -86,7 +103,35 @@ public class CreateJavaModel {
 				writer.write("\n\tpublic void set" + firstCaseUp(member.getJavaname()) + "( " + member.getType().getJavaname() + " " 
 							+ member.getJavaname() + " )\n\t{\n\t\tthis." + member.getJavaname() + " = " + member.getJavaname() + ";\n\t}\n\n" );
 			}
-			
+
+			// for each entitymember:
+			for(EntityMember entityMember : entity.getEntityMembers())
+			{
+				// for Lists
+				if(entityMember.isMany())
+				{
+					// getter
+					writer.write("\tpublic Set<" + entityMember.getEntity().getClassname() + "> get" + firstCaseUp(entityMember.getJavaname()) 
+								+ "s()\n\t{\n\t\treturn " + entityMember.getJavaname() + "s;\n\t}\n" );
+				
+					// setter
+					writer.write("\n\tpublic void set" + firstCaseUp(entityMember.getJavaname()) 
+					+ "s( Set<" + entityMember.getEntity().getClassname() + "> " + entityMember.getJavaname() 
+					+ "s )\n\t{\n\t\tthis." + entityMember.getJavaname() + "s = " + entityMember.getJavaname() + "s;\n\t}\n\n" );
+				}
+				// Singles
+				else
+				{
+					// getter
+					writer.write("\tpublic " + entityMember.getEntity().getClassname() + " get" + firstCaseUp(entityMember.getJavaname()) 
+								+ "()\n\t{\n\t\treturn " + entityMember.getJavaname() + ";\n\t}\n" );
+				
+					// setter
+					writer.write("\n\tpublic void set" + firstCaseUp(entityMember.getJavaname()) + "( " + entityMember.getEntity().getClassname() 
+							+ " " 	+ entityMember.getJavaname() + " )\n\t{\n\t\tthis." + entityMember.getJavaname() + " = " 
+							+ entityMember.getJavaname() + ";\n\t}\n\n" );
+				}
+			}
 			// TODO? toString, equals, hashValue	
 			// fin
 			writer.write("}\n");
