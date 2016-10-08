@@ -13,4 +13,10 @@ end entity
 begin entity TEST2
 	VC varchar 20
 	iii int
+	TEST
+	testmember TEST
 end entity
+
+create sqlcreate
+create sqldelete
+create javamodels

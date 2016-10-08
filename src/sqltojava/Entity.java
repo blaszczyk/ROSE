@@ -3,14 +3,15 @@ package sqltojava;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class Entity implements Iterable<Member>{
+public class Entity {
 	private String sqlname;
 	private String javaname;
+	private Member primary;
 	private List<Member> members = new ArrayList<>();
+	private List<EntityMember> entitymembers = new ArrayList<>();
  
 	public Entity(String sqlname)
 	{
@@ -18,7 +19,7 @@ public class Entity implements Iterable<Member>{
 		this.javaname = sqlname.toLowerCase();
 		try
 		{
-			addMember( new Member(sqlname+"_ID", "int",true) );
+			addMember( primary = new Member(sqlname+"_ID", "int",true) );
 		}
 		catch (ParseException e)
 		{
@@ -35,9 +36,29 @@ public class Entity implements Iterable<Member>{
 		return javaname;
 	}
 
+	public Member getPrimary()
+	{
+		return primary;
+	}
+
+	public List<Member> getMembers()
+	{
+		return members;
+	}
+
+	public List<EntityMember> getEntityMembers()
+	{
+		return entitymembers;
+	}
+	
 	public void addMember(Member member)
 	{
 		members.add(member);
+	}
+	
+	public void addEntityMember(EntityMember entitymember)
+	{
+		entitymembers.add(entitymember);
 	}
 	
 //	public void setPrimaryKey(String membername)
@@ -58,12 +79,5 @@ public class Entity implements Iterable<Member>{
 					imports.add(memberType.getJavapackage());
 		return imports;
 	}
-
-	@Override
-	public Iterator<Member> iterator()
-	{
-		return members.iterator();
-	}
-	
 	
 }
