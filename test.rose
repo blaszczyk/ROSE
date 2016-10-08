@@ -3,25 +3,25 @@ set modelpackage foo
 set srcpath src/
 set sqlpath sql/
 set foreignkeys true
+set database foo
 
-begin entity FOO
-	FOO_VARCHAR varchar(50) 
-	FOO_DATE date getDate()
-	FOO_NUMERIC numeric(9,2) 1234567.89
-	FOO_CHAR char(5) 'def'
+begin entity Foo
+	fooVarchar varchar(50) null
+	fooDate date 
+	fooNumeric numeric(9,2) 1234567.89
+	fooChar char(5) "foo"
 end entity
 
-begin entity BAR
-	BAR_VARCHAR varchar 20
-	BAR_INT int
-	FOO
+begin entity Bar
+	barVarchar varchar(20) "bar"
+	barInt int 45
+	Foo
 end entity
 
-begin entity FOOBAR
-	FOO
-	MYBAR BAR
+begin entity FooBar
+	Foo
+	myBar Bar
 end entity
 
 create sqlcreate
-create sqldelete
 create javamodels

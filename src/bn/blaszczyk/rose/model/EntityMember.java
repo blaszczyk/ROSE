@@ -3,31 +3,19 @@ package bn.blaszczyk.rose.model;
 public class EntityMember {
 	
 	private Entity entity;
-	private String sqlname;
-	private String javaname;
+	private String name;
+	private String capitalName;
 	private boolean many = false;
 	private EntityMember couterpart = null;
 
-	public EntityMember(Entity entity, String sqlname, boolean many)
+	public EntityMember(Entity entity, String name, boolean many)
 	{
 		this.entity = entity;
 		this.many = many;
-		if(sqlname != null)
-		{
-			this.sqlname = sqlname;
-			this.javaname = sqlname.toLowerCase();
-		}
-		else
-		{
-			this.sqlname = entity.getPrimary().getSqlname();
-			this.javaname = entity.getJavaname();
-		}
-	}
-	
-	public EntityMember(Entity entity, String sqlname, String javaname, boolean many)
-	{
-		this(entity, sqlname, many);
-		this.javaname = javaname;
+		this.name = name;
+		if( name == null )
+			this.name = entity.getPrimary().getName();
+		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 	}
 	
 	public Entity getEntity()
@@ -35,14 +23,14 @@ public class EntityMember {
 		return entity;
 	}
 	
-	public String getSqlname()
+	public String getName()
 	{
-		return sqlname;
+		return name;
 	}
 	
-	public String getJavaname()
+	public String getCapitalName()
 	{
-		return javaname;
+		return capitalName;
 	}
 	
 	public boolean isMany()

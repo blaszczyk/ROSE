@@ -7,29 +7,24 @@ import java.util.List;
 import java.util.Set;
 
 public class Entity {
-	private String sqlname;
+	private String classname;
 	private String javaname;
 	private Member primary;
 	private Set<String> imports = new HashSet<>();
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
  
-	public Entity(String sqlname)
+	public Entity(String classname)
 	{
-		this.sqlname = sqlname;
-		this.javaname = sqlname.toLowerCase();
+		this.classname = classname;
+		this.javaname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
 		try
 		{
-			addMember( primary = new Member(sqlname+"_ID", "int",true) );
+			addMember( primary = new Member(javaname+"_id", "int",true) );
 		}
 		catch (ParseException e)
 		{
 		}
-	}
-	
-	public String getSqlname()
-	{
-		return sqlname;
 	}
 
 	public String getJavaname()
@@ -39,7 +34,7 @@ public class Entity {
 	
 	public String getClassname()
 	{
-		return javaname.substring(0, 1).toUpperCase() + javaname.substring(1);
+		return classname;
 	}
 
 	public Member getPrimary()
@@ -75,7 +70,7 @@ public class Entity {
 		}
 		else
 		{
-			EntityMember counterpart = new EntityMember(this, getSqlname(), getJavaname(), true);
+			EntityMember counterpart = new EntityMember(this, getJavaname(), true);
 			counterpart.setCouterpart(entitymember);
 			entitymember.setCouterpart(counterpart);
 			entitymember.getEntity().addEntityMember( counterpart );

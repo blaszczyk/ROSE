@@ -1,0 +1,16 @@
+set annotations false
+set modelpackage bn.blaszczyk.rose
+set srcpath src/
+set sqlpath sql/
+set foreignkeys false
+
+begin entity MetaData
+	modelpackage varchar(50) null
+	srcpath varchar(50) "src/"
+	sqlpath varchar(50) "sql/"
+	usingForeignKeys tinyint false
+	usingAnnotations tinyint false
+	database varchar(50) null
+end entity
+
+create javamodels
