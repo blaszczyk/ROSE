@@ -46,6 +46,8 @@ public class RoseParser {
 				JavaBasicPanelCreator.create(entity, metadata);
 			break;
 		case "javafullpanels":
+			for(Entity entity : entities)
+				JavaFullPanelCreator.create(entity, metadata);
 			break;
 		case "javaparser":
 			for(Entity entity : entities)
@@ -77,7 +79,7 @@ public class RoseParser {
 			else if( split.length > 1 && ( subentity = getEntityType(split[1], entities) ) != null )
 				entity.addEntityMember(new EntityMember(subentity, split[0], false));
 			else
-				throw new ParseException("Invalid Member: " + line, 0);
+				System.out.println("Invalid Member: " + line);
 		}
 		entities.add(entity);
 	}

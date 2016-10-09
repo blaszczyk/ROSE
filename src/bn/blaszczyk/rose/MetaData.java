@@ -16,7 +16,7 @@ public class MetaData
 
 	private String fullpanelformat = "%sFullPanel";
 
-	private String simplepanelformat = "%sSimplePanel";
+	private String basicpanelformat = "%sBasicPanel";
 
 	private String srcpath = "src/";
 
@@ -37,12 +37,12 @@ public class MetaData
 	{
 	}
 
-	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String simplepanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, String basicpanelclass, String fullpanelclass )
+	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String basicpanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, String basicpanelclass, String fullpanelclass )
 	{
 		this.modelpackage = modelpackage;
 		this.panelpackage = panelpackage;
 		this.fullpanelformat = fullpanelformat;
-		this.simplepanelformat = simplepanelformat;
+		this.basicpanelformat = basicpanelformat;
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
 		this.usingForeignKeys = usingForeignKeys;
@@ -92,14 +92,14 @@ public class MetaData
 		this.fullpanelformat = fullpanelformat;
 	}
 
-	public String getSimplepanelformat()
+	public String getBasicpanelformat()
 	{
-		return simplepanelformat;
+		return basicpanelformat;
 	}
 
-	public void setSimplepanelformat( String simplepanelformat )
+	public void setBasicpanelformat( String basicpanelformat )
 	{
-		this.simplepanelformat = simplepanelformat;
+		this.basicpanelformat = basicpanelformat;
 	}
 
 	public String getSrcpath()

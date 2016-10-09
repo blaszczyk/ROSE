@@ -8,12 +8,12 @@ import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
 
 
-public class JavaBasicPanelCreator {
+public class JavaFullPanelCreator {
 
 	public static void create(Entity entity, MetaData metadata)
 	{
-		String classname = String.format( metadata.getBasicpanelformat() , entity.getClassname() );
-		String parentclass = metadata.getBasicpanelclass().substring(metadata.getBasicpanelclass().lastIndexOf(".") + 1);
+		String classname = String.format( metadata.getFullpanelformat() , entity.getClassname() );
+		String parentclass = metadata.getFullpanelclass().substring(metadata.getFullpanelclass().lastIndexOf(".") + 1);
 		String fullpath = metadata.getSrcpath() + metadata.getPanelpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
@@ -28,7 +28,7 @@ public class JavaBasicPanelCreator {
 			
 			// imports
 			writer.write("import " + metadata.getModelpackage() + ".*;\n");
-			writer.write("import " + metadata.getBasicpanelclass() + ";\n");
+			writer.write("import " + metadata.getFullpanelclass() + ";\n");
 			writer.write("import javax.swing.*;\n");
 			for(String importpackage : entity.getImports())
 				if(importpackage != null)
@@ -43,9 +43,19 @@ public class JavaBasicPanelCreator {
 			// default constructor
 			writer.write("\n\n\tpublic " + classname + "( " + entity.getClassname() + " " + entity.getJavaname() + " )\n\t{\n");
 //			writer.write("\t\tthis." + entity.getJavaname() + " = " + entity.getJavaname() + ";\n");
-			for(Member member : entity.getMembers())
-				writer.write( "\t\taddValue( \"" + member.getCapitalName() + "\", " 
-							+ entity.getJavaname() + ".get" + member.getCapitalName()+ "().toString() );\n" );
+			writer.write("\t\taddTitle(\"" + entity.getClassname() + "\");\n" );
+			writer.write("\t\taddBasicPanel( new " + String.format( metadata.getBasicpanelformat() , entity.getClassname() ) + "( " 
+						 + entity.getJavaname() + " ) );\n");
+			for(EntityMember entityMember: entity.getEntityMembers())
+				if(entityMember.isMany())
+					continue;
+				else
+				{
+					writer.write("\t\taddSubTitle(\"" + entityMember.getCapitalName() + "\");\n" );
+					writer.write("\t\taddBasicPanel( new " + String.format( metadata.getBasicpanelformat() , entityMember.getEntity().getClassname() ) + "( " 
+								 + entity.getJavaname() + ".get" + entityMember.getCapitalName() + "() ) );\n");
+					
+				}
 			writer.write("\t}\n\n");
 			
 			// fin

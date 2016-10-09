@@ -6,7 +6,7 @@ begin entity MetaData
 	modelpackage varchar(50) null
 	panelpackage varchar(50) null
 	fullpanelformat varchar(50) "%sFullPanel"
-	simplepanelformat varchar(50) "%sSimplePanel"
+	basicpanelformat varchar(50) "%sBasicPanel"
 	srcpath varchar(50) "src/"
 	sqlpath varchar(50) "sql/"
 	usingForeignKeys tinyint false

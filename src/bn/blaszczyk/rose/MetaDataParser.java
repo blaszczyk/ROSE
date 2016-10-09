@@ -24,8 +24,8 @@ public class MetaDataParser
 		case "fullpanelformat":
 			metaData.setFullpanelformat( value );
 			break;
-		case "simplepanelformat":
-			metaData.setSimplepanelformat( value );
+		case "basicpanelformat":
+			metaData.setBasicpanelformat( value );
 			break;
 		case "srcpath":
 			metaData.setSrcpath( value );
