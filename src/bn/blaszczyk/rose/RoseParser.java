@@ -53,6 +53,9 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
 			break;
+		case "javacontroller":
+			JavaControllerCreator.create(entities, metadata);
+			break;
 		// TODO: java CRUD, hibernate.cfg.xml
 		default:
 			System.out.println( "Unknown Agrument: create " + filetype );
@@ -78,7 +81,7 @@ public class RoseParser {
 				entity.addEntityMember(new EntityMember(subentity, null, false));
 			else if( split.length > 1 && ( subentity = getEntityType(split[1], entities) ) != null )
 				entity.addEntityMember(new EntityMember(subentity, split[0], false));
-			else
+			else if( split.length > 1 )
 				System.out.println("Invalid Member: " + line);
 		}
 		entities.add(entity);

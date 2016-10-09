@@ -3,17 +3,25 @@ set modelpackage bn.blaszczyk.rose
 set srcpath src/
 
 begin entity MetaData
-	modelpackage varchar(50) null
-	panelpackage varchar(50) null
-	fullpanelformat varchar(50) "%sFullPanel"
-	basicpanelformat varchar(50) "%sBasicPanel"
+
 	srcpath varchar(50) "src/"
 	sqlpath varchar(50) "sql/"
+	
 	usingForeignKeys tinyint false
-	usingAnnotations tinyint false
 	database varchar(50) null
+	
+	modelpackage varchar(50) null
+	usingAnnotations tinyint false
+	
+	panelpackage varchar(50) null
+	basicpanelformat varchar(50) "%sBasicPanel"
 	basicpanelclass varchar(50) "bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel"
+	fullpanelformat varchar(50) "%sFullPanel"
 	fullpanelclass varchar(50) "bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel"
+	
+	controllerpackage varchar(50) null
+	controllerclass varchar(50) "BasicControler"
+	
 end entity
 
 create javamodels

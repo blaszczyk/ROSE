@@ -8,10 +8,13 @@ set modelpackage foo
 set usingannotations true
 
 set panelpackage foo.panels
-set fullpanelformat %sFullPanel
 set basicpanelformat %sSimplePanel
-
 set basicpanelclass bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel
+set fullpanelformat %sFullPanel
+set fullpanelclass bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel
+
+set controllerpackage foo.controller
+set controllerclass BasicControler
 
 begin entity Foo
 	fooVarchar varchar(50) null
@@ -35,3 +38,4 @@ create sqlcreate
 create javamodels
 create javabasicpanels
 create javafullpanels
+create javacontroller

@@ -29,6 +29,7 @@ public class JavaFullPanelCreator {
 			// imports
 			writer.write("import " + metadata.getModelpackage() + ".*;\n");
 			writer.write("import " + metadata.getFullpanelclass() + ";\n");
+			writer.write("import bn.blaszczyk.rose.interfaces.*;\n");
 			writer.write("import javax.swing.*;\n");
 			for(String importpackage : entity.getImports())
 				if(importpackage != null)
@@ -41,22 +42,36 @@ public class JavaFullPanelCreator {
 //			writer.write("\tprivate final " + entity.getClassname() + " " + entity.getJavaname() + ";\n");
 
 			// default constructor
-			writer.write("\n\n\tpublic " + classname + "( " + entity.getClassname() + " " + entity.getJavaname() + " )\n\t{\n");
+			writer.write("\n\n\tpublic " + classname + "( " + entity.getClassname() + " " + entity.getJavaname() + ", GUIController controller )\n\t{\n");
+			writer.write("\t\tsuper( " + entity.getJavaname() + ", controller );\n");
 //			writer.write("\t\tthis." + entity.getJavaname() + " = " + entity.getJavaname() + ";\n");
-			writer.write("\t\taddTitle(\"" + entity.getClassname() + "\");\n" );
-			writer.write("\t\taddBasicPanel( new " + String.format( metadata.getBasicpanelformat() , entity.getClassname() ) + "( " 
-						 + entity.getJavaname() + " ) );\n");
-			for(EntityMember entityMember: entity.getEntityMembers())
-				if(entityMember.isMany())
-					continue;
-				else
-				{
-					writer.write("\t\taddSubTitle(\"" + entityMember.getCapitalName() + "\");\n" );
-					writer.write("\t\taddBasicPanel( new " + String.format( metadata.getBasicpanelformat() , entityMember.getEntity().getClassname() ) + "( " 
-								 + entity.getJavaname() + ".get" + entityMember.getCapitalName() + "() ) );\n");
-					
-				}
 			writer.write("\t}\n\n");
+			
+			// implement mehtods
+
+			writer.write("\t@Override\n\tpublic String getName()\n\t{\n\t\treturn \"" + entity.getClassname() + "\";\n\t}\n\n");
+			
+			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + entity.getEntityMembers().size() + ";\n\t}\n\n");
+
+			writer.write("\t@Override\n\tpublic String getEntityName(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			int count = 0;
+			for(EntityMember entityMember : entity.getEntityMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.isMany() ? "s" : "" ) +  "\";\n" );
+			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
+
+			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			count = 0;
+			for(EntityMember entityMember : entity.getEntityMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn ((" + entity.getClassname() + ")getObject()).get" + entityMember.getCapitalName() 
+							+ ( entityMember.isMany() ? "s" : "" ) +  "();\n" );
+			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
+			
+			writer.write("\t@Override\n\tpublic boolean isEntityMany(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			count = 0;
+			for(EntityMember entityMember : entity.getEntityMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityMember.isMany() + ";\n" );
+			writer.write("\t\t}\n\t\treturn false;\n\t}\n\n");
+
 			
 			// fin
 			writer.write("}\n");

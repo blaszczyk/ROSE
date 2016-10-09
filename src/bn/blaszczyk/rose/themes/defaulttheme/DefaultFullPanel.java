@@ -6,7 +6,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import bn.blaszczyk.rose.themes.*;
+import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")
 public abstract class DefaultFullPanel extends JPanel implements FullPanel {
@@ -28,17 +28,34 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 	
 	private static final Color BACKGROUND = Color.LIGHT_GRAY;
 	
+	private static final int H_OFFSET = 20;	
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
 
-	public DefaultFullPanel()
+	private GUIController controller;
+	private Object object;
+	
+	public DefaultFullPanel( Object object, GUIController controller )
 	{
+		this.controller = controller;
+		this.object = object;
 		setLayout(null);
 		setBackground(BACKGROUND);
+		addTitle( getName() );
+		addBasicPanel(object);
+		for(int i = 0; i < getEntityCount(); i++)
+		{
+			if( getEntityMember(i) == null)
+				continue;
+			addSubTitle( getEntityName(i) );
+			addBasicPanel( getEntityMember(i) );
+		}
+		
 	}
 
-	public void addTitle( String title )
+	private void addTitle( String title )
 	{
+		height += H_OFFSET;
 		JLabel lblTitle = new JLabel( title );
 		lblTitle.setFont(TITLE_FONT);
 		lblTitle.setForeground(TITLE_FG);
@@ -49,8 +66,9 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
 	
-	public void addSubTitle( String subtitle )
+	private void addSubTitle( String subtitle )
 	{
+		height += H_OFFSET;
 		JLabel lblSubTitle = new JLabel( subtitle );
 		lblSubTitle.setFont(SUBTITLE_FONT);
 		lblSubTitle.setForeground(SUBTITLE_FG);
@@ -61,8 +79,9 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
 	
-	public void addBasicPanel( BasicPanel basicPanel )
-	{
+	private void addBasicPanel( Object object )
+	{	
+		BasicPanel basicPanel = controller.createBasicPanel(object);
 		JPanel panel = basicPanel.getPanel();
 		panel.setBounds(H_SPACING, height, basicPanel.getWidth() , basicPanel.getHeight() );
 		add(panel);
@@ -73,6 +92,14 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 	{
 		this.width = Math.max(this.width, 2 * H_SPACING + width);
 		this.height += V_SPACING + height;
+	}
+
+	
+	
+	@Override
+	public Object getObject()
+	{
+		return object;
 	}
 
 	@Override

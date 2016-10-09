@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import bn.blaszczyk.rose.themes.BasicPanel;
+import bn.blaszczyk.rose.interfaces.BasicPanel;
 
 @SuppressWarnings("serial")
 public abstract class DefaultBasicPanel extends JPanel implements BasicPanel {

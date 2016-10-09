@@ -10,46 +10,52 @@ public class MetaData
 {
 	private Integer metaData_id = 0;
 
-	private String modelpackage = null;
-
-	private String panelpackage = null;
-
-	private String fullpanelformat = "%sFullPanel";
-
-	private String basicpanelformat = "%sBasicPanel";
-
 	private String srcpath = "src/";
 
 	private String sqlpath = "sql/";
 
 	private Boolean usingForeignKeys = false;
 
+	private String database = null;
+
+	private String modelpackage = null;
+
 	private Boolean usingAnnotations = false;
 
-	private String database = null;
+	private String panelpackage = null;
+
+	private String basicpanelformat = "%sBasicPanel";
 
 	private String basicpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel";
 
+	private String fullpanelformat = "%sFullPanel";
+
 	private String fullpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel";
+
+	private String controllerpackage = null;
+
+	private String controllerclass = "BasicControler";
 
 
 	public MetaData()
 	{
 	}
 
-	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String basicpanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, String basicpanelclass, String fullpanelclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String panelpackage, String basicpanelformat, String basicpanelclass, String fullpanelformat, String fullpanelclass, String controllerpackage, String controllerclass )
 	{
-		this.modelpackage = modelpackage;
-		this.panelpackage = panelpackage;
-		this.fullpanelformat = fullpanelformat;
-		this.basicpanelformat = basicpanelformat;
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
 		this.usingForeignKeys = usingForeignKeys;
-		this.usingAnnotations = usingAnnotations;
 		this.database = database;
+		this.modelpackage = modelpackage;
+		this.usingAnnotations = usingAnnotations;
+		this.panelpackage = panelpackage;
+		this.basicpanelformat = basicpanelformat;
 		this.basicpanelclass = basicpanelclass;
+		this.fullpanelformat = fullpanelformat;
 		this.fullpanelclass = fullpanelclass;
+		this.controllerpackage = controllerpackage;
+		this.controllerclass = controllerclass;
 	}
 
 	public Integer getMetaData_id()
@@ -60,46 +66,6 @@ public class MetaData
 	public void setMetaData_id( Integer metaData_id )
 	{
 		this.metaData_id = metaData_id;
-	}
-
-	public String getModelpackage()
-	{
-		return modelpackage;
-	}
-
-	public void setModelpackage( String modelpackage )
-	{
-		this.modelpackage = modelpackage;
-	}
-
-	public String getPanelpackage()
-	{
-		return panelpackage;
-	}
-
-	public void setPanelpackage( String panelpackage )
-	{
-		this.panelpackage = panelpackage;
-	}
-
-	public String getFullpanelformat()
-	{
-		return fullpanelformat;
-	}
-
-	public void setFullpanelformat( String fullpanelformat )
-	{
-		this.fullpanelformat = fullpanelformat;
-	}
-
-	public String getBasicpanelformat()
-	{
-		return basicpanelformat;
-	}
-
-	public void setBasicpanelformat( String basicpanelformat )
-	{
-		this.basicpanelformat = basicpanelformat;
 	}
 
 	public String getSrcpath()
@@ -132,6 +98,26 @@ public class MetaData
 		this.usingForeignKeys = usingForeignKeys;
 	}
 
+	public String getDatabase()
+	{
+		return database;
+	}
+
+	public void setDatabase( String database )
+	{
+		this.database = database;
+	}
+
+	public String getModelpackage()
+	{
+		return modelpackage;
+	}
+
+	public void setModelpackage( String modelpackage )
+	{
+		this.modelpackage = modelpackage;
+	}
+
 	public Boolean isUsingAnnotations()
 	{
 		return usingAnnotations;
@@ -142,14 +128,24 @@ public class MetaData
 		this.usingAnnotations = usingAnnotations;
 	}
 
-	public String getDatabase()
+	public String getPanelpackage()
 	{
-		return database;
+		return panelpackage;
 	}
 
-	public void setDatabase( String database )
+	public void setPanelpackage( String panelpackage )
 	{
-		this.database = database;
+		this.panelpackage = panelpackage;
+	}
+
+	public String getBasicpanelformat()
+	{
+		return basicpanelformat;
+	}
+
+	public void setBasicpanelformat( String basicpanelformat )
+	{
+		this.basicpanelformat = basicpanelformat;
 	}
 
 	public String getBasicpanelclass()
@@ -162,6 +158,16 @@ public class MetaData
 		this.basicpanelclass = basicpanelclass;
 	}
 
+	public String getFullpanelformat()
+	{
+		return fullpanelformat;
+	}
+
+	public void setFullpanelformat( String fullpanelformat )
+	{
+		this.fullpanelformat = fullpanelformat;
+	}
+
 	public String getFullpanelclass()
 	{
 		return fullpanelclass;
@@ -170,6 +176,26 @@ public class MetaData
 	public void setFullpanelclass( String fullpanelclass )
 	{
 		this.fullpanelclass = fullpanelclass;
+	}
+
+	public String getControllerpackage()
+	{
+		return controllerpackage;
+	}
+
+	public void setControllerpackage( String controllerpackage )
+	{
+		this.controllerpackage = controllerpackage;
+	}
+
+	public String getControllerclass()
+	{
+		return controllerclass;
+	}
+
+	public void setControllerclass( String controllerclass )
+	{
+		this.controllerclass = controllerclass;
 	}
 
 }

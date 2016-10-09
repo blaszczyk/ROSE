@@ -15,18 +15,6 @@ public class MetaDataParser
 		case "metadata_id":
 			metaData.setMetaData_id( Integer.parseInt( value ) );
 			break;
-		case "modelpackage":
-			metaData.setModelpackage( value );
-			break;
-		case "panelpackage":
-			metaData.setPanelpackage( value );
-			break;
-		case "fullpanelformat":
-			metaData.setFullpanelformat( value );
-			break;
-		case "basicpanelformat":
-			metaData.setBasicpanelformat( value );
-			break;
 		case "srcpath":
 			metaData.setSrcpath( value );
 			break;
@@ -36,17 +24,35 @@ public class MetaDataParser
 		case "usingforeignkeys":
 			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
 			break;
+		case "database":
+			metaData.setDatabase( value );
+			break;
+		case "modelpackage":
+			metaData.setModelpackage( value );
+			break;
 		case "usingannotations":
 			metaData.setUsingAnnotations( Boolean.parseBoolean( value ) );
 			break;
-		case "database":
-			metaData.setDatabase( value );
+		case "panelpackage":
+			metaData.setPanelpackage( value );
+			break;
+		case "basicpanelformat":
+			metaData.setBasicpanelformat( value );
 			break;
 		case "basicpanelclass":
 			metaData.setBasicpanelclass( value );
 			break;
+		case "fullpanelformat":
+			metaData.setFullpanelformat( value );
+			break;
 		case "fullpanelclass":
 			metaData.setFullpanelclass( value );
+			break;
+		case "controllerpackage":
+			metaData.setControllerpackage( value );
+			break;
+		case "controllerclass":
+			metaData.setControllerclass( value );
 			break;
 		default:
 			System.out.println( "Unknown Property: " + property + " in MetaData");
