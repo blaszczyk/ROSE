@@ -16,7 +16,7 @@ public class Rose {
 			{
 				RoseParser.parse(roseFile);
 			}
-			catch (FileNotFoundException | ParseException e)
+			catch (FileNotFoundException | ParseException  e)
 			{
 				e.printStackTrace();
 			}

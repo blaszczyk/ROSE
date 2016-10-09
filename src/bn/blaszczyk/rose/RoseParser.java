@@ -7,12 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import bn.blaszczyk.rose.creators.CreateJavaModel;
-import bn.blaszczyk.rose.creators.CreateSQL;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EntityMember;
-import bn.blaszczyk.rose.model.Member;
-import bn.blaszczyk.rose.model.MemberType;
+import bn.blaszczyk.rose.creators.*;
+import bn.blaszczyk.rose.model.*;
 
 public class RoseParser {
 	
@@ -26,7 +22,7 @@ public class RoseParser {
 		{
 			split = scanner.nextLine().trim().split("\\s+");
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
-				setProperty(split[1], split[2], metadata);
+				MetaDataParser.parseProperty(metadata, split[1], split[2]);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
 				parseEntity(split[2],  entities, scanner);
 			else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
@@ -34,41 +30,28 @@ public class RoseParser {
 		}
 	}
 	
-	private static void setProperty( String propertyName, String propertyValue, MetaData metadata)
-	{switch(propertyName.toLowerCase())
-		{
-		case "modelpackage":
-			metadata.setModelpackage( propertyValue );
-			break;
-		case "annotations":
-			metadata.setUsingAnnotations( Boolean.parseBoolean( propertyValue ) );
-			break;
-		case "srcpath":
-			metadata.setSrcpath( propertyValue );
-			break;
-		case "sqlpath":
-			metadata.setSqlpath( propertyValue );
-			break;
-		case "foreignkeys":
-			metadata.setUsingForeignKeys( Boolean.parseBoolean(propertyValue));
-			break;
-		case "database":
-			metadata.setDatabase( propertyValue );
-			break;
-		// more to come
-		}		
-	}
-	
 	private static void createFile( String filetype, List<Entity> entities, MetaData metadata )
 	{
 		switch(filetype.toLowerCase())
 		{
 		case "sqlcreate":
-			CreateSQL.createCreateTables(entities, metadata);
+			SQLCreator.create(entities, metadata);
 			break;
 		case "javamodels":
 			for(Entity entity : entities)
-				CreateJavaModel.createModel(entity, metadata);
+				JavaModelCreator.create(entity, metadata);
+			break;
+		case "javasimplepanels":
+			for(Entity entity : entities)
+				JavaPanelCreator.create(entity, metadata, true);
+			break;
+		case "javafullpanels":
+			for(Entity entity : entities)
+				JavaPanelCreator.create(entity, metadata, false);
+			break;
+		case "javaparser":
+			for(Entity entity : entities)
+				JavaParserCreator.create(entity, metadata);
 			break;
 		// TODO: java CRUD, hibernate.cfg.xml
 		}

@@ -8,7 +8,7 @@ public class Member {
 	private String sqltype;
 	private MemberType type = null;
 	private boolean primary = false;
-	private String defvalue = null;
+	private String defValue = null;
 	
 	public Member(String name, String sqltype, String defvalue, boolean primary) throws ParseException
 	{
@@ -16,7 +16,7 @@ public class Member {
 		this.capitalName = name.substring(0,1).toUpperCase() + name.substring(1);
 		this.sqltype = sqltype;
 		this.primary = primary;
-		this.defvalue = defvalue;
+		this.defValue = defvalue;
 		for(MemberType memberType : MemberType.values() )
 			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
 				this.type = memberType;
@@ -39,14 +39,16 @@ public class Member {
 		this.primary = primary;
 	}
 
-	public String getDefvalue()
+	public String getDefValue()
 	{
-		return defvalue;
+		if(defValue == null || defValue == "")
+			return getType().getDefValue();
+		return defValue;
 	}
 
-	public void setDefvalue(String defvalue)
+	public void setDefValue(String defValue)
 	{
-		this.defvalue = defvalue;
+		this.defValue = defValue;
 	}
 
 	public String getName()

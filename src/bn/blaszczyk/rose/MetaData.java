@@ -8,41 +8,59 @@ package bn.blaszczyk.rose;
 
 public class MetaData
 {
-	private int metaData_id = 0;
+	private Integer metaData_id = 0;
 
 	private String modelpackage = null;
+
+	private String panelpackage = null;
+
+	private String fullpanelformat = "%sFullPanel";
+
+	private String simplepanelformat = "%sSimplePanel";
 
 	private String srcpath = "src/";
 
 	private String sqlpath = "sql/";
 
-	private boolean usingForeignKeys = false;
+	private Boolean usingForeignKeys = false;
 
-	private boolean usingAnnotations = false;
+	private Boolean usingAnnotations = false;
 
 	private String database = null;
+
+	private Integer labelheigth = 30;
+
+	private Integer labelspacing = 10;
+
+	private Integer labelwidth = 150;
 
 
 	public MetaData()
 	{
 	}
 
-	public MetaData( String modelpackage, String srcpath, String sqlpath, boolean usingForeignKeys, boolean usingAnnotations, String database )
+	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String simplepanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, Integer labelheigth, Integer labelspacing, Integer labelwidth )
 	{
 		this.modelpackage = modelpackage;
+		this.panelpackage = panelpackage;
+		this.fullpanelformat = fullpanelformat;
+		this.simplepanelformat = simplepanelformat;
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
 		this.usingForeignKeys = usingForeignKeys;
 		this.usingAnnotations = usingAnnotations;
 		this.database = database;
+		this.labelheigth = labelheigth;
+		this.labelspacing = labelspacing;
+		this.labelwidth = labelwidth;
 	}
 
-	public int getMetaData_id()
+	public Integer getMetaData_id()
 	{
 		return metaData_id;
 	}
 
-	public void setMetaData_id( int metaData_id )
+	public void setMetaData_id( Integer metaData_id )
 	{
 		this.metaData_id = metaData_id;
 	}
@@ -55,6 +73,36 @@ public class MetaData
 	public void setModelpackage( String modelpackage )
 	{
 		this.modelpackage = modelpackage;
+	}
+
+	public String getPanelpackage()
+	{
+		return panelpackage;
+	}
+
+	public void setPanelpackage( String panelpackage )
+	{
+		this.panelpackage = panelpackage;
+	}
+
+	public String getFullpanelformat()
+	{
+		return fullpanelformat;
+	}
+
+	public void setFullpanelformat( String fullpanelformat )
+	{
+		this.fullpanelformat = fullpanelformat;
+	}
+
+	public String getSimplepanelformat()
+	{
+		return simplepanelformat;
+	}
+
+	public void setSimplepanelformat( String simplepanelformat )
+	{
+		this.simplepanelformat = simplepanelformat;
 	}
 
 	public String getSrcpath()
@@ -77,22 +125,22 @@ public class MetaData
 		this.sqlpath = sqlpath;
 	}
 
-	public boolean isUsingForeignKeys()
+	public Boolean isUsingForeignKeys()
 	{
 		return usingForeignKeys;
 	}
 
-	public void setUsingForeignKeys( boolean usingForeignKeys )
+	public void setUsingForeignKeys( Boolean usingForeignKeys )
 	{
 		this.usingForeignKeys = usingForeignKeys;
 	}
 
-	public boolean isUsingAnnotations()
+	public Boolean isUsingAnnotations()
 	{
 		return usingAnnotations;
 	}
 
-	public void setUsingAnnotations( boolean usingAnnotations )
+	public void setUsingAnnotations( Boolean usingAnnotations )
 	{
 		this.usingAnnotations = usingAnnotations;
 	}
@@ -105,6 +153,36 @@ public class MetaData
 	public void setDatabase( String database )
 	{
 		this.database = database;
+	}
+
+	public Integer getLabelheigth()
+	{
+		return labelheigth;
+	}
+
+	public void setLabelheigth( Integer labelheigth )
+	{
+		this.labelheigth = labelheigth;
+	}
+
+	public Integer getLabelspacing()
+	{
+		return labelspacing;
+	}
+
+	public void setLabelspacing( Integer labelspacing )
+	{
+		this.labelspacing = labelspacing;
+	}
+
+	public Integer getLabelwidth()
+	{
+		return labelwidth;
+	}
+
+	public void setLabelwidth( Integer labelwidth )
+	{
+		this.labelwidth = labelwidth;
 	}
 
 }

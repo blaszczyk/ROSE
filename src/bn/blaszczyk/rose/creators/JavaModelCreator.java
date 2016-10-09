@@ -8,9 +8,9 @@ import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
 
 
-public class CreateJavaModel {
+public class JavaModelCreator {
 
-	public static void createModel(Entity entity, MetaData metadata)
+	public static void create(Entity entity, MetaData metadata)
 	{
 		String fullpath = metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entity.getClassname() + ".java";
 		File file = new File(fullpath);
@@ -52,8 +52,8 @@ public class CreateJavaModel {
 				writer.write("\n\tprivate " + member.getType().getJavaname() + " " + member.getName() );
 				if(member.isPrimary())
 					writer.write( " = " + member.getType().getDefValue());
-				else if(member.getDefvalue() != null && member.getDefvalue() != "" )
-					writer.write( " = " + String.format( member.getType().getDefFormat(), member.getDefvalue() ) );
+				else if(member.getDefValue() != null && member.getDefValue() != "" )
+					writer.write( " = " + String.format( member.getType().getDefFormat(), member.getDefValue() ) );
 				else
 					writer.write( " = " + member.getType().getDefValue() );
 				writer.write( ";\n" );

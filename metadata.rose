@@ -1,16 +1,21 @@
-set annotations false
+set usingannotations false
 set modelpackage bn.blaszczyk.rose
 set srcpath src/
-set sqlpath sql/
-set foreignkeys false
 
 begin entity MetaData
 	modelpackage varchar(50) null
+	panelpackage varchar(50) null
+	fullpanelformat varchar(50) "%sFullPanel"
+	simplepanelformat varchar(50) "%sSimplePanel"
 	srcpath varchar(50) "src/"
 	sqlpath varchar(50) "sql/"
 	usingForeignKeys tinyint false
 	usingAnnotations tinyint false
 	database varchar(50) null
+	labelheigth int 30
+	labelspacing int 10
+	labelwidth int 150
 end entity
 
 create javamodels
+create javaparser

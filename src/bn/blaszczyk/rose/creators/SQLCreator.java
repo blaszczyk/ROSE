@@ -11,9 +11,9 @@ import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EntityMember;
 import bn.blaszczyk.rose.model.Member;
 
-public class CreateSQL {
+public class SQLCreator {
 	
-	public static void createCreateTables(List<Entity> entities, MetaData metadata)
+	public static void create(List<Entity> entities, MetaData metadata)
 	{
 		String fullpath = metadata.getSqlpath() + "createtables.sql";
 		File file = new File(fullpath);
