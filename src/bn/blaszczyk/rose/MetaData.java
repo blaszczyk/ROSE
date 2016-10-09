@@ -28,18 +28,16 @@ public class MetaData
 
 	private String database = null;
 
-	private Integer labelheigth = 30;
+	private String basicpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel";
 
-	private Integer labelspacing = 10;
-
-	private Integer labelwidth = 150;
+	private String fullpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel";
 
 
 	public MetaData()
 	{
 	}
 
-	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String simplepanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, Integer labelheigth, Integer labelspacing, Integer labelwidth )
+	public MetaData( String modelpackage, String panelpackage, String fullpanelformat, String simplepanelformat, String srcpath, String sqlpath, Boolean usingForeignKeys, Boolean usingAnnotations, String database, String basicpanelclass, String fullpanelclass )
 	{
 		this.modelpackage = modelpackage;
 		this.panelpackage = panelpackage;
@@ -50,9 +48,8 @@ public class MetaData
 		this.usingForeignKeys = usingForeignKeys;
 		this.usingAnnotations = usingAnnotations;
 		this.database = database;
-		this.labelheigth = labelheigth;
-		this.labelspacing = labelspacing;
-		this.labelwidth = labelwidth;
+		this.basicpanelclass = basicpanelclass;
+		this.fullpanelclass = fullpanelclass;
 	}
 
 	public Integer getMetaData_id()
@@ -155,34 +152,24 @@ public class MetaData
 		this.database = database;
 	}
 
-	public Integer getLabelheigth()
+	public String getBasicpanelclass()
 	{
-		return labelheigth;
+		return basicpanelclass;
 	}
 
-	public void setLabelheigth( Integer labelheigth )
+	public void setBasicpanelclass( String basicpanelclass )
 	{
-		this.labelheigth = labelheigth;
+		this.basicpanelclass = basicpanelclass;
 	}
 
-	public Integer getLabelspacing()
+	public String getFullpanelclass()
 	{
-		return labelspacing;
+		return fullpanelclass;
 	}
 
-	public void setLabelspacing( Integer labelspacing )
+	public void setFullpanelclass( String fullpanelclass )
 	{
-		this.labelspacing = labelspacing;
-	}
-
-	public Integer getLabelwidth()
-	{
-		return labelwidth;
-	}
-
-	public void setLabelwidth( Integer labelwidth )
-	{
-		this.labelwidth = labelwidth;
+		this.fullpanelclass = fullpanelclass;
 	}
 
 }

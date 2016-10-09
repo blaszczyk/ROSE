@@ -41,19 +41,20 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaModelCreator.create(entity, metadata);
 			break;
-		case "javasimplepanels":
+		case "javabasicpanels":
 			for(Entity entity : entities)
-				JavaPanelCreator.create(entity, metadata, true);
+				JavaBasicPanelCreator.create(entity, metadata);
 			break;
 		case "javafullpanels":
-			for(Entity entity : entities)
-				JavaPanelCreator.create(entity, metadata, false);
 			break;
 		case "javaparser":
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
 			break;
 		// TODO: java CRUD, hibernate.cfg.xml
+		default:
+			System.out.println( "Unknown Agrument: create " + filetype );
+				
 		}
 	}
 	

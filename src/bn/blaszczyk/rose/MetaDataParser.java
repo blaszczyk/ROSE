@@ -42,14 +42,11 @@ public class MetaDataParser
 		case "database":
 			metaData.setDatabase( value );
 			break;
-		case "labelheigth":
-			metaData.setLabelheigth( Integer.parseInt( value ) );
+		case "basicpanelclass":
+			metaData.setBasicpanelclass( value );
 			break;
-		case "labelspacing":
-			metaData.setLabelspacing( Integer.parseInt( value ) );
-			break;
-		case "labelwidth":
-			metaData.setLabelwidth( Integer.parseInt( value ) );
+		case "fullpanelclass":
+			metaData.setFullpanelclass( value );
 			break;
 		default:
 			System.out.println( "Unknown Property: " + property + " in MetaData");
