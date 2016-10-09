@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.List;
 
 import bn.blaszczyk.rose.*;
-import bn.blaszczyk.rose.interfaces.EntityModel;
 import bn.blaszczyk.rose.model.*;
 
 

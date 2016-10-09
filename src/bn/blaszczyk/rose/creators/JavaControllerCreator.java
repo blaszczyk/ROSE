@@ -6,9 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.Member;
-import bn.blaszczyk.rose.model.MemberType;
+import bn.blaszczyk.rose.model.*;
 
 public class JavaControllerCreator {
 	

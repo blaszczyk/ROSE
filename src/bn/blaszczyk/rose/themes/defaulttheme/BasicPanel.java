@@ -11,7 +11,7 @@ import bn.blaszczyk.rose.interfaces.MyPanel;
 import bn.blaszczyk.rose.interfaces.EntityModel;
 
 @SuppressWarnings("serial")
-public class DefaultBasicPanel extends JPanel implements MyPanel {
+public class BasicPanel extends JPanel implements MyPanel {
 
 	private static final int LBL_HEIGHT = 30;
 	private static final int H_SPACING = 10;
@@ -34,7 +34,7 @@ public class DefaultBasicPanel extends JPanel implements MyPanel {
 
 //	private EntityModel entityModel;
 	
-	public DefaultBasicPanel( EntityModel entityModel )
+	public BasicPanel( EntityModel entityModel )
 	{
 //		this.entityModel = entityModel;
 		setLayout(null);

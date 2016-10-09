@@ -137,11 +137,12 @@ public class JavaModelCreator {
 					// getter
 					writer.write("\tpublic " + entityMember.getEntity().getClassname() + " get" + entityMember.getCapitalName() 
 								+ "()\n\t{\n\t\treturn " + entityMember.getName() + ";\n\t}\n" );
-				
+					
 					// setter
 					writer.write("\n\tpublic void set" + entityMember.getCapitalName() + "( " + entityMember.getEntity().getClassname() 
 							+ " " 	+ entityMember.getName() + " )\n\t{\n\t\tthis." + entityMember.getName() + " = " 
-							+ entityMember.getName() + ";\n\t}\n\n" );
+							+ entityMember.getName() + ";\n\t\t" + entityMember.getName() + ".get" + entityMember.getCouterpart().getCapitalName()
+							+ "s().add(this);\n\t}\n\n" );
 				}
 			}
 			// TODO? toString, equals, hashValue	

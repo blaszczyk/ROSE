@@ -2,14 +2,18 @@ package bn.blaszczyk.rose.themes.defaulttheme;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")
-public class DefaultFullPanel extends JPanel implements MyPanel {
+public class FullPanel extends JPanel implements MyPanel {
 
 	private static final int H_SPACING = 10;
 	private static final int V_SPACING = 10;
@@ -28,12 +32,12 @@ public class DefaultFullPanel extends JPanel implements MyPanel {
 	
 	private static final Color BACKGROUND = Color.LIGHT_GRAY;
 	
-	private static final int H_OFFSET = 20;	
+	private static final int V_OFFSET = 20;	
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
 
 	
-	public DefaultFullPanel( EntityModel entityModel )
+	public FullPanel( EntityModel entityModel )
 	{
 		setLayout(null);
 		setBackground(BACKGROUND);
@@ -41,17 +45,30 @@ public class DefaultFullPanel extends JPanel implements MyPanel {
 		addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
-			if( entityModel.getEntityMember(i) == null)
+			if( entityModel.getEntityMember(i) == null )
 				continue;
-			addSubTitle( entityModel.getEntityName(i) );
-			addBasicPanel( entityModel.createModel( entityModel.getEntityMember(i) ) );
+			else if( entityModel.isEntityMany(i))
+			{
+				List<EntityModel> entityModels = new ArrayList<>();
+				Set<?> objects =  (Set<?>) entityModel.getEntityMember(i);
+				for(Object object : objects)
+					entityModels.add(entityModel.createModel(object));
+				addSubTitle( entityModel.getEntityName(i) );
+				addMemberTable( entityModels );
+			}
+			else
+			{
+				EntityModel subEntityModel = entityModel.createModel( entityModel.getEntityMember(i) );
+				addSubTitle( entityModel.getEntityName(i), subEntityModel );
+				addBasicPanel( subEntityModel );
+			}
 		}
 		
 	}
 
 	private void addTitle( String title )
 	{
-		height += H_OFFSET;
+		height += V_OFFSET;
 		JLabel lblTitle = new JLabel( title );
 		lblTitle.setFont(TITLE_FONT);
 		lblTitle.setForeground(TITLE_FG);
@@ -61,10 +78,20 @@ public class DefaultFullPanel extends JPanel implements MyPanel {
 		add(lblTitle);
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
-	
+
+	private void addSubTitle( String subtitle, EntityModel entityModel )
+	{	
+		JButton btnView = new JButton("View");
+		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
+		final EntityModel entityModelCpy = entityModel;
+		btnView.addActionListener( e -> GUIController.createFullPanelDialog(null, entityModelCpy) );
+		add(btnView);
+		
+		addSubTitle(subtitle);		
+	}
 	private void addSubTitle( String subtitle )
 	{
-		height += H_OFFSET;
+		height += V_OFFSET;
 		JLabel lblSubTitle = new JLabel( subtitle );
 		lblSubTitle.setFont(SUBTITLE_FONT);
 		lblSubTitle.setForeground(SUBTITLE_FG);
@@ -72,16 +99,27 @@ public class DefaultFullPanel extends JPanel implements MyPanel {
 		lblSubTitle.setBounds(H_SPACING, height, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
 		lblSubTitle.setOpaque(true);
 		add(lblSubTitle);
+		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
 	
 	private void addBasicPanel( EntityModel entityModel )
 	{	
-		MyPanel myPanel = new DefaultBasicPanel(entityModel) ;
+		MyPanel myPanel = new BasicPanel(entityModel) ;
 		JPanel panel = myPanel.getPanel();
 		panel.setBounds(H_SPACING, height, myPanel.getWidth() , myPanel.getHeight() );
 		add(panel);
 		computeDimensions( myPanel.getHeight(), myPanel.getWidth() );
+	}
+	
+	private void addMemberTable( List<EntityModel> entityModels )
+	{
+		MemberTableModel tableModel = new MemberTableModel(entityModels);
+		MemberTable table = new MemberTable( tableModel );
+		JPanel panel = table.getPanel();
+		panel.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
+		add(panel);
+		computeDimensions( panel.getHeight(), panel.getWidth() );
 	}
 	
 	private void computeDimensions( int height, int width )
