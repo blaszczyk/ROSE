@@ -28,25 +28,10 @@ public class JavaControllerCreator {
 			
 			// imports
 			writer.write("import " + metadata.getModelpackage() + ".*;\n"
-						+ "import " + metadata.getPanelpackage() + ".*;\n"
 						+ "import bn.blaszczyk.rose.interfaces.*;" );
 			
 			// class declaration
 			writer.write("\npublic class " + metadata.getControllerclass() + " implements GUIController\n{\n");
-
-			// createBasicPanel
-			writer.write("\n\t@Override\n\tpublic BasicPanel createBasicPanel( Object object )\n\t{\n\t\t");
-			for(Entity entity : entities)
-				writer.write("if( object instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
-							+ String.format( metadata.getBasicpanelformat(), entity.getClassname() ) +  "( ( " + entity.getClassname() + " ) object );\n\t\telse " );
-			writer.write("\n\t\t\treturn null;\n\t}\n" );
-
-			// createFullPanel
-			writer.write("\n\t@Override\n\tpublic FullPanel createFullPanel( Object object )\n\t{\n\t\t");
-			for(Entity entity : entities)
-				writer.write("if( object instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
-							+ String.format( metadata.getFullpanelformat(), entity.getClassname() ) +  "( ( " + entity.getClassname() + " ) object, this );\n\t\telse " );
-			writer.write("\n\t\t\treturn null;\n\t}\n" );
 			
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

@@ -7,10 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import bn.blaszczyk.rose.interfaces.BasicPanel;
+import bn.blaszczyk.rose.interfaces.MyPanel;
+import bn.blaszczyk.rose.interfaces.EntityModel;
 
 @SuppressWarnings("serial")
-public abstract class DefaultBasicPanel extends JPanel implements BasicPanel {
+public class DefaultBasicPanel extends JPanel implements MyPanel {
 
 	private static final int LBL_HEIGHT = 30;
 	private static final int H_SPACING = 10;
@@ -31,14 +32,18 @@ public abstract class DefaultBasicPanel extends JPanel implements BasicPanel {
 	private int width = 3 * H_SPACING + PROPERTY_WIDTH + VALUE_WIDTH;
 	private int height = V_SPACING;
 
-	public DefaultBasicPanel()
+//	private EntityModel entityModel;
+	
+	public DefaultBasicPanel( EntityModel entityModel )
 	{
+//		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(BACKGROUND);
+		for(int i = 0; i < entityModel.getMemberCount(); i++)
+			addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
 	}
 
-	@Override
-	public void addValue(String property, String value)
+	private void addValue(String property, String value)
 	{
 		JLabel lblProperty = new JLabel(property + ": ", SwingConstants.RIGHT);
 		lblProperty.setBounds( H_SPACING, height, PROPERTY_WIDTH, LBL_HEIGHT );

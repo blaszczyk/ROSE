@@ -7,14 +7,12 @@ set database foo
 set modelpackage foo
 set usingannotations true
 
-set panelpackage foo.panels
-set basicpanelformat %sSimplePanel
-set basicpanelclass bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel
-set fullpanelformat %sFullPanel
-set fullpanelclass bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel
-
 set controllerpackage foo.controller
-set controllerclass BasicControler
+set controllerclass BasicGUIControler
+
+set entitymodelpackage foo.entitymodels
+set entitymodelformat %sEntityModel
+set entitymodelfactoryclass EntityModelFactory
 
 begin entity Foo
 	fooVarchar varchar(50) null
@@ -36,6 +34,7 @@ end entity
 
 create sqlcreate
 create javamodels
-create javabasicpanels
-create javafullpanels
-create javacontroller
+-create javabasicpanels
+-create javafullpanels
+-create javacontroller
+create javaentitymodels

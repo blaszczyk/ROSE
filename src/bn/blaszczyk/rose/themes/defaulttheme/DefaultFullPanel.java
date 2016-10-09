@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")
-public abstract class DefaultFullPanel extends JPanel implements FullPanel {
+public class DefaultFullPanel extends JPanel implements MyPanel {
 
 	private static final int H_SPACING = 10;
 	private static final int V_SPACING = 10;
@@ -32,23 +32,19 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
 
-	private GUIController controller;
-	private Object object;
 	
-	public DefaultFullPanel( Object object, GUIController controller )
+	public DefaultFullPanel( EntityModel entityModel )
 	{
-		this.controller = controller;
-		this.object = object;
 		setLayout(null);
 		setBackground(BACKGROUND);
-		addTitle( getName() );
-		addBasicPanel(object);
-		for(int i = 0; i < getEntityCount(); i++)
+		addTitle( entityModel.getName() );
+		addBasicPanel(entityModel);
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
-			if( getEntityMember(i) == null)
+			if( entityModel.getEntityMember(i) == null)
 				continue;
-			addSubTitle( getEntityName(i) );
-			addBasicPanel( getEntityMember(i) );
+			addSubTitle( entityModel.getEntityName(i) );
+			addBasicPanel( entityModel.createModel( entityModel.getEntityMember(i) ) );
 		}
 		
 	}
@@ -79,27 +75,19 @@ public abstract class DefaultFullPanel extends JPanel implements FullPanel {
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
 	
-	private void addBasicPanel( Object object )
+	private void addBasicPanel( EntityModel entityModel )
 	{	
-		BasicPanel basicPanel = controller.createBasicPanel(object);
-		JPanel panel = basicPanel.getPanel();
-		panel.setBounds(H_SPACING, height, basicPanel.getWidth() , basicPanel.getHeight() );
+		MyPanel myPanel = new DefaultBasicPanel(entityModel) ;
+		JPanel panel = myPanel.getPanel();
+		panel.setBounds(H_SPACING, height, myPanel.getWidth() , myPanel.getHeight() );
 		add(panel);
-		computeDimensions( basicPanel.getHeight(), basicPanel.getWidth() );
+		computeDimensions( myPanel.getHeight(), myPanel.getWidth() );
 	}
 	
 	private void computeDimensions( int height, int width )
 	{
 		this.width = Math.max(this.width, 2 * H_SPACING + width);
 		this.height += V_SPACING + height;
-	}
-
-	
-	
-	@Override
-	public Object getObject()
-	{
-		return object;
 	}
 
 	@Override

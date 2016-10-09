@@ -22,26 +22,22 @@ public class MetaData
 
 	private Boolean usingAnnotations = false;
 
-	private String panelpackage = null;
-
-	private String basicpanelformat = "%sBasicPanel";
-
-	private String basicpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultBasicPanel";
-
-	private String fullpanelformat = "%sFullPanel";
-
-	private String fullpanelclass = "bn.blaszczyk.rose.themes.defaulttheme.DefaultFullPanel";
-
 	private String controllerpackage = null;
 
 	private String controllerclass = "BasicControler";
+
+	private String entitymodelpackage = null;
+
+	private String entitymodelformat = "$sEntityModel";
+
+	private String entitymodelfactoryclass = "EntityModelFactory";
 
 
 	public MetaData()
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String panelpackage, String basicpanelformat, String basicpanelclass, String fullpanelformat, String fullpanelclass, String controllerpackage, String controllerclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
 	{
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
@@ -49,13 +45,11 @@ public class MetaData
 		this.database = database;
 		this.modelpackage = modelpackage;
 		this.usingAnnotations = usingAnnotations;
-		this.panelpackage = panelpackage;
-		this.basicpanelformat = basicpanelformat;
-		this.basicpanelclass = basicpanelclass;
-		this.fullpanelformat = fullpanelformat;
-		this.fullpanelclass = fullpanelclass;
 		this.controllerpackage = controllerpackage;
 		this.controllerclass = controllerclass;
+		this.entitymodelpackage = entitymodelpackage;
+		this.entitymodelformat = entitymodelformat;
+		this.entitymodelfactoryclass = entitymodelfactoryclass;
 	}
 
 	public Integer getMetaData_id()
@@ -128,56 +122,6 @@ public class MetaData
 		this.usingAnnotations = usingAnnotations;
 	}
 
-	public String getPanelpackage()
-	{
-		return panelpackage;
-	}
-
-	public void setPanelpackage( String panelpackage )
-	{
-		this.panelpackage = panelpackage;
-	}
-
-	public String getBasicpanelformat()
-	{
-		return basicpanelformat;
-	}
-
-	public void setBasicpanelformat( String basicpanelformat )
-	{
-		this.basicpanelformat = basicpanelformat;
-	}
-
-	public String getBasicpanelclass()
-	{
-		return basicpanelclass;
-	}
-
-	public void setBasicpanelclass( String basicpanelclass )
-	{
-		this.basicpanelclass = basicpanelclass;
-	}
-
-	public String getFullpanelformat()
-	{
-		return fullpanelformat;
-	}
-
-	public void setFullpanelformat( String fullpanelformat )
-	{
-		this.fullpanelformat = fullpanelformat;
-	}
-
-	public String getFullpanelclass()
-	{
-		return fullpanelclass;
-	}
-
-	public void setFullpanelclass( String fullpanelclass )
-	{
-		this.fullpanelclass = fullpanelclass;
-	}
-
 	public String getControllerpackage()
 	{
 		return controllerpackage;
@@ -196,6 +140,36 @@ public class MetaData
 	public void setControllerclass( String controllerclass )
 	{
 		this.controllerclass = controllerclass;
+	}
+
+	public String getEntitymodelpackage()
+	{
+		return entitymodelpackage;
+	}
+
+	public void setEntitymodelpackage( String entitymodelpackage )
+	{
+		this.entitymodelpackage = entitymodelpackage;
+	}
+
+	public String getEntitymodelformat()
+	{
+		return entitymodelformat;
+	}
+
+	public void setEntitymodelformat( String entitymodelformat )
+	{
+		this.entitymodelformat = entitymodelformat;
+	}
+
+	public String getEntitymodelfactoryclass()
+	{
+		return entitymodelfactoryclass;
+	}
+
+	public void setEntitymodelfactoryclass( String entitymodelfactoryclass )
+	{
+		this.entitymodelfactoryclass = entitymodelfactoryclass;
 	}
 
 }

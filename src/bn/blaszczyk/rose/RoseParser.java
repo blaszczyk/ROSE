@@ -41,17 +41,14 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaModelCreator.create(entity, metadata);
 			break;
-		case "javabasicpanels":
-			for(Entity entity : entities)
-				JavaBasicPanelCreator.create(entity, metadata);
-			break;
-		case "javafullpanels":
-			for(Entity entity : entities)
-				JavaFullPanelCreator.create(entity, metadata);
-			break;
 		case "javaparser":
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
+			break;
+		case "javaentitymodels":
+			for(Entity entity : entities)
+				JavaEntityModelCreator.createModel(entity, metadata);
+			JavaEntityModelCreator.createFactory(entities, metadata);
 			break;
 		case "javacontroller":
 			JavaControllerCreator.create(entities, metadata);

@@ -33,26 +33,20 @@ public class MetaDataParser
 		case "usingannotations":
 			metaData.setUsingAnnotations( Boolean.parseBoolean( value ) );
 			break;
-		case "panelpackage":
-			metaData.setPanelpackage( value );
-			break;
-		case "basicpanelformat":
-			metaData.setBasicpanelformat( value );
-			break;
-		case "basicpanelclass":
-			metaData.setBasicpanelclass( value );
-			break;
-		case "fullpanelformat":
-			metaData.setFullpanelformat( value );
-			break;
-		case "fullpanelclass":
-			metaData.setFullpanelclass( value );
-			break;
 		case "controllerpackage":
 			metaData.setControllerpackage( value );
 			break;
 		case "controllerclass":
 			metaData.setControllerclass( value );
+			break;
+		case "entitymodelpackage":
+			metaData.setEntitymodelpackage( value );
+			break;
+		case "entitymodelformat":
+			metaData.setEntitymodelformat( value );
+			break;
+		case "entitymodelfactoryclass":
+			metaData.setEntitymodelfactoryclass( value );
 			break;
 		default:
 			System.out.println( "Unknown Property: " + property + " in MetaData");
