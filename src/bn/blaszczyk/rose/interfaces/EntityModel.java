@@ -5,6 +5,7 @@ public interface EntityModel {
 
 	public String getName();
 	public int getId();
+	public Object getEntity();
 	
 	public int getMemberCount();
 	public String getMemberName( int index );

@@ -77,11 +77,13 @@ public class MemberTable extends JTable implements MyPanel {
 	
 //	private MemberTableModel tableModel;
 	private JPanel panel = new JPanel();
+	private GUIController controller;
 //	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public MemberTable(MemberTableModel tableModel)
+	public MemberTable(MemberTableModel tableModel, GUIController controller)
 	{
 		super(tableModel);
+		this.controller = controller;
 //		this.tableModel = tableModel;
 		panel.setLayout(null);
 		JScrollPane scrollPane = new JScrollPane(this);
@@ -104,7 +106,7 @@ public class MemberTable extends JTable implements MyPanel {
 				if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
 				{
 					int row = rowAtPoint( e.getPoint() );
-					GUIController.createFullPanelDialog(null, tableModel.getEntityModel(row));
+					controller.createFullPanelDialog(null, tableModel.getEntityModel(row));
 				}
 			}
 			

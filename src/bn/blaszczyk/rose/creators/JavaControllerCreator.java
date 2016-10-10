@@ -39,7 +39,7 @@ public class JavaControllerCreator {
 			writer.write("\t@Override\n\tpublic void setMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
-								+ JavaParserCreator.PARSE_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
+								+ JavaParserCreator.SET_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			//public void setEntityMember( Object entity, String name, Object value);

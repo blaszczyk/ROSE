@@ -18,13 +18,16 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
+	
+	private GUIController controller;
 
 	
-	public FullPanel( EntityModel entityModel )
+	public FullPanel( EntityModel entityModel, GUIController controller )
 	{
+		this.controller = controller;
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
-		addTitle( entityModel.getName() );
+		addTitle( entityModel.getName(), entityModel );
 		addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
@@ -61,13 +64,26 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		add(lblTitle);
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
+	
+	private void addTitle( String title, EntityModel entityModel )
+	{
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
+		final EntityModel entityModelCpy = entityModel;
+		btnEdit.addActionListener( e -> {
+			controller.createEditPanelDialog(null, entityModelCpy);
+		} );
+		add(btnEdit);
+		
+		addTitle(title);				
+	}
 
 	private void addSubTitle( String subtitle, EntityModel entityModel )
 	{	
 		JButton btnView = new JButton("View");
 		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
-		btnView.addActionListener( e -> GUIController.createFullPanelDialog(null, entityModelCpy) );
+		btnView.addActionListener( e -> controller.createFullPanelDialog(null, entityModelCpy) );
 		add(btnView);
 		
 		addSubTitle(subtitle);		
@@ -98,7 +114,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addMemberTable( List<EntityModel> entityModels )
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels);
-		MemberTable table = new MemberTable( tableModel );
+		MemberTable table = new MemberTable( tableModel, controller );
 		JPanel panel = table.getPanel();
 		panel.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
 		add(panel);

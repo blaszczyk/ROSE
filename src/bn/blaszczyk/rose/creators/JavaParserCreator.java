@@ -12,7 +12,8 @@ import bn.blaszczyk.rose.model.MemberType;
 
 public class JavaParserCreator {
 	
-	public static final String PARSE_METHOD = "setMember";
+	public static final String PARSE_METHOD = "parseMember";
+	public static final String SET_METHOD = "setMember";
 	public static final String SET_ENTITY_METHOD = "setEntity";
 	public static final String ADD_ENTITY_METHOD = "addEntity";
 	public static final String DEL_ENTITY_METHOD = "deleteEntity";
@@ -39,6 +40,7 @@ public class JavaParserCreator {
 			
 			// imports
 			writer.write("import java.text.ParseException;\n");
+			writer.write("import java.util.Date;\n");
 			if(!metadata.getModelpackage().equals(metadata.getParserpackage()))
 				writer.write("import " + metadata.getModelpackage() + ".*;\n");
 			if(entity.getImports().contains(MemberType.DATE.getJavapackage()))
@@ -49,7 +51,7 @@ public class JavaParserCreator {
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n");
 			
-			// setMember
+			// parseMember
 			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
 						+ ", String name, String value ) throws ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
@@ -73,6 +75,36 @@ public class JavaParserCreator {
 					break;
 				case BOOLEAN:
 					writer.write( "Boolean.parseBoolean( value )" ) ;
+				}
+				writer.write( " );\n\t\t\tbreak;\n" );
+			}			
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getClassname() + "\");\n" );
+			writer.write("\t\t}\n\t}\n\n");
+			
+			// setMember
+			writer.write("\tpublic static void " + SET_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
+						+ ", String name, Object value ) throws ParseException\n\t{\n" );
+			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
+			for(Member member : entity.getMembers())
+			{
+				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getSetterName(member) + "( " );
+				switch(member.getType())
+				{
+				case VARCHAR:
+				case CHAR:
+					writer.write( "value.toString()" );
+					break;
+				case INT:
+					writer.write( "(Integer) value" );
+					break;
+				case DATE:
+					writer.write( "(Date) value" );
+					break;
+				case NUMERIC:
+					writer.write( "(BigDecimal) value" );
+					break;
+				case BOOLEAN:
+					writer.write( "(Boolean) value" ) ;
 				}
 				writer.write( " );\n\t\t\tbreak;\n" );
 			}			

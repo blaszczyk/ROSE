@@ -4,17 +4,28 @@ import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class IntegerInputPanel extends AbstractInputPanel<Integer> implements KeyListener {
+public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> implements KeyListener {
+
+	private static final DecimalFormat BIG_DEC_FORMAT = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+	
+	static{
+		BIG_DEC_FORMAT.setParseBigDecimal(true);
+	}
 	
 	private final JLabel label = new JLabel();
 	private final JTextField textField = new JTextField();
 	
-	public IntegerInputPanel( String name, Integer defvalue )
+	public BigDecimalInputPanel( String name, BigDecimal defvalue )
 	{
 		
 		label.setText(name);
@@ -28,13 +39,20 @@ public class IntegerInputPanel extends AbstractInputPanel<Integer> implements Ke
 	}
 	
 	@Override
-	public Integer getValue()
+	public BigDecimal getValue()
 	{
-		return Integer.parseInt(textField.getText());
+		try
+		{
+			return (BigDecimal) BIG_DEC_FORMAT.parse(textField.getText());
+		}
+		catch (ParseException e)
+		{
+			return BigDecimal.ZERO;
+		}
 	}
 	
 	@Override
-	public void setValue(Integer value)
+	public void setValue(BigDecimal value)
 	{	
 		textField.setText("" + value);
 	}
@@ -57,11 +75,6 @@ public class IntegerInputPanel extends AbstractInputPanel<Integer> implements Ke
 		textField.removeActionListener(l);
 	}
 
-	private void shiftReverenceValue(int diff)
-	{
-		int newValue = getValue() + diff;
-		textField.setText( newValue + "" );
-	}	
 
 	/*
 	 * KeyListener Methods
@@ -69,16 +82,6 @@ public class IntegerInputPanel extends AbstractInputPanel<Integer> implements Ke
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		switch(e.getKeyCode())
-		{
-		case KeyEvent.VK_UP:
-			shiftReverenceValue(1);
-			break;
-		case KeyEvent.VK_DOWN:
-			shiftReverenceValue(-1);
-			break;
-		}
-		textField.requestFocusInWindow();
 	}
 
 	@Override
@@ -92,7 +95,7 @@ public class IntegerInputPanel extends AbstractInputPanel<Integer> implements Ke
 	{
 		textField.replaceSelection(null);
 		char c = e.getKeyChar();
-		if (!Character.isISOControl(c) && !Character.isDigit(c) && c!='-')
+		if (!Character.isISOControl(c) && !Character.isDigit(c) && !"-.,".contains("" + c) )
 		{
 			Toolkit.getDefaultToolkit().beep();
 			e.consume();

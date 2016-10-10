@@ -6,10 +6,11 @@
 package bn.blaszczyk.rose;
 
 import java.text.ParseException;
+import java.util.Date;
 
 public class MetaDataParser
 {
-	public static void setMember( MetaData metaData, String name, String value ) throws ParseException
+	public static void parseMember( MetaData metaData, String name, String value ) throws ParseException
 	{
 		switch( name.toLowerCase() )
 		{
@@ -54,6 +55,57 @@ public class MetaDataParser
 			break;
 		case "entitymodelfactoryclass":
 			metaData.setEntitymodelfactoryclass( value );
+			break;
+		default:
+			System.out.println( "Unknown Member: " + name + " in MetaData");
+		}
+	}
+
+	public static void setMember( MetaData metaData, String name, Object value ) throws ParseException
+	{
+		switch( name.toLowerCase() )
+		{
+		case "metadata_id":
+			metaData.setMetaData_id( (Integer) value );
+			break;
+		case "srcpath":
+			metaData.setSrcpath( value.toString() );
+			break;
+		case "sqlpath":
+			metaData.setSqlpath( value.toString() );
+			break;
+		case "usingforeignkeys":
+			metaData.setUsingForeignKeys( (Boolean) value );
+			break;
+		case "database":
+			metaData.setDatabase( value.toString() );
+			break;
+		case "modelpackage":
+			metaData.setModelpackage( value.toString() );
+			break;
+		case "usingannotations":
+			metaData.setUsingAnnotations( (Boolean) value );
+			break;
+		case "parserpackage":
+			metaData.setParserpackage( value.toString() );
+			break;
+		case "parserformat":
+			metaData.setParserformat( value.toString() );
+			break;
+		case "controllerpackage":
+			metaData.setControllerpackage( value.toString() );
+			break;
+		case "controllerclass":
+			metaData.setControllerclass( value.toString() );
+			break;
+		case "entitymodelpackage":
+			metaData.setEntitymodelpackage( value.toString() );
+			break;
+		case "entitymodelformat":
+			metaData.setEntitymodelformat( value.toString() );
+			break;
+		case "entitymodelfactoryclass":
+			metaData.setEntitymodelfactoryclass( value.toString() );
 			break;
 		default:
 			System.out.println( "Unknown Member: " + name + " in MetaData");

@@ -60,6 +60,9 @@ public class JavaEntityModelCreator {
 			// public int getId();
 			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + "." 
 							+ JavaModelCreator.getGetterName(entity.getPrimary()) + "();\n\t}\n\n");
+
+			//public Object getEntity();
+			writer.write("\t@Override\n\tpublic Object getEntity()\n\t{\n\t\treturn " + entity.getJavaname() + ";\n\t}\n\n");
 			
 			// public int getMemberCount();
 			writer.write("\t@Override\n\tpublic int getMemberCount()\n\t{\n\t\treturn " + entity.getMembers().size() + ";\n\t}\n\n");
