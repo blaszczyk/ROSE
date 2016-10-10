@@ -11,23 +11,9 @@ import bn.blaszczyk.rose.interfaces.MyPanel;
 import bn.blaszczyk.rose.interfaces.EntityModel;
 
 @SuppressWarnings("serial")
-public class BasicPanel extends JPanel implements MyPanel {
+public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
 
-	private static final int LBL_HEIGHT = 30;
-	private static final int H_SPACING = 10;
-	private static final int V_SPACING = 10;
-	
-	private static final int PROPERTY_WIDTH = 150;
-	private static final Font PROPERTY_FONT = new Font("Arial", Font.BOLD, 20);
-	private static final Color PROPERTY_BG = Color.BLACK;
-	private static final Color PROPERTY_FG = Color.RED;
-	
-	private static final int VALUE_WIDTH = 350;
-	private static final Font VALUE_FONT = new Font("Arial", Font.BOLD, 20);
-	private static final Color VALUE_BG = Color.BLACK;
-	private static final Color VALUE_FG = Color.GREEN;
-	
-	private static final Color BACKGROUND = Color.DARK_GRAY;
+
 	
 	private int width = 3 * H_SPACING + PROPERTY_WIDTH + VALUE_WIDTH;
 	private int height = V_SPACING;
@@ -38,7 +24,7 @@ public class BasicPanel extends JPanel implements MyPanel {
 	{
 //		this.entityModel = entityModel;
 		setLayout(null);
-		setBackground(BACKGROUND);
+		setBackground(BASIC_PNL_BACKGROUND);
 		for(int i = 0; i < entityModel.getMemberCount(); i++)
 			addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
 	}

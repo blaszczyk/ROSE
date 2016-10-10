@@ -25,11 +25,43 @@ public class JavaControllerCreator {
 			writer.write("package " + metadata.getControllerpackage() + ";\n\n");
 			
 			// imports
+			writer.write("import " + metadata.getParserpackage() + ".*;\n");
+			writer.write("import java.text.ParseException;\n");
 			writer.write("import " + metadata.getModelpackage() + ".*;\n"
 						+ "import bn.blaszczyk.rose.interfaces.*;" );
 			
 			// class declaration
-			writer.write("\npublic class " + metadata.getControllerclass() + " implements GUIController\n{\n");
+			writer.write("\npublic class " + metadata.getControllerclass() + " implements ModelController\n{\n\n");
+			
+			// implement methods
+			
+			//public void setMember( Object entity, String name, Object value);
+			writer.write("\t@Override\n\tpublic void setMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
+			for(Entity entity : entities)
+				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
+								+ JavaParserCreator.PARSE_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
+			writer.write("\n\t\t\treturn;\n\t}\n\n" );
+			
+			//public void setEntityMember( Object entity, String name, Object value);
+			writer.write("\t@Override\n\tpublic void setEntityMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
+			for(Entity entity : entities)
+				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
+								+ JavaParserCreator.SET_ENTITY_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
+			writer.write("\n\t\t\treturn;\n\t}\n\n" );
+			
+			//public void addEntityMember( Object entity, String name, Object value);
+			writer.write("\t@Override\n\tpublic void addEntityMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
+			for(Entity entity : entities)
+				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
+								+ JavaParserCreator.ADD_ENTITY_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
+			writer.write("\n\t\t\treturn;\n\t}\n\n" );
+			
+			//public void deleteEntityMember( Object entity, String name, Object value);
+			writer.write("\t@Override\n\tpublic void deleteEntityMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
+			for(Entity entity : entities)
+				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
+								+ JavaParserCreator.DEL_ENTITY_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
+			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

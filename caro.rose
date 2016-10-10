@@ -1,0 +1,49 @@
+set srcpath src/
+-set sqlpath sql/
+
+-set usingforeignkeys true
+-set database foo
+
+set modelpackage caro.model
+set usingannotations false
+
+-set controllerpackage caro.controller
+-set controllerclass BasicGUIControler
+
+set entitymodelpackage caro.entitymodels
+set entitymodelformat %sEntityModel
+set entitymodelfactoryclass EntityModelFactory
+
+begin entity Benutzer
+	vorname varchar(50) "Carolin"
+	nachname varchar(50) "Winkendick"
+end entity	
+
+begin entity Schicht
+	Name
+	Anfangs numeric(4,2)
+	PauseAnfang numeric(4,2)
+	PauseEnde numeric(4,2)
+	Ende numeric(4,2)
+end entity
+
+	
+begin entity Kalendar
+	name varchar(50) "MeinKalendar"
+	Benutzer
+end entity
+
+begin entity Woche
+	wochenZahl int 1
+	anfangsTag date
+	Kalendar
+end entity
+
+begin entity Arbeitstag
+	Name varchar(50) "Montag"
+	Woche
+	Schicht
+end entity
+	
+create javamodels
+create javaentitymodels

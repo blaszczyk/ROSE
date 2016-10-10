@@ -10,6 +10,32 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaModelCreator {
 
+	public static String getGetterName(Member member)
+	{
+		if(member.getType().equals(MemberType.BOOLEAN))
+			return "is" + member.getCapitalName();
+		return "get" + member.getCapitalName();
+	}
+	
+	public static String getSetterName(Member member)
+	{
+		return "set" + member.getCapitalName();
+	}
+
+	public static String getGetterName(EntityMember entityMember)
+	{
+		if(entityMember.isMany())
+			return "get" + entityMember.getCapitalName() + "s";
+		return "get" + entityMember.getCapitalName();
+	}
+	
+	public static String getSetterName(EntityMember entityMember)
+	{
+		if(entityMember.isMany())
+			return "set" + entityMember.getCapitalName() + "s";
+		return "set" + entityMember.getCapitalName();
+	}
+	
 	public static void create(Entity entity, MetaData metadata)
 	{
 		String fullpath = metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entity.getClassname() + ".java";
@@ -104,15 +130,11 @@ public class JavaModelCreator {
 			for(Member member : entity.getMembers())
 			{				
 				// getter
-				writer.write("\tpublic " + member.getType().getJavaname());
-				if(member.getType().equals(MemberType.BOOLEAN))
-					writer.write(" is");
-				else
-					writer.write(" get");
-				writer.write( member.getCapitalName() + "()\n\t{\n\t\treturn " + member.getName() + ";\n\t}\n" );
+				writer.write("\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
+							+ "()\n\t{\n\t\treturn " + member.getName() + ";\n\t}\n" );
 				
 				// setter
-				writer.write("\n\tpublic void set" + member.getCapitalName() + "( " + member.getType().getJavaname() + " " 
+				writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
 							+ member.getName() + " )\n\t{\n\t\tthis." + member.getName() + " = " + member.getName() + ";\n\t}\n\n" );
 			}
 
@@ -123,23 +145,22 @@ public class JavaModelCreator {
 				if(entityMember.isMany())
 				{
 					// getter
-					writer.write("\tpublic Set<" + entityMember.getEntity().getClassname() + "> get" + entityMember.getCapitalName() 
-								+ "s()\n\t{\n\t\treturn " + entityMember.getName() + "s;\n\t}\n" );
+					writer.write("\tpublic Set<" + entityMember.getEntity().getClassname() + "> " + getGetterName(entityMember)	+ "()\n\t{\n\t\treturn " + entityMember.getName() + "s;\n\t}\n" );
 				
 					// setter
-					writer.write("\n\tpublic void set" + entityMember.getCapitalName()
-					+ "s( Set<" + entityMember.getEntity().getClassname() + "> " + entityMember.getName() 
+					writer.write("\n\tpublic void " + getSetterName(entityMember) 
+					+ "( Set<" + entityMember.getEntity().getClassname() + "> " + entityMember.getName() 
 					+ "s )\n\t{\n\t\tthis." + entityMember.getName() + "s = " + entityMember.getName() + "s;\n\t}\n\n" );
 				}
 				// Singles
 				else
 				{
 					// getter
-					writer.write("\tpublic " + entityMember.getEntity().getClassname() + " get" + entityMember.getCapitalName() 
+					writer.write("\tpublic " + entityMember.getEntity().getClassname() + " " + getGetterName(entityMember) 
 								+ "()\n\t{\n\t\treturn " + entityMember.getName() + ";\n\t}\n" );
 					
 					// setter
-					writer.write("\n\tpublic void set" + entityMember.getCapitalName() + "( " + entityMember.getEntity().getClassname() 
+					writer.write("\n\tpublic void " + getSetterName(entityMember) + "( " + entityMember.getEntity().getClassname() 
 							+ " " 	+ entityMember.getName() + " )\n\t{\n\t\tthis." + entityMember.getName() + " = " 
 							+ entityMember.getName() + ";\n\t\t" + entityMember.getName() + ".get" + entityMember.getCouterpart().getCapitalName()
 							+ "s().add(this);\n\t}\n\n" );

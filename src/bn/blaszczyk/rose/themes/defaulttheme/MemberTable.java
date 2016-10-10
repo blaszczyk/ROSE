@@ -1,6 +1,8 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.*;
 import java.util.Date;
 import java.util.Locale;
@@ -92,6 +94,21 @@ public class MemberTable extends JTable implements MyPanel {
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		getTableHeader().setFont(HEADER_FONT);
 //		setRowSorter(sorter);
+		
+		addMouseListener( new MouseAdapter() 
+		{
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
+				{
+					int row = rowAtPoint( e.getPoint() );
+					GUIController.createFullPanelDialog(null, tableModel.getEntityModel(row));
+				}
+			}
+			
+		});
 		
 		setRowHeight(ODD_FONT.getSize() + 10);
 		

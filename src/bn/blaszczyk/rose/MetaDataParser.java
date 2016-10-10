@@ -5,12 +5,13 @@
 
 package bn.blaszczyk.rose;
 
+import java.text.ParseException;
 
 public class MetaDataParser
 {
-	public static void parseProperty( MetaData metaData, String property, String value )
+	public static void setMember( MetaData metaData, String name, String value ) throws ParseException
 	{
-		switch( property.toLowerCase() )
+		switch( name.toLowerCase() )
 		{
 		case "metadata_id":
 			metaData.setMetaData_id( Integer.parseInt( value ) );
@@ -33,6 +34,12 @@ public class MetaDataParser
 		case "usingannotations":
 			metaData.setUsingAnnotations( Boolean.parseBoolean( value ) );
 			break;
+		case "parserpackage":
+			metaData.setParserpackage( value );
+			break;
+		case "parserformat":
+			metaData.setParserformat( value );
+			break;
 		case "controllerpackage":
 			metaData.setControllerpackage( value );
 			break;
@@ -49,7 +56,35 @@ public class MetaDataParser
 			metaData.setEntitymodelfactoryclass( value );
 			break;
 		default:
-			System.out.println( "Unknown Property: " + property + " in MetaData");
+			System.out.println( "Unknown Member: " + name + " in MetaData");
 		}
 	}
+
+	public static void setEntity( MetaData metaData, String name, Object value ) throws ParseException
+	{
+		switch( name.toLowerCase() )
+		{
+		default:
+			System.out.println( "Unknown Single Entitymember: " + name + " in MetaData");
+		}
+	}
+
+	public static void addEntity( MetaData metaData, String name, Object value ) throws ParseException
+	{
+		switch( name.toLowerCase() )
+		{
+		default:
+			System.out.println( "Unknown Multiple Entitymember: " + name + " in MetaData");
+		}
+	}
+
+	public static void deleteEntity( MetaData metaData, String name, Object value ) throws ParseException
+	{
+		switch( name.toLowerCase() )
+		{
+		default:
+			System.out.println( "Unknown Multiple Entitymember: " + name + " in MetaData");
+		}
+	}
+
 }

@@ -13,26 +13,9 @@ import javax.swing.JPanel;
 import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")
-public class FullPanel extends JPanel implements MyPanel {
+public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 
-	private static final int H_SPACING = 10;
-	private static final int V_SPACING = 10;
-	
-	private static final int TITLE_WIDTH = 200;
-	private static final int TITLE_HEIGHT = 35;
-	private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 30);
-	private static final Color TITLE_BG = Color.WHITE;
-	private static final Color TITLE_FG = Color.RED;
-	
-	private static final int SUBTITLE_WIDTH = 200;
-	private static final int SUBTITLE_HEIGHT = 30;
-	private static final Font SUBTITLE_FONT = new Font("Arial", Font.BOLD, 25);
-	private static final Color SUBTITLE_BG = Color.CYAN;
-	private static final Color SUBTITLE_FG = Color.BLUE;
-	
-	private static final Color BACKGROUND = Color.LIGHT_GRAY;
-	
-	private static final int V_OFFSET = 20;	
+
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
 
@@ -40,7 +23,7 @@ public class FullPanel extends JPanel implements MyPanel {
 	public FullPanel( EntityModel entityModel )
 	{
 		setLayout(null);
-		setBackground(BACKGROUND);
+		setBackground(FULL_PNL_BACKGROUND);
 		addTitle( entityModel.getName() );
 		addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)

@@ -22,7 +22,7 @@ public class RoseParser {
 		{
 			split = scanner.nextLine().trim().split("\\s+");
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
-				MetaDataParser.parseProperty(metadata, split[1], split[2]);
+				MetaDataParser.setMember(metadata, split[1], split[2]);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
 				parseEntity(split[2],  entities, scanner);
 			else if(split.length > 1 && split[0].equalsIgnoreCase("create"))

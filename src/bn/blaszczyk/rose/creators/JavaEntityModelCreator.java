@@ -11,9 +11,19 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaEntityModelCreator {
 
+	public static String getEntityModelName(Entity entity, MetaData metadata)
+	{
+		return String.format( metadata.getEntitymodelformat() , entity.getClassname() );
+	}
+	
+	public static String getEntityFactoryName(MetaData metadata)
+	{
+		return metadata.getEntitymodelfactoryclass();
+	}
+	
 	public static void createModel(Entity entity, MetaData metadata)
 	{
-		String classname = String.format( metadata.getEntitymodelformat() , entity.getClassname() );
+		String classname = getEntityModelName(entity, metadata);
 		String fullpath = metadata.getSrcpath() + metadata.getEntitymodelpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		File file = new File(fullpath);
 		int count = 0;
@@ -48,7 +58,8 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic String getName()\n\t{\n\t\treturn \"" + entity.getClassname() + "\";\n\t}\n\n");
 			
 			// public int getId();
-			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + ".get" + entity.getPrimary().getCapitalName() + "();\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + "." 
+							+ JavaModelCreator.getGetterName(entity.getPrimary()) + "();\n\t}\n\n");
 			
 			// public int getMemberCount();
 			writer.write("\t@Override\n\tpublic int getMemberCount()\n\t{\n\t\treturn " + entity.getMembers().size() + ";\n\t}\n\n");
@@ -64,7 +75,7 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic Object getMemberValue(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + ".get" + member.getCapitalName() +  "();\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + "." + JavaModelCreator.getGetterName(member) +  "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public int getEntityCount();
@@ -74,8 +85,7 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + ".get" + entityMember.getCapitalName() 
-							+ ( entityMember.isMany() ? "s" : "" ) +  "();\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public String getEntityName( int index );
@@ -133,7 +143,7 @@ public class JavaEntityModelCreator {
 			writer.write("\n\tpublic static EntityModel createModel( Object object )\n\t{\n\t\t");
 			for(Entity entity : entities)
 				writer.write("if( object instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
-							+ String.format( metadata.getEntitymodelformat(), entity.getClassname() ) +  "( ( " + entity.getClassname() + " ) object );\n\t\telse " );
+							+ getEntityModelName(entity, metadata) +  "( ( " + entity.getClassname() + " ) object );\n\t\telse " );
 			writer.write("\n\t\t\treturn null;\n\t}\n" );
 		
 			writer.write("}\n");

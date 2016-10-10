@@ -22,13 +22,17 @@ public class MetaData
 
 	private Boolean usingAnnotations = false;
 
+	private String parserpackage = null;
+
+	private String parserformat = "%sParser";
+
 	private String controllerpackage = null;
 
-	private String controllerclass = "BasicControler";
+	private String controllerclass = "BasicController";
 
 	private String entitymodelpackage = null;
 
-	private String entitymodelformat = "$sEntityModel";
+	private String entitymodelformat = "%sEntityModel";
 
 	private String entitymodelfactoryclass = "EntityModelFactory";
 
@@ -37,7 +41,7 @@ public class MetaData
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
 	{
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
@@ -45,6 +49,8 @@ public class MetaData
 		this.database = database;
 		this.modelpackage = modelpackage;
 		this.usingAnnotations = usingAnnotations;
+		this.parserpackage = parserpackage;
+		this.parserformat = parserformat;
 		this.controllerpackage = controllerpackage;
 		this.controllerclass = controllerclass;
 		this.entitymodelpackage = entitymodelpackage;
@@ -120,6 +126,26 @@ public class MetaData
 	public void setUsingAnnotations( Boolean usingAnnotations )
 	{
 		this.usingAnnotations = usingAnnotations;
+	}
+
+	public String getParserpackage()
+	{
+		return parserpackage;
+	}
+
+	public void setParserpackage( String parserpackage )
+	{
+		this.parserpackage = parserpackage;
+	}
+
+	public String getParserformat()
+	{
+		return parserformat;
+	}
+
+	public void setParserformat( String parserformat )
+	{
+		this.parserformat = parserformat;
 	}
 
 	public String getControllerpackage()

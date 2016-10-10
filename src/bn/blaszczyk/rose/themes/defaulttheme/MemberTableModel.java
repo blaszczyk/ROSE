@@ -21,6 +21,11 @@ public class MemberTableModel implements TableModel {
 			first = entityModels.get(0);
 	}
 
+	public EntityModel getEntityModel(int row)
+	{
+		return entityModels.get(row);
+	}
+	
 	@Override
 	public int getRowCount()
 	{
@@ -71,5 +76,6 @@ public class MemberTableModel implements TableModel {
 	public void removeTableModelListener(TableModelListener l)
 	{
 	}
+
 	
 }

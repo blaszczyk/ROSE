@@ -4,11 +4,14 @@ set sqlpath sql/
 set usingforeignkeys true
 set database foo
 
-set modelpackage foo
+set modelpackage foo.model
 set usingannotations true
 
 set controllerpackage foo.controller
-set controllerclass BasicGUIControler
+set controllerclass BasicController
+
+set parserpackage foo.parser
+set parserformat %sParser
 
 set entitymodelpackage foo.entitymodels
 set entitymodelformat %sEntityModel
@@ -34,7 +37,8 @@ end entity
 
 create sqlcreate
 create javamodels
+create javaparser
 -create javabasicpanels
 -create javafullpanels
--create javacontroller
+create javacontroller
 create javaentitymodels

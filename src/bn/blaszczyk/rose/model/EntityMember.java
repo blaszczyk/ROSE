@@ -14,7 +14,7 @@ public class EntityMember {
 		this.many = many;
 		this.name = name;
 		if( name == null )
-			this.name = entity.getPrimary().getName();
+			this.name = entity.getJavaname();
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 	}
 	

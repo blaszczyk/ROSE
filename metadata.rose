@@ -1,5 +1,7 @@
 set usingannotations false
 set modelpackage bn.blaszczyk.rose
+set parserpackage bn.blaszczyk.rose
+set parserformat %sParser
 set srcpath src/
 
 begin entity MetaData
@@ -13,11 +15,14 @@ begin entity MetaData
 	modelpackage varchar(50) null
 	usingAnnotations tinyint false
 	
+	parserpackage varchar(50) null
+	parserformat varchar(50) "%sParser"
+	
 	controllerpackage varchar(50) null
-	controllerclass varchar(50) "BasicControler"
+	controllerclass varchar(50) "BasicController"
 	
 	entitymodelpackage varchar(50) null
-	entitymodelformat varchar(50) "$sEntityModel"
+	entitymodelformat varchar(50) "%sEntityModel"
 	entitymodelfactoryclass varchar(50) "EntityModelFactory"
 	
 end entity
