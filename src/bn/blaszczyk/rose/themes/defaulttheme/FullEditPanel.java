@@ -1,9 +1,6 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

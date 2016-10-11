@@ -1,8 +1,5 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;

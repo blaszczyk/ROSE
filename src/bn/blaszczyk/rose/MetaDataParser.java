@@ -6,7 +6,6 @@
 package bn.blaszczyk.rose;
 
 import java.text.ParseException;
-import java.util.Date;
 
 public class MetaDataParser
 {

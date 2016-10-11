@@ -1,15 +1,11 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import bn.blaszczyk.rose.interfaces.MyPanel;
 import bn.blaszczyk.rose.themes.defaulttheme.inputpanels.*;

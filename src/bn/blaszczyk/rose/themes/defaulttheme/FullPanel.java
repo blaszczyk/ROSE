@@ -1,7 +1,5 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

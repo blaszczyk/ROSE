@@ -9,8 +9,6 @@ import java.util.List;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EntityMember;
-import bn.blaszczyk.rose.model.Member;
 
 public class HibernateCreator {
 
