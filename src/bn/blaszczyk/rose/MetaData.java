@@ -6,7 +6,7 @@
 package bn.blaszczyk.rose;
 
 
-public class MetaData
+public class MetaData implements Comparable<MetaData>
 {
 	private Integer metaData_id = 0;
 
@@ -261,6 +261,12 @@ public class MetaData
 	public void setEntitymodelfactoryclass( String entitymodelfactoryclass )
 	{
 		this.entitymodelfactoryclass = entitymodelfactoryclass;
+	}
+
+	@Override
+	public int compareTo(MetaData that)
+	{
+		return Integer.compare( this.getMetaData_id(), that.getMetaData_id() );
 	}
 
 }

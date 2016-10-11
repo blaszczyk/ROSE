@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EntityMember;
 import bn.blaszczyk.rose.model.Member;
@@ -15,6 +16,7 @@ public class SQLCreator {
 	
 	public static void create(List<Entity> entities, MetaData metadata)
 	{
+		DBType dbType = DBType.getType(metadata.getDbtype());
 		String fullpath = metadata.getSqlpath() + "createtables.sql";
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
@@ -25,12 +27,20 @@ public class SQLCreator {
 			
 			if(metadata.getDbname() != null)
 				writer.write("use " + metadata.getDbname() +"\ngo\n\n" );
-	
+//SELECT * FROM information_schema.tables	
 			for(int i = entities.size() - 1; i >= 0; i-- )
-				writer.write("if exists (select count(*) from " + entities.get(i).getClassname() + ")\n\tdelete table " + entities.get(i).getClassname() + ";\ngo\n\n");
-
+			{
+				switch(dbType)
+				{
+				case MYSQL:
+					writer.write("if exists (select * from information_schema.tables where table_schema = '" 
+								+ metadata.getDbname() + "' and table_name = '" + entities.get(i).getClassname() + "')\n");
+					break;
+				}
+				writer.write("\tdelete table " + entities.get(i).getClassname() + ";\ngo\n\n");
+			}
 			for(Entity entity : entities)
-				createTable(entity, metadata, writer);
+				createTable(entity, metadata, dbType, writer);
 			System.out.println( "File created: " + fullpath);
 		}
 		catch (IOException e)
@@ -39,7 +49,7 @@ public class SQLCreator {
 		}
 	}
 	
-	private static void createTable(Entity entity, MetaData metadata, Writer writer) throws IOException
+	private static void createTable(Entity entity, MetaData metadata, DBType dbType, Writer writer) throws IOException
 	{
 		// create table
 		writer.write( "create table " + entity.getClassname() + "\n(\n" );
@@ -49,7 +59,12 @@ public class SQLCreator {
 		{
 			writer.write( "\t" + member.getName() + " " + member.getSqltype());
 			if(member.isPrimary())
-				writer.write( " auto_increment");
+				switch(dbType)
+				{
+				case MYSQL:
+					writer.write( " auto_increment");
+					break;
+				}
 			writer.write(",\n");
 		}
 		

@@ -66,7 +66,7 @@ public class Entity {
 		if(entitymember.isMany())
 		{
 			imports.add("java.util.Set");
-			imports.add("java.util.HashSet");
+			imports.add("java.util.TreeSet");
 		}
 		else
 		{

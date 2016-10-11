@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
+import foo.model.Bar;
 
 
 public class JavaModelCreator {
@@ -62,7 +63,7 @@ public class JavaModelCreator {
 				writer.write("\n@Entity\n@Table(name=\"" + entity.getClassname() + "\")");
 			
 			// class declaration
-			writer.write("\npublic class " + entity.getClassname() + "\n{");
+			writer.write("\npublic class " + entity.getClassname() + " implements Comparable<" + entity.getClassname() + ">\n{");
 			
 			// member variables
 			for(Member member : entity.getMembers())
@@ -96,7 +97,7 @@ public class JavaModelCreator {
 						writer.write("\n\t@ManyToOne\n\t@JoinColumn(name=\"" + entitymember.getName() + "\")" );
 				}
 				if(entitymember.isMany())
-					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new HashSet<>();\n");
+					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new TreeSet<>();\n");
 				else
 					writer.write("\n\tprivate " + entitymember.getEntity().getClassname() + " " + entitymember.getName() + ";\n");
 			}
@@ -166,6 +167,11 @@ public class JavaModelCreator {
 							+ "s().add(this);\n\t}\n\n" );
 				}
 			}
+			
+			// Comparable.compareto
+			writer.write("\t@Override\n\tpublic int compareTo(" + entity.getClassname() + " that)\n\t{\n"
+					+ "\t\treturn Integer.compare( this." + getGetterName(entity.getPrimary()) + "(), that." + getGetterName(entity.getPrimary()) + "() );\n"
+					+ "\t}\n\n");
 			// TODO? toString, equals, hashValue	
 			// fin
 			writer.write("}\n");
