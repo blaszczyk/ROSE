@@ -15,6 +15,7 @@ src/foo/
 src/bar/
 src/foobar/
 src/caro/
+src/hibernate.cfg.xml
 sql/
 
 #

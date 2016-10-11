@@ -16,7 +16,17 @@ public class MetaData
 
 	private Boolean usingForeignKeys = false;
 
-	private String database = null;
+	private String dbtype = "mysql";
+
+	private String dbuser = "root";
+
+	private String dbpassword = "";
+
+	private String dbserver = "localhost";
+
+	private String dbport = "3306";
+
+	private String dbname = "MyDB";
 
 	private String modelpackage = null;
 
@@ -41,12 +51,17 @@ public class MetaData
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String database, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
 	{
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
 		this.usingForeignKeys = usingForeignKeys;
-		this.database = database;
+		this.dbtype = dbtype;
+		this.dbuser = dbuser;
+		this.dbpassword = dbpassword;
+		this.dbserver = dbserver;
+		this.dbport = dbport;
+		this.dbname = dbname;
 		this.modelpackage = modelpackage;
 		this.usingAnnotations = usingAnnotations;
 		this.parserpackage = parserpackage;
@@ -98,14 +113,64 @@ public class MetaData
 		this.usingForeignKeys = usingForeignKeys;
 	}
 
-	public String getDatabase()
+	public String getDbtype()
 	{
-		return database;
+		return dbtype;
 	}
 
-	public void setDatabase( String database )
+	public void setDbtype( String dbtype )
 	{
-		this.database = database;
+		this.dbtype = dbtype;
+	}
+
+	public String getDbuser()
+	{
+		return dbuser;
+	}
+
+	public void setDbuser( String dbuser )
+	{
+		this.dbuser = dbuser;
+	}
+
+	public String getDbpassword()
+	{
+		return dbpassword;
+	}
+
+	public void setDbpassword( String dbpassword )
+	{
+		this.dbpassword = dbpassword;
+	}
+
+	public String getDbserver()
+	{
+		return dbserver;
+	}
+
+	public void setDbserver( String dbserver )
+	{
+		this.dbserver = dbserver;
+	}
+
+	public String getDbport()
+	{
+		return dbport;
+	}
+
+	public void setDbport( String dbport )
+	{
+		this.dbport = dbport;
+	}
+
+	public String getDbname()
+	{
+		return dbname;
+	}
+
+	public void setDbname( String dbname )
+	{
+		this.dbname = dbname;
 	}
 
 	public String getModelpackage()

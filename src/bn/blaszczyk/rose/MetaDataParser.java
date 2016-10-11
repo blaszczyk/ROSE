@@ -26,8 +26,23 @@ public class MetaDataParser
 		case "usingforeignkeys":
 			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
 			break;
-		case "database":
-			metaData.setDatabase( value );
+		case "dbtype":
+			metaData.setDbtype( value );
+			break;
+		case "dbuser":
+			metaData.setDbuser( value );
+			break;
+		case "dbpassword":
+			metaData.setDbpassword( value );
+			break;
+		case "dbserver":
+			metaData.setDbserver( value );
+			break;
+		case "dbport":
+			metaData.setDbport( value );
+			break;
+		case "dbname":
+			metaData.setDbname( value );
 			break;
 		case "modelpackage":
 			metaData.setModelpackage( value );
@@ -77,8 +92,23 @@ public class MetaDataParser
 		case "usingforeignkeys":
 			metaData.setUsingForeignKeys( (Boolean) value );
 			break;
-		case "database":
-			metaData.setDatabase( value.toString() );
+		case "dbtype":
+			metaData.setDbtype( value.toString() );
+			break;
+		case "dbuser":
+			metaData.setDbuser( value.toString() );
+			break;
+		case "dbpassword":
+			metaData.setDbpassword( value.toString() );
+			break;
+		case "dbserver":
+			metaData.setDbserver( value.toString() );
+			break;
+		case "dbport":
+			metaData.setDbport( value.toString() );
+			break;
+		case "dbname":
+			metaData.setDbname( value.toString() );
 			break;
 		case "modelpackage":
 			metaData.setModelpackage( value.toString() );

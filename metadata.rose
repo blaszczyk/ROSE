@@ -10,7 +10,12 @@ begin entity MetaData
 	sqlpath varchar(50) "sql/"
 	
 	usingForeignKeys tinyint false
-	database varchar(50) null
+	dbtype varchar(50) "mysql"
+	dbuser varchar(50) "root"
+	dbpassword varchar(50) ""
+	dbserver varchar(50) "localhost"
+	dbport char(5) "3306"
+	dbname varchar(50) "MyDB"
 	
 	modelpackage varchar(50) null
 	usingAnnotations tinyint false

@@ -2,7 +2,12 @@ set srcpath src/
 set sqlpath sql/
 
 set usingforeignkeys true
-set database foo
+set dbtype mysql
+set dbuser root
+-set dbpassword 
+set dbserver localhost
+set dbport 3306
+set dbname foo
 
 set modelpackage foo.model
 set usingannotations true
@@ -36,9 +41,8 @@ begin entity FooBar
 end entity
 
 create sqlcreate
+create hibernate
 create javamodels
 create javaparser
--create javabasicpanels
--create javafullpanels
 create javacontroller
 create javaentitymodels

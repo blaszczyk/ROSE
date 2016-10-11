@@ -37,6 +37,9 @@ public class RoseParser {
 		case "sqlcreate":
 			SQLCreator.create(entities, metadata);
 			break;
+		case "hibernate":
+			HibernateCreator.create(entities, metadata);
+			break;
 		case "javamodels":
 			for(Entity entity : entities)
 				JavaModelCreator.create(entity, metadata);
@@ -58,11 +61,6 @@ public class RoseParser {
 			System.out.println( "Unknown Agrument: create " + filetype );
 				
 		}
-	}
-
-	private static void parseMetaData(MetaData metadata, String property, String value)
-	{
-		
 	}
 	
 	private static void parseEntity(String sqlname, List<Entity> entities, Scanner scanner) throws ParseException
