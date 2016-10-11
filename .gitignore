@@ -7,6 +7,12 @@
 *.ear
 
 #
+# Test Files
+#
+test.*
+caro.*
+
+#
 # Generated Files
 #
 
