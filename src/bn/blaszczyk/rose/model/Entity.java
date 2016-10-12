@@ -63,28 +63,24 @@ public class Entity {
 	public void addEntityMember(EntityMember entitymember)
 	{
 		entitymembers.add(entitymember);
-		if(entitymember.getType().isSecondMany())
+		switch(entitymember.getType())
 		{
-			imports.add("java.util.Set");
-			imports.add("java.util.TreeSet");
-		}
-		else
-		{
+		case ONETOONE:
+			break;
+		case MANYTOONE:
 			EntityMember counterpart = new EntityMember(this, entitymember.getType().getInverse() , getJavaname());
 			counterpart.setCouterpart(entitymember);
 			entitymember.setCouterpart(counterpart);
 			entitymember.getEntity().addEntityMember( counterpart );
+			break;
+		case ONETOMANY:
+			imports.add("java.util.Set");
+			imports.add("java.util.TreeSet");
+			break;
+		default:
+			break;
 		}
 	}
-	
-//	public void setPrimaryKey(String membername)
-//	{
-//		for(Member member : members)
-//			if(membername.toLowerCase().contains(member.getSqlname().toLowerCase()))
-//				member.setPrimary(true);
-//			else
-//				member.setPrimary(false);
-//	}
 	
 	public Set<String> getImports()
 	{

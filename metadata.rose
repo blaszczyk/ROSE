@@ -9,7 +9,7 @@ begin entity MetaData
 	srcpath varchar(50) "src/"
 	sqlpath varchar(50) "sql/"
 	
-	usingForeignKeys tinyint false
+	usingForeignKeys boolean false
 	dbtype varchar(50) "mysql"
 	dbuser varchar(50) "root"
 	dbpassword varchar(50) ""
@@ -18,7 +18,7 @@ begin entity MetaData
 	dbname varchar(50) "MyDB"
 	
 	modelpackage varchar(50) null
-	usingAnnotations tinyint false
+	usingAnnotations boolean false
 	
 	parserpackage varchar(50) null
 	parserformat varchar(50) "%sParser"

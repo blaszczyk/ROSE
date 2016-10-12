@@ -22,11 +22,18 @@ set entitymodelpackage foo.entitymodels
 set entitymodelformat %sEntityModel
 set entitymodelfactoryclass EntityModelFactory
 
+begin entity FooProp
+	prop1 varchar(40) "Prop1"
+	prop2 varchar(40) "Prop2"
+	prop3 varchar(40) "Prop3"
+end entity
+
 begin entity Foo
 	fooVarchar varchar(50) null
 	fooDate date 
 	fooNumeric numeric(9,2) 1234567.89
 	fooChar char(5) "foo"
+	onetoone FooProp
 end entity
 
 begin entity Bar

@@ -6,9 +6,7 @@ public enum MemberType {
 	INT("int","Integer","0","%s"),
 	DATE("date","Date"," ","new Date(%s)","java.util.Date"),
 	NUMERIC("numeric","BigDecimal","0","new BigDecimal(%s)","java.math.BigDecimal"),
-	BOOLEAN("tinyint","Boolean","false","%s");
-// works like this:
-//	@Column(columnDefinition = "TINYINT(1)")
+	BOOLEAN("boolean","Boolean","false","%s");
 	
 	private String sqlname;
 	private String javaname;

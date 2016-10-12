@@ -174,8 +174,10 @@ public class JavaModelCreator {
 					// setter
 					writer.write("\n\tpublic void " + getSetterName(entityMember) + "( " + entityMember.getEntity().getClassname() 
 							+ " " 	+ entityMember.getName() + " )\n\t{\n\t\tthis." + entityMember.getName() + " = " 
-							+ entityMember.getName() + ";\n\t\t" + entityMember.getName() + ".get" + entityMember.getCouterpart().getCapitalName()
-							+ "s().add(this);\n\t}\n\n" );
+							+ entityMember.getName() + ";\n");
+					if(entityMember.getType().isFirstMany())
+					writer.write("\t\t" + entityMember.getName() + "." + getGetterName(entityMember.getCouterpart()) + "().add(this);\n");
+					writer.write("\t}\n\n" );
 				}
 			}
 			

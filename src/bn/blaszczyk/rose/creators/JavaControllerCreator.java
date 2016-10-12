@@ -55,13 +55,16 @@ public class JavaControllerCreator {
 				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
 								+ JavaParserCreator.ADD_ENTITY_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
-			
+
 			//public void deleteEntityMember( Object entity, String name, Object value);
 			writer.write("\t@Override\n\tpublic void deleteEntityMember( Object entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\t" + JavaParserCreator.getParserName(entity, metadata) + "." 
 								+ JavaParserCreator.DEL_ENTITY_METHOD +   "( ( " + entity.getClassname() + " ) entity, name, value.toString() );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
+			
+			//public void commit();
+			writer.write("\t@Override\n\tpublic void commit()\n\t{\n\t}\n\n" );
 			
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

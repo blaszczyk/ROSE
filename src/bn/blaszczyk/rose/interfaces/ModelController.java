@@ -8,5 +8,6 @@ public interface ModelController {
 	public void setEntityMember( Object entity, String name, Object value) throws ParseException;
 	public void addEntityMember( Object entity, String name, Object value) throws ParseException;
 	public void deleteEntityMember( Object entity, String name, Object value) throws ParseException;
+	public void commit();
 	
 }

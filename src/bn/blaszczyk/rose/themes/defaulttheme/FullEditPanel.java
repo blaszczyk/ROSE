@@ -108,16 +108,6 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		computeDimensions(SUBTITLE_HEIGHT + V_OFFSET, 100);
 	}
 	
-//	private void addMemberTable( List<EntityModel> entityModels )
-//	{
-//		MemberTableModel tableModel = new MemberTableModel(entityModels);
-//		MemberTable table = new MemberTable( tableModel );
-//		JPanel panel = table.getPanel();
-//		panel.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
-//		add(panel);
-//		computeDimensions( panel.getHeight(), panel.getWidth() );
-//	}
-	
 	private void save()
 	{
 		for(int i = 0; i < entityModel.getMemberCount(); i++ )
@@ -131,6 +121,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 				e.printStackTrace();
 			}
 		}
+		controller.commit();
 	}
 	
 	private void computeDimensions( int height, int width )
