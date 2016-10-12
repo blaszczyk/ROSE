@@ -14,7 +14,7 @@ public interface EntityModel {
 	public int getEntityCount();
 	public Object getEntityMember( int index );
 	public String getEntityName( int index );
-	public boolean isEntityMany( int index );
+	public RelationType getRelationType( int index );
 	
 	// to create instances is Factory
 	public EntityModel createModel( Object object);

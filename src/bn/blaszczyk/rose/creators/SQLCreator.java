@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.interfaces.RelationType;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EntityMember;
@@ -70,7 +71,7 @@ public class SQLCreator {
 		
 		// relational columns
 		for(EntityMember entityMember : entity.getEntityMembers())
-			if(!entityMember.isMany())
+			if(!entityMember.getType().isSecondMany())
 				writer.write( "\t" + entityMember.getName() + " " 
 							+ entityMember.getEntity().getPrimary().getSqltype() + ",\n" );
 		
@@ -91,7 +92,7 @@ public class SQLCreator {
 		//foreign keys
 		if(metadata.isUsingForeignKeys())
 			for(EntityMember entityMember : entity.getEntityMembers())
-				if(!entityMember.isMany())
+				if(entityMember.getType() == RelationType.MANYTOONE)
 					writer.write( ",\n\tconstraint fk_" + entity.getClassname().toLowerCase() + "_" + entityMember.getEntity().getClassname().toLowerCase()
 								+ " foreign key ( " + entityMember.getName() + " ) references "
 								+ entityMember.getEntity().getClassname() + "( " + entityMember.getEntity().getPrimary().getName() + " )");

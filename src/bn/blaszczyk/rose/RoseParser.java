@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import bn.blaszczyk.rose.creators.*;
+import bn.blaszczyk.rose.interfaces.RelationType;
 import bn.blaszczyk.rose.model.*;
 
 public class RoseParser {
@@ -67,6 +68,7 @@ public class RoseParser {
 	{
 		Entity entity = new Entity(sqlname);
 		Entity subentity;
+		RelationType type;
 		String line;
 		String[] split;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
@@ -77,10 +79,10 @@ public class RoseParser {
 					entity.addMember(new Member(split[0], split[1], split[2],false));
 				else
 					entity.addMember(new Member(split[0], split[1],false));
-			else if( split.length == 1 && ( subentity = getEntityType(split[0], entities) ) != null )
-				entity.addEntityMember(new EntityMember(subentity, null, false));
-			else if( split.length > 1 && ( subentity = getEntityType(split[1], entities) ) != null )
-				entity.addEntityMember(new EntityMember(subentity, split[0], false));
+			else if( split.length == 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )
+				entity.addEntityMember(new EntityMember(subentity, type, null));
+			else if( split.length > 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )
+				entity.addEntityMember(new EntityMember(subentity, type, split[2]));
 			else if( split.length > 1 )
 				System.out.println("Invalid Member: " + line);
 		}
@@ -94,12 +96,20 @@ public class RoseParser {
 				return true;
 		return false;
 	}
-	
+
 	private static Entity getEntityType(String classname, List<Entity> entities)
 	{
 		for(Entity entity : entities)
 			if( entity.getClassname().equalsIgnoreCase( classname ) )
 				return entity;
+		return null;
+	}
+	
+	private static RelationType getRelationType(String typeName)
+	{
+		for( RelationType type : RelationType.values() )
+			if(type.getName().equalsIgnoreCase(typeName))
+				return type;
 		return null;
 	}
 }

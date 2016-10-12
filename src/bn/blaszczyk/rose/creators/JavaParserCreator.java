@@ -116,7 +116,7 @@ public class JavaParserCreator {
 						+ ", String name, Object value ) throws ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
-				if( !entityMember.isMany() )
+				if( !entityMember.getType().isSecondMany() )
 				{
 					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
 							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"
@@ -133,7 +133,7 @@ public class JavaParserCreator {
 						+ ", String name, Object value ) throws ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.isMany() )
+				if( entityMember.getType().isSecondMany() )
 				{
 					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
 							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"
@@ -150,7 +150,7 @@ public class JavaParserCreator {
 						+ ", String name, Object value ) throws ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.isMany() )
+				if( entityMember.getType().isSecondMany() )
 				{
 					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
 							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"

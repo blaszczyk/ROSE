@@ -63,14 +63,14 @@ public class Entity {
 	public void addEntityMember(EntityMember entitymember)
 	{
 		entitymembers.add(entitymember);
-		if(entitymember.isMany())
+		if(entitymember.getType().isSecondMany())
 		{
 			imports.add("java.util.Set");
 			imports.add("java.util.TreeSet");
 		}
 		else
 		{
-			EntityMember counterpart = new EntityMember(this, getJavaname(), true);
+			EntityMember counterpart = new EntityMember(this, entitymember.getType().getInverse() , getJavaname());
 			counterpart.setCouterpart(entitymember);
 			entitymember.setCouterpart(counterpart);
 			entitymember.getEntity().addEntityMember( counterpart );

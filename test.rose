@@ -32,12 +32,12 @@ end entity
 begin entity Bar
 	barVarchar varchar(20) "bar"
 	barInt int 45
-	Foo
+	manytoone Foo
 end entity
 
 begin entity FooBar
-	Foo
-	myBar Bar
+	manytoone Foo
+	manytoone Bar myBar
 end entity
 
 create sqlcreate

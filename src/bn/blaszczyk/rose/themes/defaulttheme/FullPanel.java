@@ -31,7 +31,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		{
 			if( entityModel.getEntityMember(i) == null )
 				continue;
-			else if( entityModel.isEntityMany(i))
+			else if( entityModel.getRelationType(i).isSecondMany())
 			{
 				List<EntityModel> entityModels = new ArrayList<>();
 				Set<?> objects =  (Set<?>) entityModel.getEntityMember(i);

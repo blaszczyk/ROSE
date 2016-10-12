@@ -3,9 +3,7 @@ package bn.blaszczyk.rose.themes.defaulttheme;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.*;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.*;
 import javax.swing.table.*;
@@ -13,24 +11,9 @@ import javax.swing.table.*;
 import bn.blaszczyk.rose.interfaces.MyPanel;
 
 @SuppressWarnings("serial")
-public class MemberTable extends JTable implements MyPanel {
+public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 
-	private static final int CELL_WIDTH = 100;
 
-	private static final DateFormat  DATE_FORMAT = new SimpleDateFormat("dd.MM.YY");
-	private static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
-	private static final NumberFormat DOUBLE_FORMAT = new DecimalFormat("0.000",DecimalFormatSymbols.getInstance(Locale.GERMAN));
-	
-	private static final Color ODD_BG = Color.DARK_GRAY;
-	private static final Color ODD_FG = Color.RED;
-	private static final Font ODD_FONT = new Font("Arial",Font.PLAIN,16);
-	
-	private static final Color EVEN_BG = Color.BLACK;
-	private static final Color EVEN_FG = Color.GREEN;
-	private static final Font EVEN_FONT = new Font("Arial",Font.PLAIN,16);
-
-	private static final Font HEADER_FONT = new Font("Arial",Font.BOLD,16);
-	private static final Color HEADER_BG = Color.LIGHT_GRAY;
 	
 	/*
 	 * Custom Cell Renderer
@@ -121,13 +104,13 @@ public class MemberTable extends JTable implements MyPanel {
 	@Override
 	public int getWidth()
 	{
-		return 5 * CELL_WIDTH + 16;
+		return Math.max(getColumnCount()* CELL_WIDTH + 16, TABLE_WIDTH);
 	}
 
 	@Override
 	public int getHeight()
 	{
-		return 150;
+		return Math.min( (getRowCount()+1) * CELL_HEIGTH + 6, TABLE_HEIGHT);
 	}
 	
 	@Override
@@ -147,7 +130,7 @@ public class MemberTable extends JTable implements MyPanel {
 	{
 		for(int i = 0 ; i < this.getColumnCount(); i++)
 		{
-			int width = CELL_WIDTH;
+			int width = Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
 			if( width >= 0 )
 			{
 				getColumnModel().getColumn(i).setPreferredWidth(width);

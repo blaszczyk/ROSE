@@ -95,15 +95,15 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic String getEntityName(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.isMany() ? "s" : "" ) +  "\";\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.getType().isSecondMany() ? "s" : "" ) +  "\";\n" );
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
 			
-			// public boolean isEntityMany( int index );			
-			writer.write("\t@Override\n\tpublic boolean isEntityMany(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public RelationType getRelationType( int index );			
+			writer.write("\t@Override\n\tpublic RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityMember.isMany() + ";\n" );
-			writer.write("\t\t}\n\t\treturn false;\n\t}\n\n");
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
+			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
 			// public EntityModel createModel( Object object);
 			writer.write("\t@Override\n\tpublic EntityModel createModel( Object object )\n\t{\n\t\treturn " 

@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
-import foo.model.Bar;
 
 
 public class JavaModelCreator {
@@ -25,14 +24,14 @@ public class JavaModelCreator {
 
 	public static String getGetterName(EntityMember entityMember)
 	{
-		if(entityMember.isMany())
+		if(entityMember.getType().isSecondMany())
 			return "get" + entityMember.getCapitalName() + "s";
 		return "get" + entityMember.getCapitalName();
 	}
 	
 	public static String getSetterName(EntityMember entityMember)
 	{
-		if(entityMember.isMany())
+		if(entityMember.getType().isSecondMany())
 			return "set" + entityMember.getCapitalName() + "s";
 		return "set" + entityMember.getCapitalName();
 	}
@@ -91,12 +90,24 @@ public class JavaModelCreator {
 			{
 				if(metadata.isUsingAnnotations())
 				{
-					if(entitymember.isMany())
+					switch (entitymember.getType())
+					{
+					case ONETOONE:
+						
+						break;
+					case ONETOMANY:
 						writer.write("\n\t@OneToMany(mappedBy=\"" + entitymember.getCouterpart().getName() + "\")");
-					else
+						break;
+					case MANYTOONE:
 						writer.write("\n\t@ManyToOne\n\t@JoinColumn(name=\"" + entitymember.getName() + "\")" );
+						
+						break;
+					case MANYTOMANY:
+						
+						break;
+					}
 				}
-				if(entitymember.isMany())
+				if(entitymember.getType().isSecondMany())
 					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new TreeSet<>();\n");
 				else
 					writer.write("\n\tprivate " + entitymember.getEntity().getClassname() + " " + entitymember.getName() + ";\n");
@@ -143,7 +154,7 @@ public class JavaModelCreator {
 			for(EntityMember entityMember : entity.getEntityMembers())
 			{
 				// for Lists
-				if(entityMember.isMany())
+				if(entityMember.getType().isSecondMany())
 				{
 					// getter
 					writer.write("\tpublic Set<" + entityMember.getEntity().getClassname() + "> " + getGetterName(entityMember)	+ "()\n\t{\n\t\treturn " + entityMember.getName() + "s;\n\t}\n" );
