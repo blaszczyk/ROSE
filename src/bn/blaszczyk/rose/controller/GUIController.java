@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.rose.controller;
 
 import java.awt.Dialog.ModalityType;
 import java.awt.Window;
@@ -7,8 +7,9 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import bn.blaszczyk.rose.interfaces.EntityModel;
-import bn.blaszczyk.rose.interfaces.ModelController;
 import bn.blaszczyk.rose.interfaces.MyPanel;
+import bn.blaszczyk.rose.themes.defaulttheme.FullEditPanel;
+import bn.blaszczyk.rose.themes.defaulttheme.FullPanel;
 
 public class GUIController {
 

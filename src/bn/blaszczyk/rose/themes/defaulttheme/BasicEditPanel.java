@@ -1,6 +1,7 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.swing.JPanel;
 
 import bn.blaszczyk.rose.interfaces.MyPanel;
 import bn.blaszczyk.rose.themes.defaulttheme.inputpanels.*;
+import bn.blaszczyk.rose.controller.ModelController;
 import bn.blaszczyk.rose.interfaces.EntityModel;
 import bn.blaszczyk.rose.interfaces.InputPanel;
 
@@ -51,11 +53,19 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		height += LBL_HEIGHT + V_SPACING;
 	}
 	
-	public InputPanel<?> getPanel( int index )
+	public void save(ModelController controller)
 	{
-		return panels.get(index);
+		for(int i = 0 ; i < entityModel.getMemberCount(); i++ )
+			try
+			{
+				controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
+			}
+			catch (ParseException e)
+			{
+				e.printStackTrace();
+			}
 	}
-
+	
 	@Override
 	public int getWidth()
 	{

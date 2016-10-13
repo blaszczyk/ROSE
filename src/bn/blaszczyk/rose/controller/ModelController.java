@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.interfaces;
+package bn.blaszczyk.rose.controller;
 
 import java.text.ParseException;
 

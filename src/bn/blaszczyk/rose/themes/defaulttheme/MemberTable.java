@@ -8,6 +8,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.*;
 
+import bn.blaszczyk.rose.controller.GUIController;
 import bn.blaszczyk.rose.interfaces.MyPanel;
 
 @SuppressWarnings("serial")

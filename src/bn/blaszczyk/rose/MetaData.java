@@ -6,9 +6,9 @@
 package bn.blaszczyk.rose;
 
 
-public class MetaData implements Comparable<MetaData>
+public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable<MetaData>
 {
-	private Integer metaData_id = 0;
+	private Integer id = 0;
 
 	private String srcpath = "src/";
 
@@ -73,15 +73,19 @@ public class MetaData implements Comparable<MetaData>
 		this.entitymodelfactoryclass = entitymodelfactoryclass;
 	}
 
-	public Integer getMetaData_id()
+
+	@Override
+	public Integer getId()
 	{
-		return metaData_id;
+		return id;
 	}
 
-	public void setMetaData_id( Integer metaData_id )
+	@Override
+	public void setId( Integer metaData_id )
 	{
-		this.metaData_id = metaData_id;
+		this.id = metaData_id;
 	}
+
 
 	public String getSrcpath()
 	{
@@ -93,6 +97,7 @@ public class MetaData implements Comparable<MetaData>
 		this.srcpath = srcpath;
 	}
 
+
 	public String getSqlpath()
 	{
 		return sqlpath;
@@ -102,6 +107,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.sqlpath = sqlpath;
 	}
+
 
 	public Boolean isUsingForeignKeys()
 	{
@@ -113,6 +119,7 @@ public class MetaData implements Comparable<MetaData>
 		this.usingForeignKeys = usingForeignKeys;
 	}
 
+
 	public String getDbtype()
 	{
 		return dbtype;
@@ -122,6 +129,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.dbtype = dbtype;
 	}
+
 
 	public String getDbuser()
 	{
@@ -133,6 +141,7 @@ public class MetaData implements Comparable<MetaData>
 		this.dbuser = dbuser;
 	}
 
+
 	public String getDbpassword()
 	{
 		return dbpassword;
@@ -142,6 +151,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.dbpassword = dbpassword;
 	}
+
 
 	public String getDbserver()
 	{
@@ -153,6 +163,7 @@ public class MetaData implements Comparable<MetaData>
 		this.dbserver = dbserver;
 	}
 
+
 	public String getDbport()
 	{
 		return dbport;
@@ -162,6 +173,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.dbport = dbport;
 	}
+
 
 	public String getDbname()
 	{
@@ -173,6 +185,7 @@ public class MetaData implements Comparable<MetaData>
 		this.dbname = dbname;
 	}
 
+
 	public String getModelpackage()
 	{
 		return modelpackage;
@@ -182,6 +195,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.modelpackage = modelpackage;
 	}
+
 
 	public Boolean isUsingAnnotations()
 	{
@@ -193,6 +207,7 @@ public class MetaData implements Comparable<MetaData>
 		this.usingAnnotations = usingAnnotations;
 	}
 
+
 	public String getParserpackage()
 	{
 		return parserpackage;
@@ -202,6 +217,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.parserpackage = parserpackage;
 	}
+
 
 	public String getParserformat()
 	{
@@ -213,6 +229,7 @@ public class MetaData implements Comparable<MetaData>
 		this.parserformat = parserformat;
 	}
 
+
 	public String getControllerpackage()
 	{
 		return controllerpackage;
@@ -222,6 +239,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.controllerpackage = controllerpackage;
 	}
+
 
 	public String getControllerclass()
 	{
@@ -233,6 +251,7 @@ public class MetaData implements Comparable<MetaData>
 		this.controllerclass = controllerclass;
 	}
 
+
 	public String getEntitymodelpackage()
 	{
 		return entitymodelpackage;
@@ -243,6 +262,7 @@ public class MetaData implements Comparable<MetaData>
 		this.entitymodelpackage = entitymodelpackage;
 	}
 
+
 	public String getEntitymodelformat()
 	{
 		return entitymodelformat;
@@ -252,6 +272,7 @@ public class MetaData implements Comparable<MetaData>
 	{
 		this.entitymodelformat = entitymodelformat;
 	}
+
 
 	public String getEntitymodelfactoryclass()
 	{
@@ -266,7 +287,7 @@ public class MetaData implements Comparable<MetaData>
 	@Override
 	public int compareTo(MetaData that)
 	{
-		return Integer.compare( this.getMetaData_id(), that.getMetaData_id() );
+		return Integer.compare( this.getId(), that.getId() );
 	}
 
 }

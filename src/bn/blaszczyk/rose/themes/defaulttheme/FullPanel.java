@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import bn.blaszczyk.rose.controller.GUIController;
 import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")

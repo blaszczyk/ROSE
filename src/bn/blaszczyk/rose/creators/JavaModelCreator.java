@@ -12,6 +12,8 @@ public class JavaModelCreator {
 
 	public static String getGetterName(Member member)
 	{
+		if(member.isPrimary())
+			return "getId";
 		if(member.getType().equals(MemberType.BOOLEAN))
 			return "is" + member.getCapitalName();
 		return "get" + member.getCapitalName();
@@ -19,6 +21,8 @@ public class JavaModelCreator {
 	
 	public static String getSetterName(Member member)
 	{
+		if(member.isPrimary())
+			return "setId";
 		return "set" + member.getCapitalName();
 	}
 
@@ -53,6 +57,7 @@ public class JavaModelCreator {
 			// imports
 			if(metadata.isUsingAnnotations())
 				writer.write("import javax.persistence.*;\n\n");
+//			writer.write("import bn.blaszczyk.rose.interfaces.Entity;\n");
 			for(String importpackage : entity.getImports())
 				if(importpackage != null)
 					writer.write("import " + importpackage + ";\n");
@@ -62,51 +67,25 @@ public class JavaModelCreator {
 				writer.write("\n@Entity\n@Table(name=\"" + entity.getClassname() + "\")");
 			
 			// class declaration
-			writer.write("\npublic class " + entity.getClassname() + " implements Comparable<" + entity.getClassname() + ">\n{");
+			writer.write("\npublic class " + entity.getClassname() + " implements bn.blaszczyk.rose.interfaces.Entity, Comparable<" + entity.getClassname() + ">\n{");
 			
 			// member variables
 			for(Member member : entity.getMembers())
 			{
-				// annotations
-				if(metadata.isUsingAnnotations())
-				{
-					if(member.isPrimary())
-						writer.write("\n\t@Id\n\t@GeneratedValue");
-					writer.write("\n\t@Column(name=\"" + member.getName() + "\")");	
-				}
 				// declaration
-				writer.write("\n\tprivate " + member.getType().getJavaname() + " " + member.getName() );
+				writer.write("\n\tprivate " + member.getType().getJavaname() + " "  );
 				if(member.isPrimary())
-					writer.write( " = " + member.getType().getDefValue());
+					writer.write( "id = " + member.getType().getDefValue());
 				else if(member.getDefValue() != null && member.getDefValue() != "" )
-					writer.write( " = " + String.format( member.getType().getDefFormat(), member.getDefValue() ) );
+					writer.write(  member.getName() + " = " + String.format( member.getType().getDefFormat(), member.getDefValue() ) );
 				else
-					writer.write( " = " + member.getType().getDefValue() );
+					writer.write(  member.getName() + " = " + member.getType().getDefValue() );
 				writer.write( ";\n" );
 			}
 			
 			// entitymember variables
 			for(EntityMember entitymember : entity.getEntityMembers())
 			{
-				if(metadata.isUsingAnnotations())
-				{
-					switch (entitymember.getType())
-					{
-					case ONETOONE:
-						
-						break;
-					case ONETOMANY:
-						writer.write("\n\t@OneToMany(mappedBy=\"" + entitymember.getCouterpart().getName() + "\")");
-						break;
-					case MANYTOONE:
-						writer.write("\n\t@ManyToOne\n\t@JoinColumn(name=\"" + entitymember.getName() + "\")" );
-						
-						break;
-					case MANYTOMANY:
-						
-						break;
-					}
-				}
 				if(entitymember.getType().isSecondMany())
 					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new TreeSet<>();\n");
 				else
@@ -140,19 +119,54 @@ public class JavaModelCreator {
 
 			// for each member:
 			for(Member member : entity.getMembers())
-			{				
+			{
+				// annotations
+				if(metadata.isUsingAnnotations())
+				{
+					if(member.isPrimary())
+						writer.write("\n\t@Id\n\t@GeneratedValue");
+					writer.write("\n\t@Column(name=\"" + member.getName() + "\")");	
+				}	
 				// getter
-				writer.write("\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
+				if(member.isPrimary())
+					writer.write("\n\t@Override\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
+							+ "()\n\t{\n\t\treturn id;\n\t}\n" );
+				else
+					writer.write("\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
 							+ "()\n\t{\n\t\treturn " + member.getName() + ";\n\t}\n" );
 				
 				// setter
-				writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
+				if(member.isPrimary())
+					writer.write("\n\t@Override\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
+							+ member.getName() + " )\n\t{\n\t\tthis.id = " + member.getName() + ";\n\t}\n\n");
+				else
+					writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
 							+ member.getName() + " )\n\t{\n\t\tthis." + member.getName() + " = " + member.getName() + ";\n\t}\n\n" );
 			}
 
 			// for each entitymember:
 			for(EntityMember entityMember : entity.getEntityMembers())
 			{
+				//Annotations
+				if(metadata.isUsingAnnotations())
+				{
+					switch (entityMember.getType())
+					{
+					case ONETOONE:
+						writer.write("\t@OneToOne\n\t@JoinColumn(name=\"" + entityMember.getName() + "\")\n" );
+						break;
+					case ONETOMANY:
+						writer.write("\t@OneToMany(mappedBy=\"" + entityMember.getCouterpart().getName() + "\")\n");
+						break;
+					case MANYTOONE:
+						writer.write("\t@ManyToOne\n\t@JoinColumn(name=\"" + entityMember.getName() + "\")\n" );
+						
+						break;
+					case MANYTOMANY:
+						
+						break;
+					}
+				}
 				// for Lists
 				if(entityMember.getType().isSecondMany())
 				{

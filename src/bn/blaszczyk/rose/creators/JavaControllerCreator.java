@@ -28,7 +28,7 @@ public class JavaControllerCreator {
 			writer.write("import " + metadata.getParserpackage() + ".*;\n");
 			writer.write("import java.text.ParseException;\n");
 			writer.write("import " + metadata.getModelpackage() + ".*;\n"
-						+ "import bn.blaszczyk.rose.interfaces.*;" );
+						+ "import bn.blaszczyk.rose.controller.ModelController;" );
 			
 			// class declaration
 			writer.write("\npublic class " + metadata.getControllerclass() + " implements ModelController\n{\n\n");

@@ -1,11 +1,16 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import bn.blaszczyk.rose.controller.ModelController;
 import bn.blaszczyk.rose.interfaces.*;
 
 @SuppressWarnings("serial")
@@ -16,6 +21,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	private int height = V_SPACING;
 
 	private BasicEditPanel basicPanel;
+	private List<BasicEditPanel> basicPanels = new ArrayList<>();
 	
 	private ModelController controller;
 	
@@ -28,12 +34,22 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
 		addTitle( "Edit " + entityModel.getName() );
-		addBasicPanel(entityModel);
-		addButtonPanel();
-//		for(int i = 0; i < entityModel.getEntityCount(); i++)
-//		{
-//			if( entityModel.getEntityMember(i) == null )
-//				continue;
+		basicPanel = addBasicPanel(entityModel);
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
+		{
+			if( entityModel.getEntityMember(i) == null )
+				continue;
+			switch( entityModel.getRelationType(i))
+			{
+			case ONETOONE:
+				addSubTitle(entityModel.getEntityName(i));
+				basicPanels.add( addBasicPanel( entityModel.createModel( entityModel.getEntityMember(i))));
+				break;
+			case ONETOMANY:
+			case MANYTOONE:
+			case MANYTOMANY:
+				break;
+			}
 //			else if( entityModel.isEntityMany(i))
 //			{
 //				List<EntityModel> entityModels = new ArrayList<>();
@@ -48,8 +64,9 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 //				EntityModel subEntityModel = entityModel.createModel( entityModel.getEntityMember(i) );
 //				addSubTitle( entityModel.getEntityName(i), subEntityModel );
 //				addBasicPanel( subEntityModel );
-//			}
-//		}
+//			}		
+		}
+		addButtonPanel();
 		
 	}
 
@@ -76,27 +93,29 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 //		
 //		addSubTitle(subtitle);		
 //	}
-//	private void addSubTitle( String subtitle )
-//	{
-//		height += V_OFFSET;
-//		JLabel lblSubTitle = new JLabel( subtitle );
-//		lblSubTitle.setFont(SUBTITLE_FONT);
-//		lblSubTitle.setForeground(SUBTITLE_FG);
-//		lblSubTitle.setBackground(SUBTITLE_BG);
-//		lblSubTitle.setBounds(H_SPACING, height, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
-//		lblSubTitle.setOpaque(true);
-//		add(lblSubTitle);
-//		
-//		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
-//	}
 	
-	private void addBasicPanel( EntityModel entityModel )
+	private void addSubTitle( String subtitle )
+	{
+		height += V_OFFSET;
+		JLabel lblSubTitle = new JLabel( subtitle );
+		lblSubTitle.setFont(SUBTITLE_FONT);
+		lblSubTitle.setForeground(SUBTITLE_FG);
+		lblSubTitle.setBackground(SUBTITLE_BG);
+		lblSubTitle.setBounds(H_SPACING, height, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
+		lblSubTitle.setOpaque(true);
+		add(lblSubTitle);
+		
+		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
+	}
+	
+	private BasicEditPanel addBasicPanel( EntityModel entityModel )
 	{	
-		basicPanel = new BasicEditPanel(entityModel) ;
+		BasicEditPanel basicPanel = new BasicEditPanel(entityModel) ;
 		JPanel panel = basicPanel.getPanel();
 		panel.setBounds(H_SPACING, height, basicPanel.getWidth() , basicPanel.getHeight() );
 		add(panel);
 		computeDimensions( basicPanel.getHeight(), basicPanel.getWidth() );
+		return basicPanel;
 	}
 	
 	private void addButtonPanel()
@@ -110,17 +129,9 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	
 	private void save()
 	{
-		for(int i = 0; i < entityModel.getMemberCount(); i++ )
-		{
-			try
-			{
-				controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), basicPanel.getPanel(i).getValue() );
-			}
-			catch (ParseException e)
-			{
-				e.printStackTrace();
-			}
-		}
+		basicPanel.save(controller);
+		for(BasicEditPanel panel : basicPanels)
+			panel.save(controller);
 		controller.commit();
 	}
 	
