@@ -1,10 +1,7 @@
 package bn.blaszczyk.rose.themes.defaulttheme;
 
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;

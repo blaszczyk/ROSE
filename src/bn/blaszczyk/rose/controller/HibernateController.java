@@ -14,12 +14,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 
+import bn.blaszczyk.rose.interfaces.Entity;
+
 public class HibernateController implements ModelController {
 
 	private static SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 	private ModelController controller;
 	
-	private Set<Object> changedObjects = new HashSet<>();
+	private Set<Entity> changedEntitys = new HashSet<>();
 	
 	public HibernateController(ModelController controller)
 	{
@@ -27,30 +29,30 @@ public class HibernateController implements ModelController {
 	}
 	
 	@Override
-	public void setMember(Object entity, String name, Object value) throws ParseException
+	public void setMember(Entity entity, String name, Object value) throws ParseException
 	{
-		changedObjects.add(entity);
+		changedEntitys.add(entity);
 		controller.setMember(entity, name, value);
 	}
 	
 	@Override
-	public void setEntityMember(Object entity, String name, Object value) throws ParseException
+	public void setEntityMember(Entity entity, String name, Entity value) throws ParseException
 	{
-		changedObjects.add(entity);
+		changedEntitys.add(entity);
 		controller.setEntityMember(entity, name, value);
 	}
 	
 	@Override
-	public void addEntityMember(Object entity, String name, Object value) throws ParseException
+	public void addEntityMember(Entity entity, String name, Entity value) throws ParseException
 	{
-		changedObjects.add(entity);
+		changedEntitys.add(entity);
 		controller.addEntityMember(entity, name, value);
 	}
 	
 	@Override
-	public void deleteEntityMember(Object entity, String name, Object value) throws ParseException
+	public void deleteEntityMember(Entity entity, String name, Entity value) throws ParseException
 	{
-		changedObjects.add(entity);
+		changedEntitys.add(entity);
 		controller.deleteEntityMember(entity, name, value);
 	}
 	
@@ -59,9 +61,10 @@ public class HibernateController implements ModelController {
 	{
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		for(Object o : changedObjects)
+		for(Entity e : changedEntitys)
 		{
-			Integer kundenId = (Integer) session.save(o);
+			Integer id = (Integer) session.save(e);
+			e.setId(id);
 		}
 		transaction.commit();
 		session.close();

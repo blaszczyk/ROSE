@@ -1,6 +1,5 @@
 package bn.blaszczyk.rose.model;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Set;
 public class Entity {
 	private String classname;
 	private String javaname;
-	private Member primary;
 	private Set<String> imports = new HashSet<>();
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
@@ -18,13 +16,6 @@ public class Entity {
 	{
 		this.classname = classname;
 		this.javaname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
-		try
-		{
-			addMember( primary = new Member(javaname+"_id", "int",true) );
-		}
-		catch (ParseException e)
-		{
-		}
 	}
 
 	public String getJavaname()
@@ -37,10 +28,10 @@ public class Entity {
 		return classname;
 	}
 
-	public Member getPrimary()
-	{
-		return primary;
-	}
+//	public Member getPrimary()
+//	{
+//		return primary;
+//	}
 
 	public List<Member> getMembers()
 	{

@@ -54,47 +54,35 @@ public class SQLCreator {
 		// create table
 		writer.write( "create table " + entity.getClassname() + "\n(\n" );
 		
+		// primary column
+		writer.write("\t" + entity.getJavaname() + "_id int");
+		switch(dbType)
+		{
+		case MYSQL:
+			writer.write( " auto_increment,\n");
+			break;
+		}
 		// member columns
 		for(Member member : entity.getMembers())
 		{
-			writer.write( "\t" + member.getName() + " " + member.getSqltype());
-			if(member.isPrimary())
-				switch(dbType)
-				{
-				case MYSQL:
-					writer.write( " auto_increment");
-					break;
-				}
-			writer.write(",\n");
+			writer.write( "\t" + member.getName() + " " + member.getSqltype() + ",\n");
 		}
 		
 		// relational columns
 		for(EntityMember entityMember : entity.getEntityMembers())
 			if(!entityMember.getType().isSecondMany())
-				writer.write( "\t" + entityMember.getName() + " " 
-							+ entityMember.getEntity().getPrimary().getSqltype() + ",\n" );
+				writer.write( "\t" + entityMember.getName() + "_id int,\n" );
 		
 		// primary key
-		writer.write( "\tconstraint pk_" + entity.getClassname().toLowerCase() + " primary key ( " );
-		boolean first = true;
-		for(Member member : entity.getMembers())
-			if(member.isPrimary())
-			{
-				if(first)
-					first = false;
-				else
-					writer.write(", ");
-				writer.write( member.getName() );
-			}
-		writer.write(" )");
+		writer.write( "\tconstraint pk_" + entity.getClassname().toLowerCase() + " primary key ( " + entity.getJavaname() + "_id )");
 		
 		//foreign keys
 		if(metadata.isUsingForeignKeys())
 			for(EntityMember entityMember : entity.getEntityMembers())
 				if(entityMember.getType() == RelationType.MANYTOONE)
 					writer.write( ",\n\tconstraint fk_" + entity.getClassname().toLowerCase() + "_" + entityMember.getEntity().getClassname().toLowerCase()
-								+ " foreign key ( " + entityMember.getName() + " ) references "
-								+ entityMember.getEntity().getClassname() + "( " + entityMember.getEntity().getPrimary().getName() + " )");
+								+ " foreign key ( " + entityMember.getName() + "_id ) references "
+								+ entityMember.getEntity().getClassname() + "( " + entityMember.getEntity().getJavaname() + "_id )");
 		//fin
 		writer.write( "\n);\n\n" );
 	}

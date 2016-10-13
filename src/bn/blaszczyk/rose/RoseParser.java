@@ -76,9 +76,9 @@ public class RoseParser {
 			split = line.split("\\s+",3); // Split at any number of Whilespaces
 			if(split.length > 1 && isMemberType(split[1]) )
 				if( split.length > 2)
-					entity.addMember(new Member(split[0], split[1], split[2],false));
+					entity.addMember(new Member(split[0], split[1], split[2]));
 				else
-					entity.addMember(new Member(split[0], split[1],false));
+					entity.addMember(new Member(split[0], split[1]));
 			else if( split.length == 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )
 				entity.addEntityMember(new EntityMember(subentity, type, null));
 			else if( split.length > 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )

@@ -12,8 +12,6 @@ public class JavaModelCreator {
 
 	public static String getGetterName(Member member)
 	{
-		if(member.isPrimary())
-			return "getId";
 		if(member.getType().equals(MemberType.BOOLEAN))
 			return "is" + member.getCapitalName();
 		return "get" + member.getCapitalName();
@@ -21,8 +19,6 @@ public class JavaModelCreator {
 	
 	public static String getSetterName(Member member)
 	{
-		if(member.isPrimary())
-			return "setId";
 		return "set" + member.getCapitalName();
 	}
 
@@ -69,14 +65,15 @@ public class JavaModelCreator {
 			// class declaration
 			writer.write("\npublic class " + entity.getClassname() + " implements bn.blaszczyk.rose.interfaces.Entity, Comparable<" + entity.getClassname() + ">\n{");
 			
+			// id
+			writer.write("\n\tprivate int id = -1;\n");
+			
 			// member variables
 			for(Member member : entity.getMembers())
 			{
 				// declaration
-				writer.write("\n\tprivate " + member.getType().getJavaname() + " "  );
-				if(member.isPrimary())
-					writer.write( "id = " + member.getType().getDefValue());
-				else if(member.getDefValue() != null && member.getDefValue() != "" )
+				writer.write("\tprivate " + member.getType().getJavaname() + " "  );
+				if(member.getDefValue() != null && member.getDefValue() != "" )
 					writer.write(  member.getName() + " = " + String.format( member.getType().getDefFormat(), member.getDefValue() ) );
 				else
 					writer.write(  member.getName() + " = " + member.getType().getDefValue() );
@@ -87,23 +84,21 @@ public class JavaModelCreator {
 			for(EntityMember entitymember : entity.getEntityMembers())
 			{
 				if(entitymember.getType().isSecondMany())
-					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new TreeSet<>();\n");
+					writer.write("\n\tprivate Set<" + entitymember.getEntity().getClassname() + "> " + entitymember.getName() + "s = new TreeSet<>();");
 				else
-					writer.write("\n\tprivate " + entitymember.getEntity().getClassname() + " " + entitymember.getName() + ";\n");
+					writer.write("\n\tprivate " + entitymember.getEntity().getClassname() + " " + entitymember.getName() + ";");
 			}
 	
 			// default constructor
 			writer.write("\n\n\tpublic " + entity.getClassname() + "()\n\t{\n\t}\n\n");
 			
-			// constructor for non-primaries
+			// full constructor
 			if( entity.getMembers().size() > 1 )
 			{
 				writer.write("\tpublic " + entity.getClassname() + "( ");
 				boolean first = true;
 				for(Member member : entity.getMembers())
 				{
-					if(member.isPrimary())
-						continue;
 					if(!first)
 						writer.write(", ");
 					else
@@ -112,35 +107,28 @@ public class JavaModelCreator {
 				}
 				writer.write(" )\n\t{\n");
 				for(Member member : entity.getMembers())
-					if(!member.isPrimary())
-						writer.write("\t\tthis." + member.getName() + " = " + member.getName() + ";\n");
+					writer.write("\t\tthis." + member.getName() + " = " + member.getName() + ";\n");
 				writer.write("\t}\n\n");
 			}
 
+			// for Id:			
+			if(metadata.isUsingAnnotations())
+				writer.write("\n\t@Id\n\t@GeneratedValue\n\t@Column(name=\"" + entity.getJavaname() + "_id\")");
+			writer.write("\n\t@Override\n\tpublic Integer getId()\n\t{\n\t\treturn id;\n\t}\n" );
+			writer.write("\n\t@Override\n\tpublic void setId( Integer id )\n\t{\n\t\tthis.id = id;\n\t}\n\n");
 			// for each member:
+			
 			for(Member member : entity.getMembers())
 			{
 				// annotations
 				if(metadata.isUsingAnnotations())
-				{
-					if(member.isPrimary())
-						writer.write("\n\t@Id\n\t@GeneratedValue");
-					writer.write("\n\t@Column(name=\"" + member.getName() + "\")");	
-				}	
+					writer.write("\n\t@Column(name=\"" + member.getName() + "\")");
 				// getter
-				if(member.isPrimary())
-					writer.write("\n\t@Override\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
-							+ "()\n\t{\n\t\treturn id;\n\t}\n" );
-				else
-					writer.write("\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
+				writer.write("\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
 							+ "()\n\t{\n\t\treturn " + member.getName() + ";\n\t}\n" );
 				
 				// setter
-				if(member.isPrimary())
-					writer.write("\n\t@Override\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
-							+ member.getName() + " )\n\t{\n\t\tthis.id = " + member.getName() + ";\n\t}\n\n");
-				else
-					writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
+				writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
 							+ member.getName() + " )\n\t{\n\t\tthis." + member.getName() + " = " + member.getName() + ";\n\t}\n\n" );
 			}
 
@@ -197,7 +185,7 @@ public class JavaModelCreator {
 			
 			// Comparable.compareto
 			writer.write("\t@Override\n\tpublic int compareTo(" + entity.getClassname() + " that)\n\t{\n"
-					+ "\t\treturn Integer.compare( this." + getGetterName(entity.getPrimary()) + "(), that." + getGetterName(entity.getPrimary()) + "() );\n"
+					+ "\t\treturn Integer.compare( this.id, that.id );\n"
 					+ "\t}\n\n");
 			// TODO? toString, equals, hashValue	
 			// fin

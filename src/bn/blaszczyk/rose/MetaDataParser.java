@@ -14,9 +14,6 @@ public class MetaDataParser
 	{
 		switch( name.toLowerCase() )
 		{
-		case "metadata_id":
-			metaData.setId( Integer.parseInt( value ) );
-			break;
 		case "srcpath":
 			metaData.setSrcpath( value );
 			break;
@@ -80,9 +77,6 @@ public class MetaDataParser
 	{
 		switch( name.toLowerCase() )
 		{
-		case "metadata_id":
-			metaData.setId( (Integer) value );
-			break;
 		case "srcpath":
 			metaData.setSrcpath( value.toString() );
 			break;

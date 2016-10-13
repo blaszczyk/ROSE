@@ -35,14 +35,14 @@ public interface ThemeConstants {
 	public static final int TITLE_WIDTH = 200;
 	public static final int TITLE_HEIGHT = 35;
 	public static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 30);
-	public static final Color TITLE_BG = Color.WHITE;
-	public static final Color TITLE_FG = Color.RED;
+	public static final Color TITLE_BG = Color.LIGHT_GRAY;
+	public static final Color TITLE_FG = Color.BLACK;
 	
 	public static final int SUBTITLE_WIDTH = 200;
 	public static final int SUBTITLE_HEIGHT = 30;
 	public static final Font SUBTITLE_FONT = new Font("Arial", Font.BOLD, 25);
-	public static final Color SUBTITLE_BG = Color.WHITE;
-	public static final Color SUBTITLE_FG = Color.BLUE;
+	public static final Color SUBTITLE_BG = Color.LIGHT_GRAY;
+	public static final Color SUBTITLE_FG = Color.BLACK;
 	
 	public static final Color FULL_PNL_BACKGROUND = Color.DARK_GRAY;
 	

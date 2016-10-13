@@ -7,15 +7,13 @@ public class Member {
 	private String capitalName;
 	private String sqltype;
 	private MemberType type = null;
-	private boolean primary = false;
 	private String defValue = null;
 	
-	public Member(String name, String sqltype, String defvalue, boolean primary) throws ParseException
+	public Member(String name, String sqltype, String defvalue) throws ParseException
 	{
 		this.name = name;
 		this.capitalName = name.substring(0,1).toUpperCase() + name.substring(1);
 		this.sqltype = sqltype;
-		this.primary = primary;
 		this.defValue = defvalue;
 		for(MemberType memberType : MemberType.values() )
 			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
@@ -24,19 +22,9 @@ public class Member {
 			throw new ParseException("Unknown SQL type: " + sqltype, 0);
 	}
 
-	public Member(String name, String sqltype, boolean primary) throws ParseException
+	public Member(String name, String sqltype) throws ParseException
 	{
-		this(name,sqltype,null,primary);
-	}
-	
-	public boolean isPrimary()
-	{
-		return primary;
-	}
-
-	public void setPrimary(boolean primary)
-	{
-		this.primary = primary;
+		this(name,sqltype,null);
 	}
 
 	public String getDefValue()

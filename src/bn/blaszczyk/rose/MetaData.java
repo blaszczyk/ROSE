@@ -8,42 +8,24 @@ package bn.blaszczyk.rose;
 
 public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable<MetaData>
 {
-	private Integer id = 0;
-
+	private int id = -1;
 	private String srcpath = "src/";
-
 	private String sqlpath = "sql/";
-
 	private Boolean usingForeignKeys = false;
-
 	private String dbtype = "mysql";
-
 	private String dbuser = "root";
-
 	private String dbpassword = "";
-
 	private String dbserver = "localhost";
-
 	private String dbport = "3306";
-
 	private String dbname = "MyDB";
-
 	private String modelpackage = null;
-
 	private Boolean usingAnnotations = false;
-
 	private String parserpackage = null;
-
 	private String parserformat = "%sParser";
-
 	private String controllerpackage = null;
-
 	private String controllerclass = "BasicController";
-
 	private String entitymodelpackage = null;
-
 	private String entitymodelformat = "%sEntityModel";
-
 	private String entitymodelfactoryclass = "EntityModelFactory";
 
 
@@ -81,9 +63,9 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 	}
 
 	@Override
-	public void setId( Integer metaData_id )
+	public void setId( Integer id )
 	{
-		this.id = metaData_id;
+		this.id = id;
 	}
 
 
@@ -287,7 +269,7 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 	@Override
 	public int compareTo(MetaData that)
 	{
-		return Integer.compare( this.getId(), that.getId() );
+		return Integer.compare( this.id, that.id );
 	}
 
 }

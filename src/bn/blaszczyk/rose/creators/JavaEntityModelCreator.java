@@ -58,11 +58,10 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic String getName()\n\t{\n\t\treturn \"" + entity.getClassname() + "\";\n\t}\n\n");
 			
 			// public int getId();
-			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + "." 
-							+ JavaModelCreator.getGetterName(entity.getPrimary()) + "();\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + ".getId();\n\t}\n\n");
 
-			//public Object getEntity();
-			writer.write("\t@Override\n\tpublic Object getEntity()\n\t{\n\t\treturn " + entity.getJavaname() + ";\n\t}\n\n");
+			//public Entity getEntity();
+			writer.write("\t@Override\n\tpublic Entity getEntity()\n\t{\n\t\treturn " + entity.getJavaname() + ";\n\t}\n\n");
 			
 			// public int getMemberCount();
 			writer.write("\t@Override\n\tpublic int getMemberCount()\n\t{\n\t\treturn " + entity.getMembers().size() + ";\n\t}\n\n");
@@ -84,8 +83,8 @@ public class JavaEntityModelCreator {
 			// public int getEntityCount();
 			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + entity.getEntityMembers().size() + ";\n\t}\n\n");
 			
-			// public Object getEntityMember( int index );
-			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public Entity getEntityMember( int index );
+			writer.write("\t@Override\n\tpublic Entity getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
@@ -105,9 +104,9 @@ public class JavaEntityModelCreator {
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
-			// public EntityModel createModel( Object object);
-			writer.write("\t@Override\n\tpublic EntityModel createModel( Object object )\n\t{\n\t\treturn " 
-						+ metadata.getEntitymodelfactoryclass() + ".createModel( object );\n\t}\n\n");
+			// public EntityModel createModel( Entity entity );
+			writer.write("\t@Override\n\tpublic EntityModel createModel( Entity entity )\n\t{\n\t\treturn " 
+						+ metadata.getEntitymodelfactoryclass() + ".createModel( entity );\n\t}\n\n");
 			
 			// fin
 			writer.write("}\n");
@@ -143,10 +142,10 @@ public class JavaEntityModelCreator {
 			writer.write("\npublic class " + metadata.getEntitymodelfactoryclass() + "\n{\n");
 
 			// createBasicPanel
-			writer.write("\n\tpublic static EntityModel createModel( Object object )\n\t{\n\t\t");
+			writer.write("\n\tpublic static EntityModel createModel( Entity entity )\n\t{\n\t\t");
 			for(Entity entity : entities)
-				writer.write("if( object instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
-							+ getEntityModelName(entity, metadata) +  "( ( " + entity.getClassname() + " ) object );\n\t\telse " );
+				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
+							+ getEntityModelName(entity, metadata) +  "( ( " + entity.getClassname() + " ) entity );\n\t\telse " );
 			writer.write("\n\t\t\treturn null;\n\t}\n" );
 		
 			writer.write("}\n");
