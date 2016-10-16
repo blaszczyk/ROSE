@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.interfaces;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import javax.swing.JPanel;
 

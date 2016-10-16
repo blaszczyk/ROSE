@@ -1,6 +1,6 @@
 package bn.blaszczyk.rose.model;
 
-import bn.blaszczyk.rose.interfaces.RelationType;
+import bn.blaszczyk.roseapp.model.RelationType;
 
 public class EntityMember {
 	
@@ -16,7 +16,7 @@ public class EntityMember {
 		this.type = type;
 		this.name = name;
 		if( name == null )
-			this.name = entity.getJavaname();
+			this.name = entity.getObjectName();
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 	}
 	

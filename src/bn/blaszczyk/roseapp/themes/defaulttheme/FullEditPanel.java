@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import bn.blaszczyk.rose.controller.ModelController;
-import bn.blaszczyk.rose.interfaces.*;
+import bn.blaszczyk.roseapp.controller.*;
+import bn.blaszczyk.roseapp.model.*;
 
 @SuppressWarnings("serial")
 public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
@@ -20,11 +20,11 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	private BasicEditPanel basicPanel;
 	private List<BasicEditPanel> basicPanels = new ArrayList<>();
 	
-	private ModelController controller;
+	private FullModelController controller;
 	
 	private EntityModel entityModel;
 	
-	public FullEditPanel( EntityModel entityModel, ModelController controller )
+	public FullEditPanel( EntityModel entityModel, FullModelController controller )
 	{
 		this.controller = controller;
 		this.entityModel = entityModel;
@@ -40,7 +40,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 			{
 			case ONETOONE:
 				addSubTitle(entityModel.getEntityName(i));
-				basicPanels.add( addBasicPanel( entityModel.createModel( entityModel.getEntityMember(i))));
+				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityMember(i))));
 				break;
 			case ONETOMANY:
 			case MANYTOONE:

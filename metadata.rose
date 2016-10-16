@@ -24,6 +24,7 @@ begin entity MetaData
 	parserformat varchar(50) "%sParser"
 	
 	controllerpackage varchar(50) null
+	controllerformat varchar(50) "%sController"
 	controllerclass varchar(50) "BasicController"
 	
 	entitymodelpackage varchar(50) null

@@ -13,14 +13,10 @@ import bn.blaszczyk.rose.model.MemberType;
 public class JavaParserCreator {
 	
 	public static final String PARSE_METHOD = "parseMember";
-	public static final String SET_METHOD = "setMember";
-	public static final String SET_ENTITY_METHOD = "setEntity";
-	public static final String ADD_ENTITY_METHOD = "addEntity";
-	public static final String DEL_ENTITY_METHOD = "deleteEntity";
 	
 	public static String getParserName(Entity entity, MetaData metadata)
 	{
-		return String.format(metadata.getParserformat(), entity.getClassname());
+		return String.format(metadata.getParserformat(), entity.getSimpleClassName());
 	}
 	
 	public static void create(Entity entity, MetaData metadata)
@@ -40,24 +36,19 @@ public class JavaParserCreator {
 			
 			// imports
 			writer.write("import java.text.ParseException;\n");
-			writer.write("import java.util.Date;\n");
 			if(!metadata.getModelpackage().equals(metadata.getParserpackage()))
 				writer.write("import " + metadata.getModelpackage() + ".*;\n");
-			if(entity.getImports().contains(MemberType.DATE.getJavapackage()))
-				writer.write("import java.text.DateFormat;\n");
-			if(entity.getImports().contains(MemberType.NUMERIC.getJavapackage()))
-				writer.write("import " + MemberType.NUMERIC.getJavapackage() + ";\n");
 			
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n");
 			
 			// parseMember
-			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
+			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, String value ) throws ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(Member member : entity.getMembers())
 			{
-				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getSetterName(member) + "( " );
+				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(member) + "( " );
 				switch(member.getType())
 				{
 				case VARCHAR:
@@ -78,89 +69,9 @@ public class JavaParserCreator {
 				}
 				writer.write( " );\n\t\t\tbreak;\n" );
 			}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getClassname() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
-			
-			// setMember
-			writer.write("\tpublic static void " + SET_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
-						+ ", String name, Object value ) throws ParseException\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(Member member : entity.getMembers())
-			{
-				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getSetterName(member) + "( " );
-				switch(member.getType())
-				{
-				case VARCHAR:
-				case CHAR:
-					writer.write( "value.toString()" );
-					break;
-				case INT:
-					writer.write( "(Integer) value" );
-					break;
-				case DATE:
-					writer.write( "(Date) value" );
-					break;
-				case NUMERIC:
-					writer.write( "(BigDecimal) value" );
-					break;
-				case BOOLEAN:
-					writer.write( "(Boolean) value" ) ;
-				}
-				writer.write( " );\n\t\t\tbreak;\n" );
-			}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getClassname() + "\");\n" );
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getSimpleClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 
-			// setEntity
-			writer.write("\tpublic static void " + SET_ENTITY_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
-						+ ", String name, Object value ) throws ParseException\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if( !entityMember.getType().isSecondMany() )
-				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"
-							+ "\t\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getSetterName(entityMember) + "( (" + entityMember.getEntity().getClassname() + ")value );\n"
-							+ "\t\t\telse\n"
-							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in + " + entity.getClassname() + "\" );\n"
-							+ "\t\t\tbreak;\n" );
-				}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single Entitymember: \" + name + \" in " + entity.getClassname() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
-
-			// addEntity
-			writer.write("\tpublic static void " + ADD_ENTITY_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
-						+ ", String name, Object value ) throws ParseException\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.getType().isSecondMany() )
-				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"
-							+ "\t\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getGetterName(entityMember) + "().add( (" + entityMember.getEntity().getClassname() + ")value );\n"
-							+ "\t\t\telse\n"
-							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in + " + entity.getClassname() + "\" );\n"
-							+ "\t\t\tbreak;\n" );
-				}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple Entitymember: \" + name + \" in " + entity.getClassname() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
-			
-			// deleteEntity
-			writer.write("\tpublic static void " + DEL_ENTITY_METHOD + "( " + entity.getClassname() + " " + entity.getJavaname() 
-						+ ", String name, Object value ) throws ParseException\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.getType().isSecondMany() )
-				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassname() + " )\n"
-							+ "\t\t\t\t" + entity.getJavaname() + "." + JavaModelCreator.getGetterName(entityMember) + "().remove( (" + entityMember.getEntity().getClassname() + ")value );\n"
-							+ "\t\t\telse\n"
-							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in + " + entity.getClassname() + "\" );\n"
-							+ "\t\t\tbreak;\n" );
-				}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple Entitymember: \" + name + \" in " + entity.getClassname() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
 			
 			
 			writer.write("}\n");

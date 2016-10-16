@@ -1,9 +1,8 @@
-package bn.blaszczyk.rose.themes.defaulttheme.inputpanels;
+package bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels;
 
 import javax.swing.JPanel;
 
-import bn.blaszczyk.rose.interfaces.InputPanel;
-import bn.blaszczyk.rose.themes.defaulttheme.ThemeConstants;
+import bn.blaszczyk.roseapp.themes.defaulttheme.ThemeConstants;
 
 @SuppressWarnings("serial")
 public abstract class AbstractInputPanel<T> extends JPanel implements InputPanel<T>, ThemeConstants {

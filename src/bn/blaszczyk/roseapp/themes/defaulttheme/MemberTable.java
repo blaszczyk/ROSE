@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -8,8 +8,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import bn.blaszczyk.rose.controller.GUIController;
-import bn.blaszczyk.rose.interfaces.MyPanel;
+import bn.blaszczyk.roseapp.controller.GUIController;
 
 @SuppressWarnings("serial")
 public class MemberTable extends JTable implements MyPanel, ThemeConstants {
@@ -90,7 +89,7 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 				if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
 				{
 					int row = rowAtPoint( e.getPoint() );
-					controller.createFullPanelDialog(null, tableModel.getEntityModel(row));
+					controller.createFullPanelDialog(tableModel.getEntityModel(row));
 				}
 			}
 			
@@ -102,17 +101,17 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 		setWidths();
 	}
 
-	@Override
-	public int getWidth()
-	{
-		return Math.max(getColumnCount()* CELL_WIDTH + 16, TABLE_WIDTH);
-	}
-
-	@Override
-	public int getHeight()
-	{
-		return Math.min( (getRowCount()+1) * CELL_HEIGTH + 6, TABLE_HEIGHT);
-	}
+//	@Override
+//	public int getWidth()
+//	{
+//		return Math.max(getColumnCount()* CELL_WIDTH + 16, TABLE_WIDTH);
+//	}
+//
+//	@Override
+//	public int getHeight()
+//	{
+//		return Math.min( (getRowCount()+1) * CELL_HEIGTH + 6, TABLE_HEIGHT);
+//	}
 	
 	@Override
 	public JPanel getPanel()

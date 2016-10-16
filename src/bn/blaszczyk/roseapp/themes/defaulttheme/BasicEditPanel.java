@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -8,11 +8,9 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import bn.blaszczyk.rose.interfaces.MyPanel;
-import bn.blaszczyk.rose.themes.defaulttheme.inputpanels.*;
-import bn.blaszczyk.rose.controller.ModelController;
-import bn.blaszczyk.rose.interfaces.EntityModel;
-import bn.blaszczyk.rose.interfaces.InputPanel;
+import bn.blaszczyk.roseapp.controller.*;
+import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels.*;
 
 @SuppressWarnings("serial")
 public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
@@ -46,18 +44,22 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		else if( value instanceof BigDecimal)
 			panel = new BigDecimalInputPanel( name, (BigDecimal) value );
 		else
+		{
+			System.out.printf( "Unknown type %s \n", value);
 			return;
+		}
 		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH, LBL_HEIGHT );
 		panels.add(panel);
 		add(panel.getPanel());
 		height += LBL_HEIGHT + V_SPACING;
 	}
 	
-	public void save(ModelController controller)
+	public void save(FullModelController controller)
 	{
 		for(int i = 0 ; i < entityModel.getMemberCount(); i++ )
 			try
 			{
+				System.err.printf("%s - %s - %s\n", entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue());
 				controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
 			}
 			catch (ParseException e)

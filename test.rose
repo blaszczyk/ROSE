@@ -14,6 +14,7 @@ set usingannotations true
 
 set controllerpackage foo.controller
 set controllerclass BasicController
+set controllerformat %sController
 
 set parserpackage foo.parser
 set parserformat %sParser
@@ -29,20 +30,21 @@ begin entity FooProp
 end entity
 
 begin entity Foo
-	fooVarchar varchar(50) null
+	fooVarchar varchar(50) ""
 	fooDate date 
 	fooNumeric numeric(9,2) 1234567.89
-	fooChar char(10) "foo"
+	fooChar char(30) "foo"
 	onetoone FooProp
 end entity
 
---begin entity Bar
+begin entity Bar
 	barVarchar varchar(20) "bar"
 	barInt int 45
 	manytoone Foo
 end entity
 
---begin entity FooBar
+begin entity FooBar
+	foobarstring varchar(30) "foobar"
 	manytoone Foo
 	manytoone Bar myBar
 end entity
@@ -53,3 +55,4 @@ create javamodels
 create javaparser
 create javacontroller
 create javaentitymodels
+

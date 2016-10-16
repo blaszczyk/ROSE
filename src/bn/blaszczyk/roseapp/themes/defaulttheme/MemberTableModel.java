@@ -1,11 +1,11 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.util.List;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import bn.blaszczyk.rose.interfaces.EntityModel;
+import bn.blaszczyk.roseapp.model.EntityModel;
 
 public class MemberTableModel implements TableModel {
 	

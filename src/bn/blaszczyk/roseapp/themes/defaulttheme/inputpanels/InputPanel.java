@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.interfaces;
+package bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels;
 
 import java.awt.event.ActionListener;
 

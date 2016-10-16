@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -70,4 +70,8 @@ public interface ThemeConstants {
 	public static final Font HEADER_FONT = new Font("Arial",Font.BOLD,16);
 	public static final Color HEADER_BG = new Color(238,238,238);
 	
+	// Main Frame
+	
+	public static final int MF_WIDTH = 1000;
+	public static final int MF_HEIGTH = 800;
 }

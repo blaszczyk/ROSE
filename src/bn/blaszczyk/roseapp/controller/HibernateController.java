@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.controller;
+package bn.blaszczyk.roseapp.controller;
 
 //
 //import org.hibernate.*;
@@ -7,6 +7,7 @@ package bn.blaszczyk.rose.controller;
 
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -14,16 +15,17 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import bn.blaszczyk.rose.interfaces.Entity;
+import bn.blaszczyk.roseapp.model.Entity;
+import bn.blaszczyk.roseapp.model.EntityModel;
 
-public class HibernateController implements ModelController {
+public class HibernateController implements FullModelController {
 
 	private static SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-	private ModelController controller;
+	private BasicModelController controller;
 	
 	private Set<Entity> changedEntitys = new HashSet<>();
 	
-	public HibernateController(ModelController controller)
+	public HibernateController(BasicModelController controller)
 	{
 		this.controller = controller;
 	}
@@ -56,6 +58,19 @@ public class HibernateController implements ModelController {
 		controller.deleteEntityMember(entity, name, value);
 	}
 	
+
+	@Override
+	public Entity createNew(String className)
+	{
+		return controller.createNew(className);
+	}
+
+	@Override
+	public EntityModel createModel( Entity entity )
+	{
+		return controller.createModel(entity);
+	}
+	
 	@Override
 	public void commit()
 	{
@@ -67,8 +82,17 @@ public class HibernateController implements ModelController {
 			e.setId(id);
 		}
 		transaction.commit();
-		session.close();
-		controller.commit();
+		session.close();	
+		changedEntitys.clear();
 	}
 	
+	@Override
+	public List<?> getAll(Class<?> type)
+	{
+		Session session = sessionFactory.openSession();
+		List<?> list = session.createCriteria(type).list();
+		session.close();
+		return list;
+	}
+
 }

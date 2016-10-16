@@ -6,7 +6,7 @@
 package bn.blaszczyk.rose;
 
 
-public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable<MetaData>
+public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<MetaData>
 {
 	private int id = -1;
 	private String srcpath = "src/";
@@ -23,6 +23,7 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 	private String parserpackage = null;
 	private String parserformat = "%sParser";
 	private String controllerpackage = null;
+	private String controllerformat = "%sController";
 	private String controllerclass = "BasicController";
 	private String entitymodelpackage = null;
 	private String entitymodelformat = "%sEntityModel";
@@ -33,7 +34,7 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerformat, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
 	{
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
@@ -49,6 +50,7 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 		this.parserpackage = parserpackage;
 		this.parserformat = parserformat;
 		this.controllerpackage = controllerpackage;
+		this.controllerformat = controllerformat;
 		this.controllerclass = controllerclass;
 		this.entitymodelpackage = entitymodelpackage;
 		this.entitymodelformat = entitymodelformat;
@@ -220,6 +222,17 @@ public class MetaData implements bn.blaszczyk.rose.interfaces.Entity, Comparable
 	public void setControllerpackage( String controllerpackage )
 	{
 		this.controllerpackage = controllerpackage;
+	}
+
+
+	public String getControllerformat()
+	{
+		return controllerformat;
+	}
+
+	public void setControllerformat( String controllerformat )
+	{
+		this.controllerformat = controllerformat;
 	}
 
 

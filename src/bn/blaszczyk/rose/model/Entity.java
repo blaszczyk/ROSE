@@ -8,22 +8,31 @@ import java.util.Set;
 public class Entity {
 	private String classname;
 	private String javaname;
-	private Set<String> imports = new HashSet<>();
+	private String packagename;
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
  
-	public Entity(String classname)
+	public Entity(String classname, String packagename)
 	{
 		this.classname = classname;
+		this.packagename = packagename;
 		this.javaname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
 	}
 
-	public String getJavaname()
+	public String getObjectName()
 	{
 		return javaname;
 	}
 	
-	public String getClassname()
+	
+	public String getClassName()
+	{
+		if(packagename == null || packagename == "")
+			return classname;
+		return packagename + "." + classname;
+	}
+	
+	public String getSimpleClassName()
 	{
 		return classname;
 	}
@@ -46,9 +55,6 @@ public class Entity {
 	public void addMember(Member member)
 	{
 		members.add(member);
-		for(MemberType memberType : MemberType.values())
-			if(member.getType().equals(memberType))
-				imports.add(memberType.getJavapackage());
 	}
 	
 	public void addEntityMember(EntityMember entitymember)
@@ -59,23 +65,16 @@ public class Entity {
 		case ONETOONE:
 			break;
 		case MANYTOONE:
-			EntityMember counterpart = new EntityMember(this, entitymember.getType().getInverse() , getJavaname());
+			EntityMember counterpart = new EntityMember(this, entitymember.getType().getInverse() , getObjectName());
 			counterpart.setCouterpart(entitymember);
 			entitymember.setCouterpart(counterpart);
 			entitymember.getEntity().addEntityMember( counterpart );
 			break;
 		case ONETOMANY:
-			imports.add("java.util.Set");
-			imports.add("java.util.TreeSet");
 			break;
 		default:
 			break;
 		}
-	}
-	
-	public Set<String> getImports()
-	{
-		return imports;
 	}
 	
 }

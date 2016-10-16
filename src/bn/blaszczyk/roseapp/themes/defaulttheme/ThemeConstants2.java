@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.awt.Color;
 import java.awt.Font;

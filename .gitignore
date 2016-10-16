@@ -25,6 +25,11 @@ src/hibernate.cfg.xml
 sql/
 
 #
+# Log Files
+#
+*.log
+
+#
 # Eclipse Files
 #
 

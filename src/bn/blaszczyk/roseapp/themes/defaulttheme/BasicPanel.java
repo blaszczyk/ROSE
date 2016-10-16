@@ -1,11 +1,10 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import bn.blaszczyk.rose.interfaces.MyPanel;
-import bn.blaszczyk.rose.interfaces.EntityModel;
+import bn.blaszczyk.roseapp.model.EntityModel;
 
 @SuppressWarnings("serial")
 public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {

@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.themes.defaulttheme;
+package bn.blaszczyk.roseapp.themes.defaulttheme;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import bn.blaszczyk.rose.controller.GUIController;
-import bn.blaszczyk.rose.interfaces.*;
+import bn.blaszczyk.roseapp.controller.GUIController;
+import bn.blaszczyk.roseapp.model.*;
 
 @SuppressWarnings("serial")
 public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
@@ -43,7 +43,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 			}
 			else
 			{
-				EntityModel subEntityModel = entityModel.createModel( entityModel.getEntityMember(i) );
+				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityMember(i) );
 				addSubTitle( entityModel.getEntityName(i), subEntityModel );
 				addBasicPanel( subEntityModel );
 			}
@@ -70,7 +70,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
 		btnEdit.addActionListener( e -> {
-			controller.createEditPanelDialog(null, entityModelCpy);
+			controller.createEditPanelDialog(entityModelCpy);
 		} );
 		add(btnEdit);
 		
@@ -82,7 +82,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		JButton btnView = new JButton("View");
 		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
-		btnView.addActionListener( e -> controller.createFullPanelDialog(null, entityModelCpy) );
+		btnView.addActionListener( e -> controller.createFullPanelDialog(entityModelCpy) );
 		add(btnView);
 		
 		addSubTitle(subtitle);		

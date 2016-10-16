@@ -13,7 +13,7 @@ public class JavaEntityModelCreator {
 
 	public static String getEntityModelName(Entity entity, MetaData metadata)
 	{
-		return String.format( metadata.getEntitymodelformat() , entity.getClassname() );
+		return String.format( metadata.getEntitymodelformat() , entity.getSimpleClassName() );
 	}
 	
 	public static String getEntityFactoryName(MetaData metadata)
@@ -37,31 +37,27 @@ public class JavaEntityModelCreator {
 			// package declaration
 			writer.write("package " + metadata.getEntitymodelpackage() + ";\n\n");
 			
-			// imports
-			writer.write("import " + metadata.getModelpackage() + ".*;\n");
-			writer.write("import bn.blaszczyk.rose.interfaces.*;\n");
-			
 			// class declaration
-			writer.write("\npublic class " + classname + " implements EntityModel\n{\n");
+			writer.write("\npublic class " + classname + " implements bn.blaszczyk.roseapp.model.EntityModel\n{\n");
 			
 			// represented object
-			writer.write("\tprivate final " + entity.getClassname() + " " + entity.getJavaname() + ";\n");
+			writer.write("\tprivate final " + entity.getClassName() + " " + entity.getObjectName() + ";\n");
 
 			// default constructor
-			writer.write("\n\n\tpublic " + classname + "( " + entity.getClassname() + " " + entity.getJavaname() + " )\n\t{\n");
-			writer.write("\t\tthis." + entity.getJavaname() + " = " + entity.getJavaname() + ";\n");
+			writer.write("\n\n\tpublic " + classname + "( " + entity.getClassName() + " " + entity.getObjectName() + " )\n\t{\n");
+			writer.write("\t\tthis." + entity.getObjectName() + " = " + entity.getObjectName() + ";\n");
 			writer.write("\t}\n\n");
 			
 			// implement EntityModel methods
 
 			// public String getName();
-			writer.write("\t@Override\n\tpublic String getName()\n\t{\n\t\treturn \"" + entity.getClassname() + "\";\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic String getName()\n\t{\n\t\treturn \"" + entity.getSimpleClassName() + "\";\n\t}\n\n");
 			
 			// public int getId();
-			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getJavaname() + ".getId();\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic int getId()\n\t{\n\t\treturn " + entity.getObjectName() + ".getId();\n\t}\n\n");
 
 			//public Entity getEntity();
-			writer.write("\t@Override\n\tpublic Entity getEntity()\n\t{\n\t\treturn " + entity.getJavaname() + ";\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.Entity getEntity()\n\t{\n\t\treturn " + entity.getObjectName() + ";\n\t}\n\n");
 			
 			// public int getMemberCount();
 			writer.write("\t@Override\n\tpublic int getMemberCount()\n\t{\n\t\treturn " + entity.getMembers().size() + ";\n\t}\n\n");
@@ -77,17 +73,17 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic Object getMemberValue(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + "." + JavaModelCreator.getGetterName(member) +  "();\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(member) +  "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public int getEntityCount();
 			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + entity.getEntityMembers().size() + ";\n\t}\n\n");
 			
-			// public Entity getEntityMember( int index );
-			writer.write("\t@Override\n\tpublic Entity getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public Object getEntityMember( int index );
+			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getJavaname() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public String getEntityName( int index );
@@ -98,14 +94,14 @@ public class JavaEntityModelCreator {
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
 			
 			// public RelationType getRelationType( int index );			
-			writer.write("\t@Override\n\tpublic RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
 			// public EntityModel createModel( Entity entity );
-			writer.write("\t@Override\n\tpublic EntityModel createModel( Entity entity )\n\t{\n\t\treturn " 
+			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.EntityModel createModel( bn.blaszczyk.roseapp.model.Entity entity )\n\t{\n\t\treturn " 
 						+ metadata.getEntitymodelfactoryclass() + ".createModel( entity );\n\t}\n\n");
 			
 			// fin
@@ -134,18 +130,14 @@ public class JavaEntityModelCreator {
 			// package declaration
 			writer.write("package " + metadata.getEntitymodelpackage() + ";\n\n");
 		
-			// imports
-			writer.write("import " + metadata.getModelpackage() + ".*;\n"
-						+ "import bn.blaszczyk.rose.interfaces.*;\n" );
-		
 			// class declaration
 			writer.write("\npublic class " + metadata.getEntitymodelfactoryclass() + "\n{\n");
 
-			// createBasicPanel
-			writer.write("\n\tpublic static EntityModel createModel( Entity entity )\n\t{\n\t\t");
+			// createModel
+			writer.write("\n\tpublic static bn.blaszczyk.roseapp.model.EntityModel createModel( bn.blaszczyk.roseapp.model.Entity entity )\n\t{\n\t\t");
 			for(Entity entity : entities)
-				writer.write("if( entity instanceof " + entity.getClassname() +" )\n\t\t\treturn new " 
-							+ getEntityModelName(entity, metadata) +  "( ( " + entity.getClassname() + " ) entity );\n\t\telse " );
+				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\treturn new " + metadata.getEntitymodelpackage() + "."
+							+ getEntityModelName(entity, metadata) +  "( ( " + entity.getClassName() + " ) entity );\n\t\telse " );
 			writer.write("\n\t\t\treturn null;\n\t}\n" );
 		
 			writer.write("}\n");

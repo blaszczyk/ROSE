@@ -1,54 +1,37 @@
-package bn.blaszczyk.rose.themes.defaulttheme.inputpanels;
+package bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels;
 
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class DateInputPanel extends AbstractInputPanel<Date> {
-	
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+public class StringInputPanel extends AbstractInputPanel<String> {
 	
 	private final JLabel label = new JLabel();
 	private final JTextField textField = new JTextField();
 	
-	private Date defValue;
-	
-	public DateInputPanel( String name, Date defValue )
+	public StringInputPanel( String name, String defvalue )
 	{
-		this.defValue = defValue;
-		
 		label.setText(name);
 		label.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
 		add(label);
 		
-		setValue(defValue);
+		textField.setText(defvalue);
 		textField.setBounds( PROPERTY_WIDTH + H_SPACING , 0, VALUE_WIDTH, LBL_HEIGHT);
 		add(textField);
 	}
 	
 	@Override
-	public Date getValue()
+	public String getValue()
 	{
-		try
-		{
-			return DATE_FORMAT.parse(textField.getText());
-		}
-		catch (ParseException e)
-		{
-			return defValue;
-		}
+		return textField.getText();
 	}
 	
 	@Override
-	public void setValue(Date value)
+	public void setValue(String value)
 	{	
-		textField.setText( DATE_FORMAT.format(value) );
+		textField.setText(value);
 	}
 		
 	@Override

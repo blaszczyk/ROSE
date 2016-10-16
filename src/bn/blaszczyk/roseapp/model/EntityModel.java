@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.interfaces;
+package bn.blaszczyk.roseapp.model;
 
 
 public interface EntityModel {
@@ -12,7 +12,7 @@ public interface EntityModel {
 	public Object getMemberValue( int index );
 	
 	public int getEntityCount();
-	public Entity getEntityMember( int index );
+	public Object getEntityMember( int index );
 	public String getEntityName( int index );
 	public RelationType getRelationType( int index );
 	

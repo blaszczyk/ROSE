@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import bn.blaszczyk.rose.creators.*;
-import bn.blaszczyk.rose.interfaces.RelationType;
 import bn.blaszczyk.rose.model.*;
+import bn.blaszczyk.roseapp.model.RelationType;
 
 public class RoseParser {
 	
@@ -25,7 +25,7 @@ public class RoseParser {
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
 				MetaDataParser.parseMember(metadata, split[1], split[2]);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
-				parseEntity(split[2],  entities, scanner);
+				parseEntity(split[2],  entities, scanner,metadata);
 			else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
 				createFile(split[1], entities, metadata);				
 		}
@@ -55,6 +55,8 @@ public class RoseParser {
 			JavaEntityModelCreator.createFactory(entities, metadata);
 			break;
 		case "javacontroller":
+			for(Entity entity : entities)
+				JavaControllerCreator.create(entity, metadata);
 			JavaControllerCreator.create(entities, metadata);
 			break;
 		// TODO: java CRUD, hibernate.cfg.xml
@@ -64,9 +66,9 @@ public class RoseParser {
 		}
 	}
 	
-	private static void parseEntity(String sqlname, List<Entity> entities, Scanner scanner) throws ParseException
+	private static void parseEntity(String sqlname, List<Entity> entities, Scanner scanner, MetaData metadata) throws ParseException
 	{
-		Entity entity = new Entity(sqlname);
+		Entity entity = new Entity(sqlname,metadata.getModelpackage());
 		Entity subentity;
 		RelationType type;
 		String line;
@@ -100,7 +102,7 @@ public class RoseParser {
 	private static Entity getEntityType(String classname, List<Entity> entities)
 	{
 		for(Entity entity : entities)
-			if( entity.getClassname().equalsIgnoreCase( classname ) )
+			if( entity.getSimpleClassName().equalsIgnoreCase( classname ) )
 				return entity;
 		return null;
 	}

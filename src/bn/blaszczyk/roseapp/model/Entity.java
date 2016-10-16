@@ -1,4 +1,4 @@
-package bn.blaszczyk.rose.interfaces;
+package bn.blaszczyk.roseapp.model;
 
 public interface Entity {
 	public Integer getId();

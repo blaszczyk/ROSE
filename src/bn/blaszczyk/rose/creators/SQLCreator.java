@@ -7,11 +7,11 @@ import java.io.Writer;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.interfaces.RelationType;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EntityMember;
 import bn.blaszczyk.rose.model.Member;
+import bn.blaszczyk.roseapp.model.RelationType;
 
 public class SQLCreator {
 	
@@ -37,7 +37,7 @@ public class SQLCreator {
 //								+ metadata.getDbname() + "' and table_name = '" + entities.get(i).getClassname() + "')\n");
 					break;
 				}
-				writer.write("drop table " + entities.get(i).getClassname() + ";\n\n");
+				writer.write("drop table " + entities.get(i).getSimpleClassName() + ";\n\n");
 			}
 			for(Entity entity : entities)
 				createTable(entity, metadata, dbType, writer);
@@ -52,10 +52,10 @@ public class SQLCreator {
 	private static void createTable(Entity entity, MetaData metadata, DBType dbType, Writer writer) throws IOException
 	{
 		// create table
-		writer.write( "create table " + entity.getClassname() + "\n(\n" );
+		writer.write( "create table " + entity.getSimpleClassName() + "\n(\n" );
 		
 		// primary column
-		writer.write("\t" + entity.getJavaname() + "_id int");
+		writer.write("\t" + entity.getObjectName() + "_id int");
 		switch(dbType)
 		{
 		case MYSQL:
@@ -74,15 +74,15 @@ public class SQLCreator {
 				writer.write( "\t" + entityMember.getName() + "_id int,\n" );
 		
 		// primary key
-		writer.write( "\tconstraint pk_" + entity.getClassname().toLowerCase() + " primary key ( " + entity.getJavaname() + "_id )");
+		writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
 		
 		//foreign keys
 		if(metadata.isUsingForeignKeys())
 			for(EntityMember entityMember : entity.getEntityMembers())
 				if(entityMember.getType() == RelationType.MANYTOONE)
-					writer.write( ",\n\tconstraint fk_" + entity.getClassname().toLowerCase() + "_" + entityMember.getEntity().getClassname().toLowerCase()
+					writer.write( ",\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityMember.getEntity().getSimpleClassName().toLowerCase()
 								+ " foreign key ( " + entityMember.getName() + "_id ) references "
-								+ entityMember.getEntity().getClassname() + "( " + entityMember.getEntity().getJavaname() + "_id )");
+								+ entityMember.getEntity().getSimpleClassName() + "( " + entityMember.getEntity().getObjectName() + "_id )");
 		//fin
 		writer.write( "\n);\n\n" );
 	}
