@@ -112,12 +112,14 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	
 	private void addMemberTable( List<EntityModel> entityModels )
 	{
-		MemberTableModel tableModel = new MemberTableModel(entityModels);
+		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
 		MemberTable table = new MemberTable( tableModel, controller );
+		table.setButtonColumn(0, "view.png", e -> controller.createFullPanelDialog( e ));
 		JPanel panel = table.getPanel();
 		panel.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
 		add(panel);
 		computeDimensions( panel.getHeight(), panel.getWidth() );
+		System.out.println(table.getModel());
 	}
 	
 	private void computeDimensions( int height, int width )

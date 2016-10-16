@@ -3,16 +3,24 @@ package bn.blaszczyk.roseapp.themes.defaulttheme;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
+import bn.blaszczyk.roseapp.model.Entity;
+import bn.blaszczyk.roseapp.model.EntityModel;
 
 @SuppressWarnings("serial")
 public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 
+	
+	public interface EntityAction
+	{
+		public void performAction(EntityModel entityModel);
+	}
 
 	
 	/*
@@ -23,12 +31,21 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 				boolean hasFocus, int row, int column) {
 			String text = "";
-			if(value instanceof Date)
+			if(value instanceof Icon)
+			{
+				JButton button = new JButton((Icon)value);
+				button.addActionListener(e -> buttonActions[column].performAction(tableModel.getEntityModel(row)  ));
+				button.setBackground( row % 2 == 0 ? EVEN_BG : ODD_BG);
+				return button;
+			}
+			else if(value instanceof Date)
 				text = DATE_FORMAT.format(value);
 			else if(value instanceof Double)
 				text = DOUBLE_FORMAT.format(value);
 			else if(value instanceof Integer)
 				text = INT_FORMAT.format(value);
+			else if(value instanceof BigDecimal)
+				text = DOUBLE_FORMAT.format(value);
 			else if(value instanceof String)
 				text = (String) value;
 			
@@ -61,12 +78,16 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 //	private MemberTableModel tableModel;
 	private JPanel panel = new JPanel();
 	private GUIController controller;
+	private EntityAction[] buttonActions;
+	private MemberTableModel tableModel;
 //	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
 	public MemberTable(MemberTableModel tableModel, GUIController controller)
 	{
 		super(tableModel);
+		this.tableModel = tableModel;
 		this.controller = controller;
+		buttonActions = new EntityAction[tableModel.getButtonCount()];
 //		this.tableModel = tableModel;
 		panel.setLayout(null);
 		JScrollPane scrollPane = new JScrollPane(this);
@@ -100,6 +121,14 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 		setCellRenderer();
 		setWidths();
 	}
+	
+	
+	public void setButtonColumn( int columnIndex, String iconFile,  EntityAction action)
+	{
+		if(columnIndex < 0 || columnIndex >= buttonActions.length)
+			buttonActions[columnIndex] = action;
+		tableModel.setButtonIcon(columnIndex, new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))));
+	}
 
 //	@Override
 //	public int getWidth()
@@ -130,7 +159,7 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 	{
 		for(int i = 0 ; i < this.getColumnCount(); i++)
 		{
-			int width = Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
+			int width = i < tableModel.getButtonCount() ? BUTTON_WIDTH : Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
 			if( width >= 0 )
 			{
 				getColumnModel().getColumn(i).setPreferredWidth(width);

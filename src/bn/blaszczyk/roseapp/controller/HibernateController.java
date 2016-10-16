@@ -64,6 +64,29 @@ public class HibernateController implements FullModelController {
 	{
 		return controller.createNew(className);
 	}
+	
+	@Override
+	public Entity createCopy(Entity entity)
+	{
+		Entity copy = createNew(entity.getClass().getSimpleName());
+		EntityModel entityModel = createModel(entity);
+		try
+		{
+			for(int i = 0; i < entityModel.getMemberCount(); i++)
+				setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
+			for(int i = 0; i < entityModel.getEntityCount(); i++)
+				if(entityModel.getRelationType(i).isSecondMany())
+					for( Object o : (List<?>) entityModel.getEntityMember(i) )
+						addEntityMember(copy, entityModel.getEntityName(i), (Entity) o);
+				else
+					setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+		return copy;
+	}
 
 	@Override
 	public EntityModel createModel( Entity entity )

@@ -70,7 +70,7 @@ public class JavaControllerCreator {
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ DEL_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value.toString() );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
-			
+
 			//public Entity createNew( String className);
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.Entity createNew( String className )\n\t{\n\t\tswitch( className.toLowerCase() )\n\t\t{\n" );
 			for(Entity entity : entities)

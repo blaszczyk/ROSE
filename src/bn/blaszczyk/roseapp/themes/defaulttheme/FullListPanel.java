@@ -20,8 +20,9 @@ public class FullListPanel extends JPanel implements ThemeConstants {
 		List<EntityModel> entityModels = new ArrayList<>();
 		for(Object o : modelController.getAll(type))
 			entityModels.add(modelController.createModel((Entity)o));
-		MemberTableModel tableModel = new MemberTableModel(entityModels);
+		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
 		MemberTable table = new MemberTable(tableModel, guiController);
+		table.setButtonColumn(0, "view.png", e -> guiController.createFullPanelDialog( e ));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(H_SPACING, V_SPACING, TABLE_WIDTH, TABLE_HEIGHT);
 		add(scrollPane);

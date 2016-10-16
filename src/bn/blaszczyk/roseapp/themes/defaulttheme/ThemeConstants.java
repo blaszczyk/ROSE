@@ -54,6 +54,8 @@ public interface ThemeConstants {
 	public static final int CELL_WIDTH = 100;
 	public static final int TABLE_HEIGHT = 150;
 	public static final int TABLE_WIDTH = 800;
+	
+	public static final int BUTTON_WIDTH = 24;
 
 	public static final DateFormat  DATE_FORMAT = new SimpleDateFormat("dd.MM.YY");
 	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
