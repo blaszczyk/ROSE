@@ -5,11 +5,10 @@
 
 package bn.blaszczyk.rose;
 
-import java.text.ParseException;
 
 public class MetaDataParser
 {
-	public static void parseMember( bn.blaszczyk.rose.MetaData metaData, String name, String value ) throws ParseException
+	public static void parseMember( bn.blaszczyk.rose.MetaData metaData, String name, String value ) throws java.text.ParseException
 	{
 		switch( name.toLowerCase() )
 		{

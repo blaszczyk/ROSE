@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -52,6 +52,8 @@ public interface ThemeConstants {
 	
 	public static final int CELL_HEIGTH = 25;
 	public static final int CELL_WIDTH = 100;
+	
+	public static final int CELL_SPACING = 3;
 	public static final int TABLE_HEIGHT = 150;
 	public static final int TABLE_WIDTH = 800;
 	
@@ -74,6 +76,9 @@ public interface ThemeConstants {
 	
 	// Main Frame
 	
-	public static final int MF_WIDTH = 1000;
-	public static final int MF_HEIGTH = 800;
+	
+	public static final int FULL_TABLE_HEIGHT = 700;
+	
+	public static final int MF_WIDTH = 1900;
+	public static final int MF_HEIGTH = 1000;
 }

@@ -9,6 +9,7 @@ public class Entity {
 	private String classname;
 	private String javaname;
 	private String packagename;
+	private String toString;
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
  
@@ -37,10 +38,16 @@ public class Entity {
 		return classname;
 	}
 
-//	public Member getPrimary()
-//	{
-//		return primary;
-//	}
+	
+	public String getToString()
+	{
+		return toString;
+	}
+
+	public void setToString(String toString)
+	{
+		this.toString = toString;
+	}
 
 	public List<Member> getMembers()
 	{
@@ -76,5 +83,6 @@ public class Entity {
 			break;
 		}
 	}
+	
 	
 }

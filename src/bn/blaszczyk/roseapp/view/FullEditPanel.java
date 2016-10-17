@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
-		addTitle( "Edit " + entityModel.getName() );
+		addTitle( entityModel );
 		basicPanel = addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
@@ -67,16 +67,18 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		
 	}
 
-	private void addTitle( String title )
+	private void addTitle( EntityModel entityModel )
 	{
 		height += V_OFFSET;
-		JLabel lblTitle = new JLabel( title );
+
+		JLabel lblTitle = new JLabel( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
 		lblTitle.setFont(TITLE_FONT);
 		lblTitle.setForeground(TITLE_FG);
 		lblTitle.setBackground(TITLE_BG);
 		lblTitle.setBounds(H_SPACING, height, TITLE_WIDTH, TITLE_HEIGHT);
 		lblTitle.setOpaque(true);
 		add(lblTitle);
+		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
 

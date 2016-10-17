@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels;
+package bn.blaszczyk.roseapp.view.inputpanels;
 
 import java.awt.event.ActionListener;
 import java.text.DateFormat;

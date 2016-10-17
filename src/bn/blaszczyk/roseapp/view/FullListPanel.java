@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +20,12 @@ public class FullListPanel extends JPanel implements ThemeConstants {
 		List<EntityModel> entityModels = new ArrayList<>();
 		for(Object o : modelController.getAll(type))
 			entityModels.add(modelController.createModel((Entity)o));
-		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
+		MemberTableModel tableModel = new MemberTableModel(entityModels,2);
 		MemberTable table = new MemberTable(tableModel, guiController);
 		table.setButtonColumn(0, "view.png", e -> guiController.createFullPanelDialog( e ));
+		table.setButtonColumn(1, "edit.png", e -> guiController.createEditPanelDialog( e ));
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(H_SPACING, V_SPACING, TABLE_WIDTH, TABLE_HEIGHT);
+		scrollPane.setBounds(H_SPACING, V_SPACING, table.getWidth(), FULL_TABLE_HEIGHT);
 		add(scrollPane);
 		
 		JButton btnNew = new JButton("New " + type.getSimpleName() );

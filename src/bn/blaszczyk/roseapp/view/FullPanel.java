@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
@@ -26,7 +27,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		this.controller = controller;
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
-		addTitle( entityModel.getName(), entityModel );
+		addTitle( entityModel );
 		addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
@@ -53,28 +54,29 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 
 	private void addTitle( String title )
 	{
+	}
+	
+	private void addTitle( EntityModel entityModel )
+	{
 		height += V_OFFSET;
-		JLabel lblTitle = new JLabel( title );
+
+		JLabel lblTitle = new JLabel( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
 		lblTitle.setFont(TITLE_FONT);
 		lblTitle.setForeground(TITLE_FG);
 		lblTitle.setBackground(TITLE_BG);
 		lblTitle.setBounds(H_SPACING, height, TITLE_WIDTH, TITLE_HEIGHT);
 		lblTitle.setOpaque(true);
 		add(lblTitle);
-		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
-	}
-	
-	private void addTitle( String title, EntityModel entityModel )
-	{
+		
 		JButton btnEdit = new JButton("Edit");
-		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
+		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
 		btnEdit.addActionListener( e -> {
 			controller.createEditPanelDialog(entityModelCpy);
 		} );
 		add(btnEdit);
-		
-		addTitle(title);				
+
+		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);				
 	}
 
 	private void addSubTitle( String subtitle, EntityModel entityModel )
@@ -115,10 +117,10 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
 		MemberTable table = new MemberTable( tableModel, controller );
 		table.setButtonColumn(0, "view.png", e -> controller.createFullPanelDialog( e ));
-		JPanel panel = table.getPanel();
-		panel.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
-		add(panel);
-		computeDimensions( panel.getHeight(), panel.getWidth() );
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
+		add(scrollPane);
+		computeDimensions( scrollPane.getHeight(), scrollPane.getWidth() );
 		System.out.println(table.getModel());
 	}
 	

@@ -7,11 +7,11 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
-import bn.blaszczyk.roseapp.themes.defaulttheme.FullEditPanel;
-import bn.blaszczyk.roseapp.themes.defaulttheme.FullListPanel;
-import bn.blaszczyk.roseapp.themes.defaulttheme.FullPanel;
-import bn.blaszczyk.roseapp.themes.defaulttheme.MainFrame;
-import bn.blaszczyk.roseapp.themes.defaulttheme.MyPanel;
+import bn.blaszczyk.roseapp.view.FullEditPanel;
+import bn.blaszczyk.roseapp.view.FullListPanel;
+import bn.blaszczyk.roseapp.view.FullPanel;
+import bn.blaszczyk.roseapp.view.MainFrame;
+import bn.blaszczyk.roseapp.view.MyPanel;
 
 public class GUIController {
 

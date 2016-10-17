@@ -173,8 +173,8 @@ public class JavaModelCreator {
 					writer.write("\n\tpublic void " + getSetterName(entityMember) + "( " + entityMember.getEntity().getSimpleClassName() 
 							+ " " 	+ entityMember.getName() + " )\n\t{\n\t\tthis." + entityMember.getName() + " = " 
 							+ entityMember.getName() + ";\n");
-					if(entityMember.getType().isFirstMany())
-					writer.write("\t\t" + entityMember.getName() + "." + getGetterName(entityMember.getCouterpart()) + "().add(this);\n");
+//					if(entityMember.getType().isFirstMany())
+//						writer.write("\t\t" + entityMember.getName() + "." + getGetterName(entityMember.getCouterpart()) + "().add(this);\n");
 					writer.write("\t}\n\n" );
 				}
 			}
@@ -183,7 +183,14 @@ public class JavaModelCreator {
 			writer.write("\t@Override\n\tpublic int compareTo(" + entity.getSimpleClassName() + " that)\n\t{\n"
 					+ "\t\treturn Integer.compare( this.id, that.id );\n"
 					+ "\t}\n\n");
-			// TODO? toString, equals, hashValue	
+			
+			String toString = "\"" + entity.getToString() + "\"";
+			for(Member member : entity.getMembers() )
+				toString = toString.replaceAll("\\%" + member.getName(), "\" + " + member.getName() + " + \"");			
+			toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
+			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn " + toString + ";\n\t}\n\n");
+			
+			// TODO? equals, hashValue	
 			// fin
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

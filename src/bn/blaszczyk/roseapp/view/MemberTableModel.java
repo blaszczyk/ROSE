@@ -1,14 +1,18 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import com.mysql.fabric.xmlrpc.base.Data;
+
 import bn.blaszczyk.roseapp.model.EntityModel;
 
-public class MemberTableModel implements TableModel {
+public class MemberTableModel implements TableModel, ThemeConstants {
 	
 	private List<EntityModel> entityModels;
 	private boolean empty;
@@ -96,6 +100,18 @@ public class MemberTableModel implements TableModel {
 	public int getButtonCount()
 	{
 		return buttonCount;
+	}
+	
+	public int getColumnWidth( int columnIndex )
+	{
+		if( getColumnClass(columnIndex) == String.class )
+			return 7 * first.getLength1(columnIndex-buttonCount);
+		else if( getColumnClass(columnIndex) == BigDecimal.class )
+			return 15 * first.getLength1(columnIndex-buttonCount);
+		else if( getColumnClass(columnIndex) == Icon.class )
+			return BUTTON_WIDTH;
+		else 
+			return CELL_WIDTH;
 	}
 
 	

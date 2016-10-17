@@ -92,13 +92,27 @@ public class JavaEntityModelCreator {
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.getType().isSecondMany() ? "s" : "" ) +  "\";\n" );
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
-			
+
 			// public RelationType getRelationType( int index );			
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
+
+			// public int getLength1( int index );			
+			writer.write("\t@Override\n\tpublic int getLength1(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			count = 0;
+			for(Member member : entity.getMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + member.getLength1() + ";\n" );
+			writer.write("\t\t}\n\t\treturn 0;\n\t}\n\n");
+			
+			// public int getLength2( int index );			
+			writer.write("\t@Override\n\tpublic int getLength2(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			count = 0;
+			for(Member member : entity.getMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + member.getLength2() + ";\n" );
+			writer.write("\t\t}\n\t\treturn 0;\n\t}\n\n");
 
 			// public EntityModel createModel( Entity entity );
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.EntityModel createModel( bn.blaszczyk.roseapp.model.Entity entity )\n\t{\n\t\treturn " 

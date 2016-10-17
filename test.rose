@@ -24,29 +24,33 @@ set entitymodelformat %sEntityModel
 set entitymodelfactoryclass EntityModelFactory
 
 begin entity FooProp
-	prop1 varchar(40) "Prop1"
-	prop2 varchar(40) "Prop2"
-	prop3 varchar(40) "Prop3"
+	varchar(40) prop1 "Prop1"
+	varchar(40) prop2 "Prop2"
+	varchar(40) prop3 "Prop3"
+	tostring Prop1 = %prop1, Prop2 = %prop2
 end entity
 
 begin entity Foo
-	fooVarchar varchar(50) ""
-	fooDate date 
-	fooNumeric numeric(9,2) 1234567.89
-	fooChar char(30) "foo"
+	varchar(50) fooVarchar ""
+	date fooDate 
+	numeric(9,2) fooNumeric 1234567.89
+	char(30) fooChar "foo"
 	onetoone FooProp
+	tostring %fooVarchar - %fooDate - %fooNumeric - %fooChar
 end entity
 
 begin entity Bar
-	barVarchar varchar(20) "bar"
-	barInt int 45
+	varchar(20) barVarchar "bar"
+	int barInt 45
 	manytoone Foo
+	tostring %barVarchar Nr %barInt
 end entity
 
 begin entity FooBar
-	foobarstring varchar(30) "foobar"
+	varchar(30) foobarstring "0123456789"
 	manytoone Foo
 	manytoone Bar myBar
+	tostring this foobars name is %foobarstring
 end entity
 
 create sqlcreate

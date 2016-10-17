@@ -71,30 +71,54 @@ public class RoseParser {
 		Entity entity = new Entity(sqlname,metadata.getModelpackage());
 		Entity subentity;
 		RelationType type;
-		String line;
+		String line, command;
 		String[] split;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
-			split = line.split("\\s+",3); // Split at any number of Whilespaces
-			if(split.length > 1 && isMemberType(split[1]) )
-				if( split.length > 2)
-					entity.addMember(new Member(split[0], split[1], split[2]));
+			split = line.split("\\s+",2);
+			if(split.length == 1 )
+				continue;
+			command = split[0];
+			if( isMemberType(command) )
+			{
+				split = split[1].split("\\s+",2);
+				if(split.length == 2)
+					entity.addMember(new Member(command, split[0], split[1]));
 				else
-					entity.addMember(new Member(split[0], split[1]));
-			else if( split.length == 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )
-				entity.addEntityMember(new EntityMember(subentity, type, null));
-			else if( split.length > 2 && ( subentity = getEntityType(split[1], entities) ) != null && ( type = getRelationType(split[0]) ) != null )
-				entity.addEntityMember(new EntityMember(subentity, type, split[2]));
-			else if( split.length > 1 )
+					entity.addMember(new Member(command, split[0]));
+			}
+			else if( isRelationType(command) )
+			{
+				split = split[1].split("\\s+", 2);
+				if( (subentity = getEntityType(split[0], entities)) != null )
+					if(split.length == 2)
+						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1]));					
+					else
+						entity.addEntityMember(new EntityMember(subentity, getRelationType(command),null));			
+			}
+			else if( command.equalsIgnoreCase("tostring"))
+			{
+				if(split.length == 2)
+					entity.setToString(split[1]);
+			}
+			else 
 				System.out.println("Invalid Member: " + line);
 		}
 		entities.add(entity);
 	}
-	
+
 	private static boolean isMemberType(String sqltype)
 	{
 		for(MemberType memberType : MemberType.values())
 			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
+				return true;
+		return false;
+	}
+	
+	private static boolean isRelationType(String name)
+	{
+		for(RelationType type : RelationType.values())
+			if( name .equalsIgnoreCase( type.getName() ) )
 				return true;
 		return false;
 	}

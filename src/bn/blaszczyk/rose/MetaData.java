@@ -285,4 +285,10 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		return Integer.compare( this.id, that.id );
 	}
 
+	@Override
+	public String toString()
+	{
+		return "null";
+	}
+
 }

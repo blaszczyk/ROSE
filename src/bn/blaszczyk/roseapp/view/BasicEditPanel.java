@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.EntityModel;
-import bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels.*;
+import bn.blaszczyk.roseapp.view.inputpanels.*;
 
 @SuppressWarnings("serial")
 public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {

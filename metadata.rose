@@ -6,30 +6,30 @@ set srcpath src/
 
 begin entity MetaData
 
-	srcpath varchar(50) "src/"
-	sqlpath varchar(50) "sql/"
+	varchar(50) srcpath "src/"
+	varchar(50) sqlpath "sql/"
 	
-	usingForeignKeys boolean false
-	dbtype varchar(50) "mysql"
-	dbuser varchar(50) "root"
-	dbpassword varchar(50) ""
-	dbserver varchar(50) "localhost"
-	dbport char(5) "3306"
-	dbname varchar(50) "MyDB"
+	boolean usingForeignKeys false
+	varchar(50) dbtype "mysql"
+	varchar(50) dbuser "root"
+	varchar(50) dbpassword ""
+	varchar(50) dbserver "localhost"
+	char(5) dbport "3306"
+	varchar(50) dbname "MyDB"
 	
-	modelpackage varchar(50) null
-	usingAnnotations boolean false
+	varchar(50) modelpackage null
+	boolean usingAnnotations false
 	
-	parserpackage varchar(50) null
-	parserformat varchar(50) "%sParser"
+	varchar(50) parserpackage null
+	varchar(50) parserformat "%sParser"
 	
-	controllerpackage varchar(50) null
-	controllerformat varchar(50) "%sController"
-	controllerclass varchar(50) "BasicController"
+	varchar(50) controllerpackage null
+	varchar(50) controllerformat "%sController"
+	varchar(50) controllerclass "BasicController"
 	
-	entitymodelpackage varchar(50) null
-	entitymodelformat varchar(50) "%sEntityModel"
-	entitymodelfactoryclass varchar(50) "EntityModelFactory"
+	varchar(50) entitymodelpackage null
+	varchar(50) entitymodelformat "%sEntityModel"
+	varchar(50) entitymodelfactoryclass "EntityModelFactory"
 	
 end entity
 

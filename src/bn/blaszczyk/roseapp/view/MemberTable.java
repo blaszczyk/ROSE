@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme;
+package bn.blaszczyk.roseapp.view;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -14,7 +14,7 @@ import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.model.EntityModel;
 
 @SuppressWarnings("serial")
-public class MemberTable extends JTable implements MyPanel, ThemeConstants {
+public class MemberTable extends JTable implements ThemeConstants {
 
 	
 	public interface EntityAction
@@ -80,6 +80,9 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 	private GUIController controller;
 	private EntityAction[] buttonActions;
 	private MemberTableModel tableModel;
+	
+	private int width = TABLE_WIDTH;
+	private int height = TABLE_HEIGHT;
 //	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
 	public MemberTable(MemberTableModel tableModel, GUIController controller)
@@ -89,14 +92,11 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 		this.controller = controller;
 		buttonActions = new EntityAction[tableModel.getButtonCount()];
 //		this.tableModel = tableModel;
-		panel.setLayout(null);
-		JScrollPane scrollPane = new JScrollPane(this);
-		scrollPane.setBounds(0, 0, getWidth(), getHeight());
-		panel.add(scrollPane);
+
 		
 
 		setShowGrid(false);
-		setIntercellSpacing(new Dimension(0, 0));
+		setIntercellSpacing(new Dimension(CELL_SPACING, CELL_SPACING));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		getTableHeader().setFont(HEADER_FONT);
 //		setRowSorter(sorter);
@@ -130,23 +130,18 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 		tableModel.setButtonIcon(columnIndex, new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))));
 	}
 
-//	@Override
-//	public int getWidth()
-//	{
-//		return Math.max(getColumnCount()* CELL_WIDTH + 16, TABLE_WIDTH);
-//	}
-//
-//	@Override
-//	public int getHeight()
-//	{
-//		return Math.min( (getRowCount()+1) * CELL_HEIGTH + 6, TABLE_HEIGHT);
-//	}
-	
 	@Override
-	public JPanel getPanel()
+	public int getWidth()
 	{
-		return panel;
+		return width;
 	}
+
+	@Override
+	public int getHeight()
+	{
+		return height;
+	}
+
 	
 	private void setCellRenderer()
 	{
@@ -157,14 +152,17 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 	
 	private void setWidths()
 	{
+		this.width = 0;
 		for(int i = 0 ; i < this.getColumnCount(); i++)
 		{
-			int width = i < tableModel.getButtonCount() ? BUTTON_WIDTH : Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
+//			int width = i < tableModel.getButtonCount() ? BUTTON_WIDTH : Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
+			int width = tableModel.getColumnWidth(i);
 			if( width >= 0 )
 			{
 				getColumnModel().getColumn(i).setPreferredWidth(width);
 				getColumnModel().getColumn(i).setMinWidth(width);
 				getColumnModel().getColumn(i).setMaxWidth(width);
+				this.width += width + CELL_SPACING;
 			}
 		}
 	}

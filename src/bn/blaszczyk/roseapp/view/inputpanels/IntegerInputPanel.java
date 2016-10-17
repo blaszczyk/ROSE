@@ -1,31 +1,20 @@
-package bn.blaszczyk.roseapp.themes.defaulttheme.inputpanels;
+package bn.blaszczyk.roseapp.view.inputpanels;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> implements KeyListener {
-
-	private static final DecimalFormat BIG_DEC_FORMAT = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
-	
-	static{
-		BIG_DEC_FORMAT.setParseBigDecimal(true);
-	}
+public class IntegerInputPanel extends AbstractInputPanel<Integer> implements KeyListener {
 	
 	private final JLabel label = new JLabel();
 	private final JTextField textField = new JTextField();
 	
-	public BigDecimalInputPanel( String name, BigDecimal defvalue )
+	public IntegerInputPanel( String name, Integer defvalue )
 	{
 		
 		label.setText(name);
@@ -39,20 +28,13 @@ public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> impleme
 	}
 	
 	@Override
-	public BigDecimal getValue()
+	public Integer getValue()
 	{
-		try
-		{
-			return (BigDecimal) BIG_DEC_FORMAT.parse(textField.getText());
-		}
-		catch (ParseException e)
-		{
-			return BigDecimal.ZERO;
-		}
+		return Integer.parseInt(textField.getText());
 	}
 	
 	@Override
-	public void setValue(BigDecimal value)
+	public void setValue(Integer value)
 	{	
 		textField.setText("" + value);
 	}
@@ -75,6 +57,11 @@ public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> impleme
 		textField.removeActionListener(l);
 	}
 
+	private void shiftReverenceValue(int diff)
+	{
+		int newValue = getValue() + diff;
+		textField.setText( newValue + "" );
+	}	
 
 	/*
 	 * KeyListener Methods
@@ -82,6 +69,16 @@ public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> impleme
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
+		switch(e.getKeyCode())
+		{
+		case KeyEvent.VK_UP:
+			shiftReverenceValue(1);
+			break;
+		case KeyEvent.VK_DOWN:
+			shiftReverenceValue(-1);
+			break;
+		}
+		textField.requestFocusInWindow();
 	}
 
 	@Override
@@ -95,7 +92,7 @@ public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> impleme
 	{
 		textField.replaceSelection(null);
 		char c = e.getKeyChar();
-		if (!Character.isISOControl(c) && !Character.isDigit(c) && !"-.,".contains("" + c) )
+		if (!Character.isISOControl(c) && !Character.isDigit(c) && c!='-')
 		{
 			Toolkit.getDefaultToolkit().beep();
 			e.consume();
