@@ -23,7 +23,7 @@ public class GUIController {
 
 	public void openEdit( EntityModel entityModel)
 	{
-		MyPanel panel = new FullEditPanel(entityModel,modelController);
+		MyPanel panel = new FullEditPanel(entityModel,modelController, this);
 		openTab(panel, entityModel, "edit.png");
 		
 //
