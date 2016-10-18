@@ -18,6 +18,8 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	private String dbserver = "localhost";
 	private String dbport = "3306";
 	private String dbname = "MyDB";
+	private String mainpackage = null;
+	private String mainname = "Main";
 	private String modelpackage = null;
 	private Boolean usingAnnotations = false;
 	private String parserpackage = null;
@@ -34,7 +36,7 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerformat, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
+	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String mainpackage, String mainname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerformat, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
 	{
 		this.srcpath = srcpath;
 		this.sqlpath = sqlpath;
@@ -45,6 +47,8 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.dbserver = dbserver;
 		this.dbport = dbport;
 		this.dbname = dbname;
+		this.mainpackage = mainpackage;
+		this.mainname = mainname;
 		this.modelpackage = modelpackage;
 		this.usingAnnotations = usingAnnotations;
 		this.parserpackage = parserpackage;
@@ -167,6 +171,28 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	public void setDbname( String dbname )
 	{
 		this.dbname = dbname;
+	}
+
+
+	public String getMainpackage()
+	{
+		return mainpackage;
+	}
+
+	public void setMainpackage( String mainpackage )
+	{
+		this.mainpackage = mainpackage;
+	}
+
+
+	public String getMainname()
+	{
+		return mainname;
+	}
+
+	public void setMainname( String mainname )
+	{
+		this.mainname = mainname;
 	}
 
 

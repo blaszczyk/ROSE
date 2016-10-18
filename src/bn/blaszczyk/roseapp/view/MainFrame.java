@@ -11,9 +11,9 @@ public class MainFrame extends JFrame implements ThemeConstants {
 
 	JTabbedPane tabbedPane = new JTabbedPane();
 	
-	public MainFrame(FullModelController modelController, GUIController guiController, Class<?>... types)
+	public MainFrame(FullModelController modelController, GUIController guiController, Class<?>[] types, String title)
 	{
-		super("Overview");
+		super(title);
 		for(Class<?> type : types)
 		{
 			FullListPanel panel = new FullListPanel(modelController, guiController, type);

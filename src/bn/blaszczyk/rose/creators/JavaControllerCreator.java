@@ -31,41 +31,34 @@ public class JavaControllerCreator {
 			// package declaration
 			writer.write("package " + metadata.getControllerpackage() + ";\n\n");
 			
-			// imports
-//			writer.write("import " + metadata.getEntitymodelpackage() + ".*;\n");
-			writer.write("import java.text.ParseException;\n");
-//			writer.write("import " + metadata.getModelpackage() + ".*;\n"
-//						+ "import bn.blaszczyk.rose.controller.BasicModelController;\n"
-//						+ "import bn.blaszczyk.rose.interfaces.*\n;" );
-			
 			// class declaration
 			writer.write("\npublic class " + metadata.getControllerclass() + " implements bn.blaszczyk.roseapp.controller.BasicModelController\n{\n\n");
 			
 			// implement methods
 			
 			//public void setMember( Entity entity, String name, Object value);
-			writer.write("\t@Override\n\tpublic void setMember( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value) throws ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void setMember( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value) throws java.text.ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			//public void setEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void setEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void setEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			//public void addEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void addEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void addEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ ADD_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 
 			//public void deleteEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void deleteEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void deleteEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ DEL_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );

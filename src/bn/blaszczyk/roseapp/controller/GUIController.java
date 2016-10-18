@@ -1,8 +1,6 @@
 package bn.blaszczyk.roseapp.controller;
 
 import java.awt.Component;
-import java.awt.Window;
-
 
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.*;
@@ -17,13 +15,13 @@ public class GUIController {
 		this.modelController = modelController;
 	}
 
-	public void createFullPanelDialog(EntityModel entityModel)
+	public void openView(EntityModel entityModel)
 	{
 		MyPanel panel = new FullPanel(entityModel,this);
 		openTab(panel, entityModel, "view.png");
 	}
 
-	public void createEditPanelDialog( EntityModel entityModel)
+	public void openEdit( EntityModel entityModel)
 	{
 		MyPanel panel = new FullEditPanel(entityModel,modelController);
 		openTab(panel, entityModel, "edit.png");
@@ -38,9 +36,9 @@ public class GUIController {
 //
 	}
 	
-	public void createMainFrame(Window owner, Class<?>... types)
+	public void createMainFrame(Class<?>[] types, String title)
 	{
-		mainFrame = new MainFrame (modelController, this, types);		
+		mainFrame = new MainFrame (modelController, this, types, title);		
 	}
 	
 	private void openTab(MyPanel panel, EntityModel entityModel, String iconFile )

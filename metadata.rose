@@ -17,6 +17,9 @@ begin entity MetaData
 	char(5) dbport "3306"
 	varchar(50) dbname "MyDB"
 	
+	varchar(50) mainpackage null
+	varchar(50) mainname "Main"
+	
 	varchar(50) modelpackage null
 	boolean usingAnnotations false
 	

@@ -71,7 +71,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
 		btnEdit.addActionListener( e -> {
-			controller.createEditPanelDialog(entityModelCpy);
+			controller.openEdit(entityModelCpy);
 		} );
 		add(btnEdit);
 
@@ -83,7 +83,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		JButton btnView = new JButton("View");
 		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
-		btnView.addActionListener( e -> controller.createFullPanelDialog(entityModelCpy) );
+		btnView.addActionListener( e -> controller.openView(entityModelCpy) );
 		add(btnView);
 		
 		addSubTitle(subtitle);		
@@ -115,7 +115,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
 		MemberTable table = new MemberTable( tableModel, controller );
-		table.setButtonColumn(0, "view.png", e -> controller.createFullPanelDialog( e ));
+		table.setButtonColumn(0, "view.png", e -> controller.openView( e ));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);

@@ -39,6 +39,12 @@ public class MetaDataParser
 		case "dbname":
 			metaData.setDbname( value );
 			break;
+		case "mainpackage":
+			metaData.setMainpackage( value );
+			break;
+		case "mainname":
+			metaData.setMainname( value );
+			break;
 		case "modelpackage":
 			metaData.setModelpackage( value );
 			break;

@@ -59,6 +59,9 @@ public class RoseParser {
 				JavaControllerCreator.create(entity, metadata);
 			JavaControllerCreator.create(entities, metadata);
 			break;
+		case "javamain":
+			JavaMainCreator.create(entities, metadata);
+			break;
 		// TODO: java CRUD
 		default:
 			System.out.println( "Unknown Agrument: create " + filetype );

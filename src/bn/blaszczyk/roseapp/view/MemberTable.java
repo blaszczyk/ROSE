@@ -115,7 +115,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 				else if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
 				{
 					int row = rowAtPoint( e.getPoint() );
-					controller.createFullPanelDialog(tableModel.getEntityModel(row));
+					controller.openView(tableModel.getEntityModel(row));
 				}
 			}
 			

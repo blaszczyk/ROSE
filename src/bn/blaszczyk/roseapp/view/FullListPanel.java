@@ -21,16 +21,16 @@ public class FullListPanel extends JPanel implements ThemeConstants {
 		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
 		MemberTable table = new MemberTable(tableModel, guiController);
 		table.setHeight(FULL_TABLE_HEIGHT);
-		table.setButtonColumn(0, "view.png", e -> guiController.createFullPanelDialog( e ));
-		table.setButtonColumn(1, "edit.png", e -> guiController.createEditPanelDialog( e ));
-		table.setButtonColumn(2, "copy.png", e -> guiController.createEditPanelDialog( modelController.createCopy( e )));
+		table.setButtonColumn(0, "view.png", e -> guiController.openView( e ));
+		table.setButtonColumn(1, "edit.png", e -> guiController.openEdit( e ));
+		table.setButtonColumn(2, "copy.png", e -> guiController.openEdit( modelController.createCopy( e )));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(H_SPACING, V_SPACING, table.getWidth(), FULL_TABLE_HEIGHT);
 		add(scrollPane);
 		
 		JButton btnNew = new JButton("New " + type.getSimpleName() );
 		btnNew.setBounds(H_SPACING, 2 * V_SPACING + FULL_TABLE_HEIGHT, 150, LBL_HEIGHT );
-		btnNew.addActionListener(e -> guiController.createEditPanelDialog( modelController.createModel( modelController.createNew( type.getSimpleName() ) ) ));
+		btnNew.addActionListener(e -> guiController.openEdit( modelController.createModel( modelController.createNew( type.getSimpleName() ) ) ));
 		add(btnNew);
 		
 		
