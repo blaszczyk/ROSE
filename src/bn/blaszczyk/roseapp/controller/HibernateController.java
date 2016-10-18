@@ -58,7 +58,9 @@ public class HibernateController implements FullModelController {
 	@Override
 	public Entity createNew(String className)
 	{
-		return controller.createNew(className);
+		Entity newEntity = controller.createNew(className);
+		changedEntitys.add(newEntity);
+		return newEntity;
 	}
 	
 	@Override
@@ -71,11 +73,22 @@ public class HibernateController implements FullModelController {
 			for(int i = 0; i < entityModel.getMemberCount(); i++)
 				setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
 			for(int i = 0; i < entityModel.getEntityCount(); i++)
-				if(entityModel.getRelationType(i).isSecondMany())
+				switch(entityModel.getRelationType(i))
+				{
+				case ONETOONE:
+					Entity subCopy = createCopy( (Entity) entityModel.getEntityMember(i) );
+					setEntityMember(copy, entityModel.getEntityName(i), subCopy );
+					break;
+				case ONETOMANY:
 					for( Object o : (Set<?>) entityModel.getEntityMember(i) )
 						addEntityMember(copy, entityModel.getEntityName(i), (Entity) o);
-				else
+					break;
+				case MANYTOONE:
 					setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
+					break;
+				case MANYTOMANY:
+					break;
+				}
 		}
 		catch (ParseException e)
 		{
@@ -95,18 +108,18 @@ public class HibernateController implements FullModelController {
 	{
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		for(Entity e : changedEntitys)
+		for(Entity entity : changedEntitys)
 		{
-			if(e.getId() < 0)
+			if(entity.getId() < 0)
 			{
-				Integer id = (Integer) session.save(e);
-				e.setId(id);
+				Integer id = (Integer) session.save(entity);
+				entity.setId(id);
 			}
 			else
-				session.update(e);
+				session.update(entity);
 		}
 		transaction.commit();
-		session.close();	
+		session.close();
 		changedEntitys.clear();
 	}
 
@@ -167,8 +180,7 @@ public class HibernateController implements FullModelController {
 					}
 				}
 			}
-		for(Class<?> type : entityModelLists.keySet())
-			System.out.println(type.getSimpleName() + " - " + entityModelLists.get(type).size());
+		changedEntitys.clear();
 	}
 	
 	@Override

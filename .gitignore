@@ -10,25 +10,22 @@ lib/
 #
 # Test Files
 #
-test.*
-caro.*
+*.rose
+!metadata.rose
 
 #
 # Generated Files
 #
 
-src/test/
-src/foo/
-src/bar/
-src/foobar/
-src/caro/
-src/hibernate.cfg.xml
+src/
+!src/bn/
 sql/
 
 #
 # Log Files
 #
-*.log
+
+*.log*
 
 #
 # Eclipse Files
