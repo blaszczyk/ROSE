@@ -19,12 +19,15 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	private int width = 2 * H_SPACING;
 	private int height = V_SPACING;
 	
+	private EntityModel entityModel;
 	private GUIController controller;
 
 	
 	public FullPanel( EntityModel entityModel, GUIController controller )
 	{
+//		System.out.println(entityModel.getEntity().hashCode() + "\t\t" + entityModel);
 		this.controller = controller;
+		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
 		addTitle( entityModel );
@@ -52,10 +55,6 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		
 	}
 
-	private void addTitle( String title )
-	{
-	}
-	
 	private void addTitle( EntityModel entityModel )
 	{
 		height += V_OFFSET;
@@ -121,7 +120,6 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		scrollPane.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);
 		computeDimensions( scrollPane.getHeight(), scrollPane.getWidth() );
-		System.out.println(table.getModel());
 	}
 	
 	private void computeDimensions( int height, int width )
@@ -146,6 +144,12 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	public JPanel getPanel()
 	{
 		return this;
+	}
+	
+	@Override
+	public Object getShownObject()
+	{
+		return entityModel.getEntity();
 	}
 	
 }

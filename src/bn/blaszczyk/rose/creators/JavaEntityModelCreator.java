@@ -117,6 +117,13 @@ public class JavaEntityModelCreator {
 			// public EntityModel createModel( Entity entity );
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.EntityModel createModel( bn.blaszczyk.roseapp.model.Entity entity )\n\t{\n\t\treturn " 
 						+ metadata.getEntitymodelfactoryclass() + ".createModel( entity );\n\t}\n\n");
+
+			// public String toString();
+			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn \"[\" + getEntity() + \"]\";\n\t}\n\n");
+			
+			// public boolean equals( Object that );
+			writer.write("\t@Override\n\tpublic boolean equals( Object that )\n\t{\n\t\tif(!(that instanceof " + classname + "))\n"
+					+ "\t\t\treturn false;\n\t\treturn ((" + classname + ")that).getEntity().equals(this.getEntity());\n\t}\n\n");
 			
 			// fin
 			writer.write("}\n");

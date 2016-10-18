@@ -291,4 +291,12 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		return "null";
 	}
 
+	@Override
+	public boolean equals( Object that)
+	{
+		if(!(that instanceof MetaData))
+			return false;
+		return this.id == ((MetaData)that).id;
+	}
+
 }

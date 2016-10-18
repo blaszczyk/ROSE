@@ -157,5 +157,10 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	{
 		return this;
 	}
-	
+
+	@Override
+	public Object getShownObject()
+	{
+		return entityModel.getEntity();
+	}
 }

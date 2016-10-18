@@ -59,7 +59,6 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		for(int i = 0 ; i < entityModel.getMemberCount(); i++ )
 			try
 			{
-				System.err.printf("%s - %s - %s\n", entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue());
 				controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
 			}
 			catch (ParseException e)
@@ -84,6 +83,12 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	public JPanel getPanel()
 	{
 		return this;
+	}
+
+	@Override
+	public Object getShownObject()
+	{
+		return entityModel.getEntity();
 	}
 	
 }

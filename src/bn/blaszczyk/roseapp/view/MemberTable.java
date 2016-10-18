@@ -10,8 +10,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
-import bn.blaszczyk.roseapp.model.Entity;
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.*;
 
 @SuppressWarnings("serial")
 public class MemberTable extends JTable implements ThemeConstants {
@@ -34,6 +33,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 			if(value instanceof Icon)
 			{
 				JButton button = new JButton((Icon)value);
+				button.setBorderPainted(false);
 				button.addActionListener(e -> buttonActions[column].performAction(tableModel.getEntityModel(row)  ));
 				button.setBackground( row % 2 == 0 ? EVEN_BG : ODD_BG);
 				return button;
@@ -76,8 +76,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 	};
 	
 //	private MemberTableModel tableModel;
-	private JPanel panel = new JPanel();
-	private GUIController controller;
+//	private GUIController controller;
 	private EntityAction[] buttonActions;
 	private MemberTableModel tableModel;
 	
@@ -89,9 +88,8 @@ public class MemberTable extends JTable implements ThemeConstants {
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
-		this.controller = controller;
+//		this.controller = controller;
 		buttonActions = new EntityAction[tableModel.getButtonCount()];
-//		this.tableModel = tableModel;
 
 		
 
@@ -107,7 +105,14 @@ public class MemberTable extends JTable implements ThemeConstants {
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
+				if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 )
+				{
+					int row = rowAtPoint(e.getPoint());
+					int col = columnAtPoint(e.getPoint());
+					if(col < tableModel.getButtonCount() )
+						buttonActions[col].performAction(tableModel.getEntityModel(row));						
+				}
+				else if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
 				{
 					int row = rowAtPoint( e.getPoint() );
 					controller.createFullPanelDialog(tableModel.getEntityModel(row));
@@ -119,14 +124,15 @@ public class MemberTable extends JTable implements ThemeConstants {
 		setRowHeight(ODD_FONT.getSize() + 10);
 		
 		setCellRenderer();
-		setWidths();
+		setDimns();
 	}
 	
 	
 	public void setButtonColumn( int columnIndex, String iconFile,  EntityAction action)
 	{
 		if(columnIndex < 0 || columnIndex >= buttonActions.length)
-			buttonActions[columnIndex] = action;
+			return;
+		buttonActions[columnIndex] = action;
 		tableModel.setButtonIcon(columnIndex, new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))));
 	}
 
@@ -141,6 +147,11 @@ public class MemberTable extends JTable implements ThemeConstants {
 	{
 		return height;
 	}
+	
+	public void setHeight( int height )
+	{
+		this.height = height;
+	}
 
 	
 	private void setCellRenderer()
@@ -150,7 +161,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 			getColumnModel().getColumn(columnIndex).setCellRenderer( cellRenderer );
 	}
 	
-	private void setWidths()
+	private void setDimns()
 	{
 		this.width = 0;
 		for(int i = 0 ; i < this.getColumnCount(); i++)

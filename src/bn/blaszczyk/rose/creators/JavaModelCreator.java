@@ -143,8 +143,7 @@ public class JavaModelCreator {
 						writer.write("\t@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityMember.getCouterpart().getName() + "\")\n");
 						break;
 					case MANYTOONE:
-						writer.write("\t@ManyToOne(fetch=FetchType.EAGER,  cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );
-						
+						writer.write("\t@ManyToOne(fetch=FetchType.EAGER,  cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );						
 						break;
 					case MANYTOMANY:
 						
@@ -184,13 +183,19 @@ public class JavaModelCreator {
 					+ "\t\treturn Integer.compare( this.id, that.id );\n"
 					+ "\t}\n\n");
 			
+			// toString
 			String toString = "\"" + entity.getToString() + "\"";
 			for(Member member : entity.getMembers() )
 				toString = toString.replaceAll("\\%" + member.getName(), "\" + " + member.getName() + " + \"");			
 			toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
 			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn " + toString + ";\n\t}\n\n");
 			
-			// TODO? equals, hashValue	
+			// equals
+			writer.write("\t@Override\n\tpublic boolean equals( Object that)\n\t{\n\t\tif(!(that instanceof " + entity.getSimpleClassName() + "))\n"
+					+ "\t\t\treturn false;\n\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\n"
+					+ "\t}\n\n");
+			
+			// TODO? hashValue	
 			// fin
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

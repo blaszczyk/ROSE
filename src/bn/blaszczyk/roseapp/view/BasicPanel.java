@@ -14,11 +14,11 @@ public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
 	private int width = 3 * H_SPACING + PROPERTY_WIDTH + VALUE_WIDTH;
 	private int height = V_SPACING;
 
-//	private EntityModel entityModel;
+	private EntityModel entityModel;
 	
 	public BasicPanel( EntityModel entityModel )
 	{
-//		this.entityModel = entityModel;
+		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(BASIC_PNL_BACKGROUND);
 		for(int i = 0; i < entityModel.getMemberCount(); i++)
@@ -62,6 +62,13 @@ public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
 	public JPanel getPanel()
 	{
 		return this;
+	}
+
+
+	@Override
+	public Object getShownObject()
+	{
+		return entityModel.getEntity();
 	}
 	
 }

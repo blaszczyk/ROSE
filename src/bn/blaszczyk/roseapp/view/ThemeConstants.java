@@ -53,7 +53,7 @@ public interface ThemeConstants {
 	public static final int CELL_HEIGTH = 25;
 	public static final int CELL_WIDTH = 100;
 	
-	public static final int CELL_SPACING = 3;
+	public static final int CELL_SPACING = 0;
 	public static final int TABLE_HEIGHT = 150;
 	public static final int TABLE_WIDTH = 800;
 	

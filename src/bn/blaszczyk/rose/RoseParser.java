@@ -59,7 +59,7 @@ public class RoseParser {
 				JavaControllerCreator.create(entity, metadata);
 			JavaControllerCreator.create(entities, metadata);
 			break;
-		// TODO: java CRUD, hibernate.cfg.xml
+		// TODO: java CRUD
 		default:
 			System.out.println( "Unknown Agrument: create " + filetype );
 				
@@ -70,7 +70,6 @@ public class RoseParser {
 	{
 		Entity entity = new Entity(sqlname,metadata.getModelpackage());
 		Entity subentity;
-		RelationType type;
 		String line, command;
 		String[] split;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )

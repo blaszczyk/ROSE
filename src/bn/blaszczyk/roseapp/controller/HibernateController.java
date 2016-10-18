@@ -6,25 +6,21 @@ package bn.blaszczyk.roseapp.controller;
 
 
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import bn.blaszczyk.roseapp.model.Entity;
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.*;
 
 public class HibernateController implements FullModelController {
 
 	private static SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
 	private BasicModelController controller;
+
+	private Map<Class<?>,List<EntityModel>> entityModelLists = new HashMap<>();
 	
 	private Set<Entity> changedEntitys = new HashSet<>();
-	
 	public HibernateController(BasicModelController controller)
 	{
 		this.controller = controller;
@@ -76,7 +72,7 @@ public class HibernateController implements FullModelController {
 				setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
 			for(int i = 0; i < entityModel.getEntityCount(); i++)
 				if(entityModel.getRelationType(i).isSecondMany())
-					for( Object o : (List<?>) entityModel.getEntityMember(i) )
+					for( Object o : (Set<?>) entityModel.getEntityMember(i) )
 						addEntityMember(copy, entityModel.getEntityName(i), (Entity) o);
 				else
 					setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
@@ -101,21 +97,90 @@ public class HibernateController implements FullModelController {
 		Transaction transaction = session.beginTransaction();
 		for(Entity e : changedEntitys)
 		{
-			Integer id = (Integer) session.save(e);
-			e.setId(id);
+			if(e.getId() < 0)
+			{
+				Integer id = (Integer) session.save(e);
+				e.setId(id);
+			}
+			else
+				session.update(e);
 		}
 		transaction.commit();
 		session.close();	
 		changedEntitys.clear();
 	}
-	
+
 	@Override
-	public List<?> getAll(Class<?> type)
+	public void loadEntities(Class<?>[] types)
 	{
 		Session session = sessionFactory.openSession();
-		List<?> list = session.createCriteria(type).list();
+		for(Class<?> type : types)
+		{
+			List<EntityModel> entityModels = new ArrayList<>();
+			entityModelLists.put(type, entityModels);
+			List<?> list = session.createCriteria(type).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+			for(Object o : list)
+				entityModels.add(createModel((Entity)o));
+		}
 		session.close();
-		return list;
+		for(Class<?> type : types)
+			for(EntityModel entityModel : entityModelLists.get(type))
+			{
+				for(int i = 0; i < entityModel.getEntityCount(); i++)
+				{
+					if(entityModel.getRelationType(i).isSecondMany())
+					{
+						Set<?> set = (Set<?>) entityModel.getEntityMember(i);
+						Object[] os = set.toArray();
+						for(int j = 0; j < set.size(); j++)
+						{
+							Entity oldEntity = (Entity) os[j];
+							for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
+								if(newEntity.getId() == oldEntity.getId())
+									try
+									{
+										deleteEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), oldEntity);
+										addEntityMember(entityModel.getEntity(), entityModel.getEntityName(i),newEntity.getEntity());
+									}
+									catch (ParseException e)
+									{
+										e.printStackTrace();
+									}
+						}
+						
+					}
+					else
+					{
+						Entity oldEntity = (Entity) entityModel.getEntityMember(i);
+						if(oldEntity == null)
+							continue;
+						for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
+							if(newEntity.getId() == oldEntity.getId())
+								try
+								{
+									setEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
+								}
+								catch (ParseException e)
+								{
+									e.printStackTrace();
+								}
+					}
+				}
+			}
+		for(Class<?> type : entityModelLists.keySet())
+			System.out.println(type.getSimpleName() + " - " + entityModelLists.get(type).size());
+	}
+	
+	@Override
+	public List<EntityModel> getAllModels(Class<?> type)
+	{
+		return entityModelLists.get(type);
+	}
+
+	@Override
+	public EntityModel createCopy(EntityModel entityModel)
+	{
+		return createModel( createCopy(entityModel.getEntity()));
 	}
 
 }
