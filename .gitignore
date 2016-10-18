@@ -17,8 +17,8 @@ lib/
 # Generated Files
 #
 
-src/
-!src/bn/
+*.xml
+src/foo/
 sql/
 
 #
