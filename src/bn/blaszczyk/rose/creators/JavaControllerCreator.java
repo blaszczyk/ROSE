@@ -37,28 +37,28 @@ public class JavaControllerCreator {
 			// implement methods
 			
 			//public void setMember( Entity entity, String name, Object value);
-			writer.write("\t@Override\n\tpublic void setMember( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value) throws java.text.ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void setMember( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			//public void setEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void setEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void setEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
 			//public void addEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void addEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void addEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ ADD_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 
 			//public void deleteEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void deleteEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value) throws java.text.ParseException\n\t{\n\t\t" );
+			writer.write("\t@Override\n\tpublic void deleteEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ DEL_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
@@ -113,7 +113,7 @@ public class JavaControllerCreator {
 			
 			// setMember
 			writer.write("\tpublic static void " + SET_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, Object value ) throws java.text.ParseException\n\t{\n" );
+						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(Member member : entity.getMembers())
 			{
@@ -143,31 +143,40 @@ public class JavaControllerCreator {
 
 			// setEntity
 			writer.write("\tpublic static void " + SET_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, Object value ) throws java.text.ParseException\n\t{\n" );
+						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
 				if( !entityMember.getType().isSecondMany() )
 				{
 					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n"
-							+ "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityMember) + "( (" + entityMember.getEntity().getClassName() + ")value );\n"
+							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n\t\t\t{\n");
+					if(entityMember.getType().isFirstMany())
+						writer.write( "\t\t\t\tif(" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "() != null)\n"
+								+ "\t\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "()."
+								+ JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().remove(" + entity.getObjectName() + ");\n"
+								+ "\t\t\t\t((" + entityMember.getEntity().getClassName() +  ")value)." 
+								+ JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().add(" + entity.getObjectName() + ");\n");
+					writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityMember) 
+							+ "( (" + entityMember.getEntity().getClassName() + ")value );\n" 
+							+ "\t\t\t}\n"
 							+ "\t\t\telse\n"
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
 				}			
 			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
-
-			// addEntity
+			
+			// addEntity()
 			writer.write("\tpublic static void " + ADD_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, Object value ) throws java.text.ParseException\n\t{\n" );
+						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
 				if( entityMember.getType().isSecondMany() )
 				{
 					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "s\":\n"
 							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n"
-							+ "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "().add( (" + entityMember.getEntity().getClassName() + ")value );\n"
+							+ "\t\t\t\t" + getControllerName(entityMember.getEntity(), metadata) + "." + SET_ENTITY_METHOD + "((" 
+							+ entityMember.getEntity().getClassName() + ")value, \"" + entityMember.getCounterName() + "\", " + entity.getObjectName() +");\n"
 							+ "\t\t\telse\n"
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
@@ -177,7 +186,7 @@ public class JavaControllerCreator {
 			
 			// deleteEntity
 			writer.write("\tpublic static void " + DEL_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, Object value ) throws java.text.ParseException\n\t{\n" );
+						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
 				if( entityMember.getType().isSecondMany() )

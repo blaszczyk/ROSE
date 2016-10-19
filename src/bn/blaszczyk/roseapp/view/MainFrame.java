@@ -1,7 +1,9 @@
 package bn.blaszczyk.roseapp.view;
 
 import java.awt.*;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import bn.blaszczyk.roseapp.controller.*;
@@ -33,7 +35,15 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	{
 		tabbedPane.addTab(name, component);
 		int index = tabbedPane.getTabCount() - 1;
-		JLabel tabLabel = new JLabel(name,  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))), SwingConstants.LEFT);
+		JLabel tabLabel = new JLabel(name, SwingConstants.LEFT);
+		try
+		{
+			tabLabel.setIcon(new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/" + iconFile))) );
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		tabLabel.setFont(new Font("Arial",Font.PLAIN, 18));
 		tabLabel.setBounds(0, 0, 70, 20);
 		tabbedPane.setTabComponentAt(index,tabLabel);
@@ -55,15 +65,5 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	{
 		return tabbedPane;
 	}
-	
-//	public int getTabCount()
-//	{
-//		return tabbedPane.getTabCount();
-//	}
-//
-//	public Component getComponentAt(int index)
-//	{
-//		return tabbedPane.getComponentAt(index);
-//	}
 	
 }

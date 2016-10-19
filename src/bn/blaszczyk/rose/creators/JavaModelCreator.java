@@ -140,7 +140,7 @@ public class JavaModelCreator {
 						writer.write("\t@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "\")\n" );
 						break;
 					case ONETOMANY:
-						writer.write("\t@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityMember.getCouterpart().getName() + "\")\n");
+						writer.write("\t@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityMember.getCounterName() + "\")\n");
 						break;
 					case MANYTOONE:
 						writer.write("\t@ManyToOne(fetch=FetchType.EAGER,  cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );						

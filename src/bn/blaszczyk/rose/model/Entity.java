@@ -70,8 +70,7 @@ public class Entity {
 		case ONETOONE:
 			break;
 		case MANYTOONE:
-			EntityMember counterpart = new EntityMember(this, entitymember.getType().getInverse() , getObjectName());
-			counterpart.setCouterpart(entitymember);
+			EntityMember counterpart = new EntityMember(this, entitymember);
 			entitymember.setCouterpart(counterpart);
 			entitymember.getEntity().addEntityMember( counterpart );
 			break;

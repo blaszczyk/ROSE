@@ -1,9 +1,12 @@
 package bn.blaszczyk.roseapp.view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -65,14 +68,6 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		lblTitle.setBounds(H_SPACING, height, TITLE_WIDTH, TITLE_HEIGHT);
 		lblTitle.setOpaque(true);
 		add(lblTitle);
-		
-		JButton btnEdit = new JButton("Edit");
-		btnEdit.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height, 100, SUBTITLE_HEIGHT);
-		final EntityModel entityModelCpy = entityModel;
-		btnEdit.addActionListener( e -> {
-			controller.openEdit(entityModelCpy);
-		} );
-		add(btnEdit);
 
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);				
 	}
@@ -80,6 +75,14 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addSubTitle( String subtitle, EntityModel entityModel )
 	{	
 		JButton btnView = new JButton("View");
+		try
+		{
+			btnView.setIcon( new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/edit.png"))) );
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
 		final EntityModel entityModelCpy = entityModel;
 		btnView.addActionListener( e -> controller.openView(entityModelCpy) );
@@ -116,7 +119,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		MemberTable table = new MemberTable( tableModel, controller );
 		table.setButtonColumn(0, "view.png", e -> controller.openView( e ));
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(H_SPACING, height, table.getWidth(), table.getHeight());
+		scrollPane.setBounds( 2 * H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);
 		computeDimensions( scrollPane.getHeight(), scrollPane.getWidth() );
 	}

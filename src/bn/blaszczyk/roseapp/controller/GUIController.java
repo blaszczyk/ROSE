@@ -2,7 +2,6 @@ package bn.blaszczyk.roseapp.controller;
 
 import java.awt.Component;
 
-import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.*;
 

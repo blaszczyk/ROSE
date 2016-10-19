@@ -100,6 +100,13 @@ public class JavaEntityModelCreator {
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
+			// public Class<?> getEntityClass( int index );	
+			writer.write("\t@Override\n\tpublic Class<?> getEntityClass(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			count = 0;
+			for(EntityMember entityMember : entity.getEntityMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityMember.getEntity().getClassName() + ".class;\n" );
+			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
+			
 			// public int getLength1( int index );			
 			writer.write("\t@Override\n\tpublic int getLength1(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;

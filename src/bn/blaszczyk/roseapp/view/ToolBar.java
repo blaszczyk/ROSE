@@ -1,9 +1,9 @@
 package bn.blaszczyk.roseapp.view;
 
 import java.awt.Font;
-import java.awt.Toolkit;
+import java.io.IOException;
 
-
+import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -28,7 +28,15 @@ public class ToolBar extends JPanel implements ThemeConstants {
 		button.setFont(new Font("Arial", Font.PLAIN, 16));
 		button.setAction(action);
 		button.setText(text);
-		button.setIcon( new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))) );
+		try
+		{
+			button.setIcon( new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/" + iconFile))) );
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+//		button.setIcon( new ImageIcon(getClass().getResource("../resources/" + iconFile)) );
 		add(button);
 		return button;
 	}

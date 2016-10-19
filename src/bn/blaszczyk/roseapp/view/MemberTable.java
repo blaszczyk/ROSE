@@ -3,9 +3,11 @@ package bn.blaszczyk.roseapp.view;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -82,7 +84,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 	
 	private int width = TABLE_WIDTH;
 	private int height = TABLE_HEIGHT;
-//	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
+	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
 	public MemberTable(MemberTableModel tableModel, GUIController controller)
 	{
@@ -97,7 +99,8 @@ public class MemberTable extends JTable implements ThemeConstants {
 		setIntercellSpacing(new Dimension(CELL_SPACING, CELL_SPACING));
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		getTableHeader().setFont(HEADER_FONT);
-//		setRowSorter(sorter);
+		setRowSorter(sorter);
+		sorter.setModel(tableModel);
 		
 		addMouseListener( new MouseAdapter() 
 		{
@@ -107,7 +110,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 			{
 				if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON1 )
 				{
-					int row = rowAtPoint(e.getPoint());
+					int row = sorter.convertRowIndexToModel( rowAtPoint(e.getPoint()) );
 					int col = columnAtPoint(e.getPoint());
 					if(col < tableModel.getButtonCount() )
 						buttonActions[col].performAction(tableModel.getEntityModel(row));						
@@ -133,7 +136,14 @@ public class MemberTable extends JTable implements ThemeConstants {
 		if(columnIndex < 0 || columnIndex >= buttonActions.length)
 			return;
 		buttonActions[columnIndex] = action;
-		tableModel.setButtonIcon(columnIndex, new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))));
+		try
+		{
+			tableModel.setButtonIcon(columnIndex, new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/" + iconFile))) );
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -167,7 +177,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 		for(int i = 0 ; i < this.getColumnCount(); i++)
 		{
 //			int width = i < tableModel.getButtonCount() ? BUTTON_WIDTH : Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
-			int width = tableModel.getColumnWidth(i);
+			int width = tableModel.getColumnWidth(i) * 2;
 			if( width >= 0 )
 			{
 				getColumnModel().getColumn(i).setPreferredWidth(width);

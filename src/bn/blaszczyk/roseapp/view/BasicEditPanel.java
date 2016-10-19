@@ -1,7 +1,6 @@
 package bn.blaszczyk.roseapp.view;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,14 +56,8 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	public void save(FullModelController controller)
 	{
 		for(int i = 0 ; i < entityModel.getMemberCount(); i++ )
-			try
-			{
-				controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
-			}
-			catch (ParseException e)
-			{
-				e.printStackTrace();
-			}
+			controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
+
 	}
 	
 	@Override

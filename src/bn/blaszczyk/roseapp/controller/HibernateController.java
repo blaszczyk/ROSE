@@ -1,11 +1,5 @@
 package bn.blaszczyk.roseapp.controller;
 
-//
-//import org.hibernate.*;
-//import org.hibernate.cfg.AnnotationConfiguration;
-
-
-import java.text.ParseException;
 import java.util.*;
 
 import org.hibernate.*;
@@ -27,28 +21,30 @@ public class HibernateController implements FullModelController {
 	}
 	
 	@Override
-	public void setMember(Entity entity, String name, Object value) throws ParseException
+	public void setMember(Entity entity, String name, Object value)
 	{
 		changedEntitys.add(entity);
 		controller.setMember(entity, name, value);
 	}
-	
+
 	@Override
-	public void setEntityMember(Entity entity, String name, Entity value) throws ParseException
+	public void setEntityMember(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
+		changedEntitys.add(value);
 		controller.setEntityMember(entity, name, value);
 	}
 	
 	@Override
-	public void addEntityMember(Entity entity, String name, Entity value) throws ParseException
+	public void addEntityMember(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
+		changedEntitys.add(value);
 		controller.addEntityMember(entity, name, value);
 	}
 	
 	@Override
-	public void deleteEntityMember(Entity entity, String name, Entity value) throws ParseException
+	public void deleteEntityMember(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
 		controller.deleteEntityMember(entity, name, value);
@@ -66,34 +62,27 @@ public class HibernateController implements FullModelController {
 	@Override
 	public Entity createCopy(Entity entity)
 	{
-		Entity copy = createNew(entity.getClass().getSimpleName());
+		Entity copy = createNew(entity.getClass().getSimpleName()), subCopy;
 		EntityModel entityModel = createModel(entity);
-		try
-		{
-			for(int i = 0; i < entityModel.getMemberCount(); i++)
-				setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
-			for(int i = 0; i < entityModel.getEntityCount(); i++)
-				switch(entityModel.getRelationType(i))
-				{
-				case ONETOONE:
-					Entity subCopy = createCopy( (Entity) entityModel.getEntityMember(i) );
-					setEntityMember(copy, entityModel.getEntityName(i), subCopy );
-					break;
-				case ONETOMANY:
-					for( Object o : (Set<?>) entityModel.getEntityMember(i) )
-						addEntityMember(copy, entityModel.getEntityName(i), (Entity) o);
-					break;
-				case MANYTOONE:
-					setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
-					break;
-				case MANYTOMANY:
-					break;
-				}
-		}
-		catch (ParseException e)
-		{
-			e.printStackTrace();
-		}
+		for(int i = 0; i < entityModel.getMemberCount(); i++)
+			setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
+			switch(entityModel.getRelationType(i))
+			{
+			case ONETOONE:
+				subCopy = createCopy( (Entity) entityModel.getEntityMember(i) );
+				setEntityMember(copy, entityModel.getEntityName(i), subCopy );
+				break;
+			case ONETOMANY:
+				for( Object o :  ((Set<?>) entityModel.getEntityMember(i)).toArray())
+					addEntityMember(copy, entityModel.getEntityName(i), createCopy((Entity) o));
+				break;
+			case MANYTOONE:
+				setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
+				break;
+			case MANYTOMANY:
+				break;
+			}
 		return copy;
 	}
 
@@ -141,42 +130,14 @@ public class HibernateController implements FullModelController {
 			{
 				for(int i = 0; i < entityModel.getEntityCount(); i++)
 				{
-					if(entityModel.getRelationType(i).isSecondMany())
-					{
-						Set<?> set = (Set<?>) entityModel.getEntityMember(i);
-						Object[] os = set.toArray();
-						for(int j = 0; j < set.size(); j++)
-						{
-							Entity oldEntity = (Entity) os[j];
-							for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
-								if(newEntity.getId() == oldEntity.getId())
-									try
-									{
-										deleteEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), oldEntity);
-										addEntityMember(entityModel.getEntity(), entityModel.getEntityName(i),newEntity.getEntity());
-									}
-									catch (ParseException e)
-									{
-										e.printStackTrace();
-									}
-						}
-						
-					}
-					else
+					if(!entityModel.getRelationType(i).isSecondMany())
 					{
 						Entity oldEntity = (Entity) entityModel.getEntityMember(i);
 						if(oldEntity == null)
 							continue;
 						for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
 							if(newEntity.getId() == oldEntity.getId())
-								try
-								{
-									setEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
-								}
-								catch (ParseException e)
-								{
-									e.printStackTrace();
-								}
+								setEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
 					}
 				}
 			}

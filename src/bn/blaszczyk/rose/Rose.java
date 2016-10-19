@@ -7,8 +7,9 @@ import java.text.ParseException;
 
 public class Rose {
 	
-	public static void main(String[] args)
+	public static void main(String[] args) throws FileNotFoundException, ParseException
 	{
+		
 		if(args.length == 0)
 			System.out.println("Use:java -jar rose.jar filename");
 		for(String roseFile : args)
@@ -20,5 +21,6 @@ public class Rose {
 			{
 				e.printStackTrace();
 			}
+		RoseParser.parse("caro.rose");
 	}
 }

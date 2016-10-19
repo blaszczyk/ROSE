@@ -91,12 +91,14 @@ public class RoseParser {
 			}
 			else if( isRelationType(command) )
 			{
-				split = split[1].split("\\s+", 2);
+				split = split[1].split("\\s+", 3);
 				if( (subentity = getEntityType(split[0], entities)) != null )
-					if(split.length == 2)
-						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1]));					
+					if(split.length == 3)
+						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1],split[2]));	
+					else if(split.length == 2)
+						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1],split[1]));					
 					else
-						entity.addEntityMember(new EntityMember(subentity, getRelationType(command),null));			
+						entity.addEntityMember(new EntityMember(subentity, getRelationType(command),subentity.getObjectName(),entity.getObjectName()));			
 			}
 			else if( command.equalsIgnoreCase("tostring"))
 			{
