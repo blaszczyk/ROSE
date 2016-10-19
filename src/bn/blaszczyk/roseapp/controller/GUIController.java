@@ -2,6 +2,7 @@ package bn.blaszczyk.roseapp.controller;
 
 import java.awt.Component;
 
+import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.*;
 
@@ -36,25 +37,59 @@ public class GUIController {
 //
 	}
 	
+	public void editCurrent()
+	{
+		openEdit( ((EntityModel) ((MyPanel)mainFrame.getTabbedPane().getSelectedComponent()).getShownObject()) );
+	}
+	
 	public void createMainFrame(Class<?>[] types, String title)
 	{
-		mainFrame = new MainFrame (modelController, this, types, title);		
+		mainFrame = new MainFrame (modelController, this, title);
+		for(Class<?> type : types)
+		{
+			FullListPanel panel = new FullListPanel(modelController, this, type);
+			mainFrame.addTab(panel, type.getSimpleName() + "s", "applist.png" ,  false);
+		}		
 	}
 	
 	private void openTab(MyPanel panel, EntityModel entityModel, String iconFile )
 	{
 		int index = 0;
-		for(int i = 0; i < mainFrame.getTabCount(); i++)
+		for(int i = 0; i < mainFrame.getTabbedPane().getTabCount(); i++)
 		{
-			Component c = mainFrame.getComponentAt(i);
-			if( c instanceof MyPanel && ((MyPanel)c).getShownObject().equals(entityModel.getEntity()) )
+			Component c = mainFrame.getTabbedPane().getComponentAt(i);
+			if( c instanceof MyPanel && ((MyPanel)c).getShownObject().equals(entityModel) )
 				mainFrame.replaceTab(index, panel.getPanel(), entityModel.getName() + " " + entityModel.getId(), iconFile,  true);				
 			index++;
 		}
-		if(index >= mainFrame.getTabCount())
+		if(index >= mainFrame.getTabbedPane().getTabCount())
 		{
 			mainFrame.addTab(panel.getPanel(), entityModel.getName() + " " + entityModel.getId(), iconFile,  true);
 		}
 		
+	}
+	
+	public void saveCurrent()
+	{
+		Component c = mainFrame.getTabbedPane().getSelectedComponent();
+		if( c instanceof FullEditPanel)
+		{
+			FullEditPanel panel = (FullEditPanel) c;
+			panel.save(modelController);
+			modelController.commit();
+			openView((EntityModel) panel.getShownObject());
+		}
+		
+		
+	}
+	
+	public void closeCurrent()
+	{
+		Component c = mainFrame.getTabbedPane().getSelectedComponent();
+		if( c instanceof MyPanel )
+		{
+			if(!((MyPanel) c).hasChanged())
+				mainFrame.getTabbedPane().remove(c);
+		}
 	}
 }

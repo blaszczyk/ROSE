@@ -81,4 +81,9 @@ public interface ThemeConstants {
 	
 	public static final int MF_WIDTH = 1900;
 	public static final int MF_HEIGTH = 1000;
+	
+	// ToolBar
+	
+	public static final int TOOLBAR_HEIGHT = 20;
+	
 }

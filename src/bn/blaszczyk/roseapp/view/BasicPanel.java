@@ -70,5 +70,11 @@ public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
 	{
 		return entityModel.getEntity();
 	}
+
+	@Override
+	public boolean hasChanged()
+	{
+		return false;
+	}
 	
 }

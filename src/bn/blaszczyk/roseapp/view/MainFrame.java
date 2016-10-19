@@ -9,18 +9,20 @@ import bn.blaszczyk.roseapp.controller.*;
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements ThemeConstants {
 
-	JTabbedPane tabbedPane = new JTabbedPane();
+	private JTabbedPane tabbedPane = new JTabbedPane();
+	private Actions actions;
 	
-	public MainFrame(FullModelController modelController, GUIController guiController, Class<?>[] types, String title)
+	public MainFrame(FullModelController modelController, GUIController guiController, String title)
 	{
 		super(title);
-		for(Class<?> type : types)
-		{
-			FullListPanel panel = new FullListPanel(modelController, guiController, type);
-			panel.setBounds(0, 0, MF_WIDTH-10, MF_HEIGTH-45);
-			addTab(panel, type.getSimpleName() + "s", "applist.png" ,  false);
-		}
-		add(tabbedPane);
+		actions = new Actions(modelController, guiController);
+		setLayout(new BorderLayout());
+		
+		ToolBar toolBar = new ToolBar(actions);
+		add(toolBar,BorderLayout.PAGE_START);
+
+		tabbedPane.addChangeListener(actions);
+		add(tabbedPane,BorderLayout.CENTER);
 		setSize( MF_WIDTH, MF_HEIGTH );
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -49,16 +51,19 @@ public class MainFrame extends JFrame implements ThemeConstants {
 		tabbedPane.setSelectedIndex(index);
 	}
 	
-	
-	
-	public int getTabCount()
+	public JTabbedPane getTabbedPane()
 	{
-		return tabbedPane.getTabCount();
+		return tabbedPane;
 	}
-
-	public Component getComponentAt(int index)
-	{
-		return tabbedPane.getComponentAt(index);
-	}
+	
+//	public int getTabCount()
+//	{
+//		return tabbedPane.getTabCount();
+//	}
+//
+//	public Component getComponentAt(int index)
+//	{
+//		return tabbedPane.getComponentAt(index);
+//	}
 	
 }

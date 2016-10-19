@@ -19,6 +19,8 @@ lib/
 
 *.xml
 src/foo/
+src/caro/
+src/galabu/
 sql/
 
 #

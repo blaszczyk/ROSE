@@ -25,7 +25,6 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	
 	public FullPanel( EntityModel entityModel, GUIController controller )
 	{
-//		System.out.println(entityModel.getEntity().hashCode() + "\t\t" + entityModel);
 		this.controller = controller;
 		this.entityModel = entityModel;
 		setLayout(null);
@@ -149,7 +148,14 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	@Override
 	public Object getShownObject()
 	{
-		return entityModel.getEntity();
+		return entityModel;
 	}
+
+	@Override
+	public boolean hasChanged()
+	{
+		return false;
+	}
+	
 	
 }

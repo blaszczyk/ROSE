@@ -31,8 +31,8 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	public FullEditPanel( EntityModel entityModel, FullModelController modelController, GUIController guiController )
 	{
 		this.modelController = modelController;
-		this.entityModel = entityModel;
 		this.guiController = guiController;
+		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(FULL_PNL_BACKGROUND);
 		addTitle( entityModel );
@@ -78,7 +78,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 //				addBasicPanel( subEntityModel );
 //			}		
 		}
-		addButtonPanel();
+//		addButtonPanel();
 		
 	}
 
@@ -177,22 +177,11 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		computeDimensions(30, 300);
 	}
 	
-	private void addButtonPanel()
-	{
-		JButton btnSave = new JButton("Save");
-		btnSave.setBounds( H_SPACING , height + V_OFFSET, 100, SUBTITLE_HEIGHT);
-		btnSave.addActionListener( e -> save() );		
-		add(btnSave);
-		computeDimensions(SUBTITLE_HEIGHT + V_OFFSET, 100);
-	}
-	
-	private void save()
+	public void save(FullModelController modelController)
 	{
 		basicPanel.save(modelController);
 		for(BasicEditPanel panel : basicPanels)
 			panel.save(modelController);
-		modelController.commit();
-		guiController.openView(entityModel);
 	}
 	
 	private void computeDimensions( int height, int width )
@@ -222,6 +211,13 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	@Override
 	public Object getShownObject()
 	{
-		return entityModel.getEntity();
+		return entityModel;
+	}
+	
+
+	@Override
+	public boolean hasChanged()
+	{
+		return true; // TODO
 	}
 }
