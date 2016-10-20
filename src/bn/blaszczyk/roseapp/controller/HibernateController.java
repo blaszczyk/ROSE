@@ -46,11 +46,32 @@ public class HibernateController implements FullModelController {
 	@Override
 	public void delete(Entity entity)
 	{
+		EntityModel entityModel = createModel(entity);
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
+		{
+			switch(entityModel.getRelationType(i))
+			{
+			case MANYTOMANY:
+				break;
+			case MANYTOONE:
+				break;
+			case ONETOMANY:
+				Set<?> set = (Set<?>) entityModel.getEntityMember(i);
+				for(Object o : set.toArray())
+					delete((Entity) o);
+				break;
+			case ONETOONE:
+//				delete((Entity) entityModel.getEntityMember(i));
+				break;
+			}
+		}		
 		Session sesson = sessionFactory.openSession();
-		Entity copy = (Entity) sesson.load(entity.getClass(), entity.getId());
-		sesson.delete(copy);
-		controller.delete(entity);
+//		Entity copy = (Entity) sesson.load(entity.getClass(), entity.getId());
+		sesson.beginTransaction();
+		sesson.delete(entity);
+		sesson.getTransaction().commit();
 		sesson.close();
+		controller.delete(entity);
 	}
 	
 

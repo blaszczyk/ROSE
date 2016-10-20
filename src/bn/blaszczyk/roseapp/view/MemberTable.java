@@ -11,7 +11,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
 
 @SuppressWarnings("serial")
@@ -86,7 +85,7 @@ public class MemberTable extends JTable implements ThemeConstants {
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public MemberTable(MemberTableModel tableModel, GUIController controller)
+	public MemberTable(MemberTableModel tableModel )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
@@ -114,11 +113,6 @@ public class MemberTable extends JTable implements ThemeConstants {
 					int col = columnAtPoint(e.getPoint());
 					if(col < tableModel.getButtonCount() )
 						buttonActions[col].performAction(tableModel.getEntityModel(row));						
-				}
-				else if(e.getClickCount() > 1 && e.getButton() == MouseEvent.BUTTON1 )
-				{
-					int row = rowAtPoint( e.getPoint() );
-					controller.openView(tableModel.getEntityModel(row));
 				}
 			}
 			

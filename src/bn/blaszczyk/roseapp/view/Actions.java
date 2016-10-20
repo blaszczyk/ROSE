@@ -22,6 +22,10 @@ public class Actions implements ChangeListener{
 	private Action actnClose;
 	private Action actnEdit;
 	private Action actnSave;
+	private Action actnSaveAll;
+	private Action actnDelete;
+	private Action actnNew;
+	private Action actnCopy;
 	
 	public Actions(FullModelController modelController, GUIController guiController)
 	{
@@ -31,6 +35,10 @@ public class Actions implements ChangeListener{
 		actnClose = createAction( e -> guiController.closeCurrent() );
 		actnEdit = createAction( e -> guiController.editCurrent() );
 		actnSave = createAction( e -> guiController.saveCurrent() );
+		actnSaveAll = createAction( e -> guiController.saveAll() );
+		actnCopy = createAction( e -> guiController.copyCurrent() );
+		actnDelete = createAction( e -> guiController.deleteCurrent() );
+		actnNew = createAction( e -> guiController.openNew(  ) );
 	}
 
 	private Action createAction(ActionListener l)
@@ -61,26 +69,72 @@ public class Actions implements ChangeListener{
 		return actnSave;
 	}
 	
+	public Action getActnSaveAll()
+	{
+		return actnSaveAll;
+	}
 
+	public Action getActnDelete()
+	{
+		return actnDelete;
+	}
 
+	public Action getActnCopy()
+	{
+		return actnCopy;
+	}
+
+	public Action getActnNew()
+	{
+		return actnNew;
+	}
+	
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
 		if( e.getSource() instanceof JTabbedPane )
 		{
 			JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+			
+			actnSaveAll.setEnabled(false);
+			for(Component c : tabbedPane.getComponents())
+				if( c instanceof MyPanel)
+				{
+					MyPanel panel = (MyPanel) c;
+					if(panel.hasChanged())
+						actnSaveAll.setEnabled(true);
+				}
+			
 			Component c = tabbedPane.getSelectedComponent();
 			actnClose.setEnabled( c instanceof MyPanel );
 			if( c instanceof MyPanel)
 			{
 				MyPanel panel = (MyPanel) c;
-				actnEdit.setEnabled(panel.getShownObject() instanceof EntityModel);
-				actnSave.setEnabled(panel.hasChanged());
+				Object o = panel.getShownObject();
+				if( o instanceof Class<?>)
+				{
+					actnNew.setEnabled(true);
+					actnSave.setEnabled(false);
+					actnCopy.setEnabled(false);
+					actnDelete.setEnabled(false);
+					actnEdit.setEnabled(false);
+				}
+				else if( o instanceof EntityModel )
+				{
+					actnNew.setEnabled(true);
+					actnCopy.setEnabled(true);
+					actnDelete.setEnabled(true);
+					actnEdit.setEnabled(panel instanceof FullPanel );
+					actnSave.setEnabled(panel.hasChanged());
+				}
 			}
 			else
 			{
-				actnEdit.setEnabled(false);
+				actnNew.setEnabled(false);
 				actnSave.setEnabled(false);
+				actnCopy.setEnabled(false);
+				actnDelete.setEnabled(false);
+				actnEdit.setEnabled(false);
 			}
 		}
 	}

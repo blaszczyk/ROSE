@@ -44,13 +44,13 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 				Set<?> entities =  (Set<?>) entityModel.getEntityMember(i);
 				for(Object entity : entities)
 					entityModels.add(entityModel.createModel((Entity)entity));
-				addSubTitle( entityModel.getEntityName(i) );
+				addSubTitle( i );
 				addMemberTable( entityModels );
 			}
 			else
 			{
 				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityMember(i) );
-				addSubTitle( entityModel.getEntityName(i), subEntityModel );
+				addSubTitle( i );
 				addBasicPanel( subEntityModel );
 			}
 		}
@@ -72,38 +72,34 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);				
 	}
 
-	private void addSubTitle( String subtitle, EntityModel entityModel )
+	private void addSubTitle( int index )
 	{	
-		JButton btnView = new JButton("View");
-		try
-		{
-			btnView.setIcon( new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/edit.png"))) );
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
-		final EntityModel entityModelCpy = entityModel;
-		btnView.addActionListener( e -> controller.openView(entityModelCpy) );
-		add(btnView);
-		
-		addSubTitle(subtitle);		
-	}
-	private void addSubTitle( String subtitle )
-	{
 		height += V_OFFSET;
-		JLabel lblSubTitle = new JLabel( subtitle );
+		JLabel lblSubTitle = new JLabel( entityModel.getEntityName(index) );
 		lblSubTitle.setFont(SUBTITLE_FONT);
 		lblSubTitle.setForeground(SUBTITLE_FG);
 		lblSubTitle.setBackground(SUBTITLE_BG);
 		lblSubTitle.setBounds(H_SPACING, height, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
 		lblSubTitle.setOpaque(true);
 		add(lblSubTitle);
-		
+		if(entityModel.getRelationType(index).equals(RelationType.MANYTOONE))
+		{
+			JButton btnView = new JButton("View");
+			try
+			{
+				btnView.setIcon( new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/view.png"))) );
+			}
+			catch (IOException e)
+			{	
+				e.printStackTrace();
+			}
+			btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height , 100, SUBTITLE_HEIGHT);
+			final EntityModel entityModelCpy = entityModel;
+			btnView.addActionListener( e -> controller.openEntityTab(entityModelCpy, false) );
+			add(btnView);
+		}		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
-	
 	private void addBasicPanel( EntityModel entityModel )
 	{	
 		MyPanel myPanel = new BasicPanel(entityModel) ;
@@ -116,8 +112,8 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addMemberTable( List<EntityModel> entityModels )
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
-		MemberTable table = new MemberTable( tableModel, controller );
-		table.setButtonColumn(0, "view.png", e -> controller.openView( e ));
+		MemberTable table = new MemberTable( tableModel );
+		table.setButtonColumn(0, "view.png", e -> controller.openEntityTab( e, false ));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds( 2 * H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);

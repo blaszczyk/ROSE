@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 
 import bn.blaszczyk.roseapp.controller.*;
 
@@ -31,7 +32,7 @@ public class MainFrame extends JFrame implements ThemeConstants {
 		setVisible(true);	
 	}
 	
-	public int addTab( Component component, String name, String iconFile, boolean closable)
+	public int addTab( Component component, String name, String iconFile)
 	{
 		tabbedPane.addTab(name, component);
 		int index = tabbedPane.getTabCount() - 1;
@@ -51,7 +52,7 @@ public class MainFrame extends JFrame implements ThemeConstants {
 		return index;
 	}
 	
-	public void replaceTab( int index, Component component, String name, String iconFile, boolean closable)
+	public void replaceTab( int index, Component component, String name, String iconFile )
 	{
 		tabbedPane.setComponentAt(index, component);
 		JLabel tabLabel = new JLabel(name,  new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("../resources/" + iconFile))), SwingConstants.LEFT);
@@ -59,6 +60,7 @@ public class MainFrame extends JFrame implements ThemeConstants {
 		tabLabel.setBounds(0, 0, 70, 20);
 		tabbedPane.setTabComponentAt(index, tabLabel);
 		tabbedPane.setSelectedIndex(index);
+		actions.stateChanged(new ChangeEvent(tabbedPane));
 	}
 	
 	public JTabbedPane getTabbedPane()

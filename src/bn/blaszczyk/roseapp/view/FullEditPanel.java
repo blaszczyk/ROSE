@@ -1,11 +1,15 @@
 package bn.blaszczyk.roseapp.view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -40,10 +44,10 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		basicPanel = addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
+			addSubTitle( i );
 			switch( entityModel.getRelationType(i))
 			{
 			case ONETOONE:
-				addSubTitle(entityModel.getEntityName(i));
 				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityMember(i))));
 				break;
 			case ONETOMANY:
@@ -51,11 +55,9 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 				Set<?> objects =  (Set<?>) entityModel.getEntityMember(i);
 				for(Object object : objects)
 					entityModels.add(entityModel.createModel((Entity)object));
-				addSubTitle( entityModel.getEntityName(i) );
 				addMemberTable( entityModels, entityModel.getEntity(),entityModel.getEntityName(i) );
 				break;
 			case MANYTOONE:
-				addSubTitle( entityModel.getEntityName(i));
 				addSelectionBox( i );
 				break;
 			case MANYTOMANY:
@@ -91,16 +93,33 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 //		addSubTitle(subtitle);		
 //	}
 	
-	private void addSubTitle( String subtitle )
+	private void addSubTitle( int index )
 	{
 		height += V_OFFSET;
-		JLabel lblSubTitle = new JLabel( subtitle );
+		JLabel lblSubTitle = new JLabel( entityModel.getEntityName(index) );
 		lblSubTitle.setFont(SUBTITLE_FONT);
 		lblSubTitle.setForeground(SUBTITLE_FG);
 		lblSubTitle.setBackground(SUBTITLE_BG);
 		lblSubTitle.setBounds(H_SPACING, height, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
 		lblSubTitle.setOpaque(true);
 		add(lblSubTitle);
+		
+		if(entityModel.getRelationType(index).isSecondMany())
+		{
+			JButton btnView = new JButton("Add");
+			try
+			{
+				btnView.setIcon( new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/add.png"))) );
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+			btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height , 100, SUBTITLE_HEIGHT);
+			final EntityModel entityModelCpy = entityModel;
+			btnView.addActionListener( e -> guiController.addNew( entityModelCpy, index ) );
+			add(btnView);
+		}
 		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
@@ -118,10 +137,10 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addMemberTable( List<EntityModel> entityModels, Entity entity, String name )
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
-		MemberTable table = new MemberTable( tableModel, guiController );
-		table.setButtonColumn(0, "edit.png", e -> guiController.openEdit( e ));
-		table.setButtonColumn(1, "copy.png", e -> guiController.openEdit( modelController.createCopy(e) ) );
-		table.setButtonColumn(2, "delete.png", e -> modelController.delete(e.getEntity()) );
+		MemberTable table = new MemberTable( tableModel );
+		table.setButtonColumn(0, "edit.png", e -> guiController.openEntityTab( e, true ));
+		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy(e), true ) );
+		table.setButtonColumn(2, "delete.png", e -> guiController.delete(e.getEntity()) );
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(2 * H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);
