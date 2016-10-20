@@ -35,10 +35,8 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 	
 	private int charCounter = 0;
 	private char selectChar = '.';
-	private boolean wantPopupVisible = false;
 	
 	private T[] items;
-	private CycleListener listener = null;
 	
 	private final JTextField inputField = (JTextField)getEditor().getEditorComponent();
 	
@@ -82,11 +80,6 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 	}
 	
 	
-	public void setCycleListener(CycleListener listener)
-	{
-		this.listener = listener;
-	}
-	
 	/*
 	 * Special Methods
 	 */
@@ -127,18 +120,11 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 			return;
 		int newIndex = getSelectedIndex() + steps;
 		if( newIndex < 0 )
-		{
-			if(listener != null)
-				listener.cycle(new CycleEvent(1));
 			newIndex = getItemCount()-1;
-		}
 		else if( newIndex >= getItemCount())
-		{
-			if(listener != null)
-				listener.cycle(new CycleEvent(-1));
 			newIndex = 0;
-		}
 		setSelectedIndex( newIndex );
+		inputField.selectAll();
 	}
 	
 	/*
@@ -183,12 +169,6 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 		tList.toArray(tArray);
 		return tArray;
 	}
-	
-	private void setMyPopupVisible(boolean v)
-	{
-		wantPopupVisible = v;
-		super.setPopupVisible(v);
-	}
 
 	/*
 	 * MouswWheelListener Method
@@ -217,11 +197,11 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 			e.consume();
 			break;
 		case KeyEvent.VK_RIGHT:
-			setMyPopupVisible(true);
+			setPopupVisible(true);
 			break;
 		case KeyEvent.VK_ENTER:
 		case KeyEvent.VK_LEFT:
-			setMyPopupVisible(false);
+			setPopupVisible(false);
 			e.consume();
 			break;
 		}
@@ -241,7 +221,7 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 			if(t.toString().toLowerCase().contains(inputField.getText().toLowerCase()))
 				newItems.add(t);
 		repopulateBox(toArray(newItems));
-		setMyPopupVisible(true);
+		setPopupVisible(true);
 	}
 
 	@Override
@@ -264,8 +244,6 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 	@Override
 	public void focusLost(FocusEvent e)
 	{
-		if(wantPopupVisible)
-			setPopupVisible(true);
 	}
 	
 	@Override
@@ -274,25 +252,5 @@ public class MyComboBox<T> extends JComboBox<T> implements MouseWheelListener, K
 		inputField.selectAll();
 	}
 	
-	/*
-	 * inner Classes for Cycling the Box
-	 */
-	public static interface CycleListener
-	{
-		public void cycle(CycleEvent e);
-	}
-	
-	public static class CycleEvent
-	{
-		private final int direction;
-		private CycleEvent(int direction)
-		{
-			this.direction = direction;
-		}
-		public int getDirection()
-		{
-			return direction;
-		}
-	}
 	
 }

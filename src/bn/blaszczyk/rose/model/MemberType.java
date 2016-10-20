@@ -7,6 +7,10 @@ public enum MemberType {
 	DATE("date","java.util.Date"," ","new java.util.Date(%s)"),
 	NUMERIC("numeric","java.math.BigDecimal","0","new java.math.BigDecimal(%s)"),
 	BOOLEAN("boolean","Boolean","false","%s");
+	// TODO:
+	// FILE("file","java.io.File","", "new java.io.File(%s)")
+	// ENUM
+	// DATETIME
 	
 	private String sqlname;
 	private String javaname;

@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.panels;
 
 import javax.swing.JPanel;
 

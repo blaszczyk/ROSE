@@ -17,13 +17,15 @@ public class ToolBar extends JPanel implements ThemeConstants {
 	public ToolBar(Actions actions)
 	{
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		addButton("Start", "start.png", actions.getActnStart());
 		addButton("New", "new.png", actions.getActnNew());
-		addButton("Edit", "appedit.png", actions.getActnEdit() );
+		addButton("Edit", "edit.png", actions.getActnEdit() );
 		addButton("Save", "save.png", actions.getActnSave());
-		addButton("SaveAll", "saveall.png", actions.getActnSaveAll());
+		addButton("Save All", "saveall.png", actions.getActnSaveAll());
 		addButton("Copy", "copy.png", actions.getActnCopy());
 		addButton("Delete", "delete.png", actions.getActnDelete());
-		addButton("Close", "appclose.png", actions.getActnClose() );
+		addButton("Close", "close.png", actions.getActnClose() );
+		addButton("Close All", "closeall.png", actions.getActnCloseAll() );
 	}
 	
 	private JButton addButton(String text, String iconFile, Action action)

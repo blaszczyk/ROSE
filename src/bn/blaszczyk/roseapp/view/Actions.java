@@ -13,13 +13,17 @@ import javax.swing.event.ChangeListener;
 import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
+import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 public class Actions implements ChangeListener{
 	
 //	private FullModelController modelController;
 //	private GUIController guiController;
 	
+	private Action actnStart;
 	private Action actnClose;
+	private Action actnCloseAll;
 	private Action actnEdit;
 	private Action actnSave;
 	private Action actnSaveAll;
@@ -32,7 +36,9 @@ public class Actions implements ChangeListener{
 //		this.modelController = modelController;
 //		this.guiController = guiController;
 		
+		actnStart = createAction( e -> guiController.openStartTab() );
 		actnClose = createAction( e -> guiController.closeCurrent() );
+		actnCloseAll = createAction( e -> guiController.closeAll() );
 		actnEdit = createAction( e -> guiController.editCurrent() );
 		actnSave = createAction( e -> guiController.saveCurrent() );
 		actnSaveAll = createAction( e -> guiController.saveAll() );
@@ -53,10 +59,15 @@ public class Actions implements ChangeListener{
 		};
 		return action;
 	}
-	
+
 	public Action getActnClose()
 	{
 		return actnClose;
+	}
+
+	public Action getActnCloseAll()
+	{
+		return actnCloseAll;
 	}
 
 	public Action getActnEdit()
@@ -89,6 +100,11 @@ public class Actions implements ChangeListener{
 		return actnNew;
 	}
 	
+	public Action getActnStart()
+	{
+		return actnStart;
+	}
+
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
@@ -124,7 +140,7 @@ public class Actions implements ChangeListener{
 					actnNew.setEnabled(true);
 					actnCopy.setEnabled(true);
 					actnDelete.setEnabled(true);
-					actnEdit.setEnabled(panel instanceof FullPanel );
+					actnEdit.setEnabled(panel instanceof FullViewPanel );
 					actnSave.setEnabled(panel.hasChanged());
 				}
 			}

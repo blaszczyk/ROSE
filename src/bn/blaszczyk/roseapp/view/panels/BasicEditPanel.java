@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.panels;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.*;
 
 @SuppressWarnings("serial")

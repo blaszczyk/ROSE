@@ -13,8 +13,8 @@ public class HibernateController implements FullModelController {
 	private BasicModelController controller;
 
 	private Map<Class<?>,List<EntityModel>> entityModelLists = new HashMap<>();
-	
 	private Set<Entity> changedEntitys = new HashSet<>();
+	
 	public HibernateController(BasicModelController controller)
 	{
 		this.controller = controller;
@@ -46,32 +46,28 @@ public class HibernateController implements FullModelController {
 	@Override
 	public void delete(Entity entity)
 	{
-		EntityModel entityModel = createModel(entity);
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
-		{
-			switch(entityModel.getRelationType(i))
-			{
-			case MANYTOMANY:
-				break;
-			case MANYTOONE:
-				break;
-			case ONETOMANY:
-				Set<?> set = (Set<?>) entityModel.getEntityMember(i);
-				for(Object o : set.toArray())
-					delete((Entity) o);
-				break;
-			case ONETOONE:
-//				delete((Entity) entityModel.getEntityMember(i));
-				break;
-			}
-		}		
 		Session sesson = sessionFactory.openSession();
-//		Entity copy = (Entity) sesson.load(entity.getClass(), entity.getId());
 		sesson.beginTransaction();
 		sesson.delete(entity);
 		sesson.getTransaction().commit();
-		sesson.close();
+		sesson.close();			
+		deleteModel(entity);
 		controller.delete(entity);
+	}
+	
+	private void deleteModel(Entity entity)
+	{
+		for( Object o : entityModelLists.get(entity.getClass()).toArray() )
+		{
+			EntityModel entityModel = (EntityModel) o;
+			if(entityModel.getEntity().equals(entity))
+			{
+				entityModelLists.get(entity.getClass()).remove(entityModel);
+				for(int i = 0; i < entityModel.getEntityCount(); i++)
+					if(entityModel.getRelationType(i).equals(RelationType.ONETOONE))
+						deleteModel((Entity) entityModel.getEntityMember(i));
+			}
+		}
 	}
 	
 
@@ -79,6 +75,7 @@ public class HibernateController implements FullModelController {
 	public Entity createNew(String className)
 	{
 		Entity newEntity = controller.createNew(className);
+		entityModelLists.get(newEntity.getClass()).add(controller.createModel(newEntity));
 		changedEntitys.add(newEntity);
 		return newEntity;
 	}

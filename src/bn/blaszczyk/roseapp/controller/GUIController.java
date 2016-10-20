@@ -1,14 +1,21 @@
 package bn.blaszczyk.roseapp.controller;
 
 import java.awt.Component;
+import java.util.Set;
 
 import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.*;
+import bn.blaszczyk.roseapp.view.panels.FullEditPanel;
+import bn.blaszczyk.roseapp.view.panels.FullListPanel;
+import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
+import bn.blaszczyk.roseapp.view.panels.MyPanel;
+import bn.blaszczyk.roseapp.view.panels.StartPanel;
 
 public class GUIController {
 
 	private FullModelController modelController;
+	private Class<?>[] types;
 	private MainFrame mainFrame;
 		
 	public GUIController(FullModelController modelController)
@@ -24,11 +31,22 @@ public class GUIController {
 	public void createMainFrame(Class<?>[] types, String title)
 	{
 		mainFrame = new MainFrame (modelController, this, title);
-		for(Class<?> type : types)
+		this.types = types;
+		openStartTab();
+	}
+	
+	public void openStartTab()
+	{
+		for(int i = 0; i < mainFrame.getTabbedPane().getTabCount(); i++)
 		{
-			FullListPanel panel = new FullListPanel(modelController, this, type);
-			mainFrame.addTab(panel, type.getSimpleName() + "s", "applist.png" );
-		}		
+			Component c = mainFrame.getTabbedPane().getComponentAt(i);
+			if( c instanceof StartPanel )
+			{
+				mainFrame.getTabbedPane().setSelectedIndex(i);
+				return;
+			}
+		}
+		mainFrame.addTab(new StartPanel(this, types), "Start", "start.png");
 	}
 	
 	public void openFullListTab( Class<?> type )
@@ -55,14 +73,14 @@ public class GUIController {
 			Component c = mainFrame.getTabbedPane().getComponentAt(i);
 			if( c instanceof MyPanel && ((MyPanel)c).getShownObject().equals(entityModel) )
 			{
-				if( edit ^ c instanceof FullPanel )
+				if( edit ^ c instanceof FullViewPanel )
 					mainFrame.getTabbedPane().setSelectedIndex(i);
 				else
 				{
 					if(edit)
 						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this) , title, iconFile );
 					else
-						mainFrame.replaceTab(i, new FullPanel(entityModel, this) , title, iconFile );
+						mainFrame.replaceTab(i, new FullViewPanel(entityModel, this) , title, iconFile );
 				}
 				return;
 			}
@@ -70,7 +88,7 @@ public class GUIController {
 		if(edit)
 			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this) , title, iconFile );
 		else
-			mainFrame.addTab( new FullPanel(entityModel, this) , title, iconFile );
+			mainFrame.addTab( new FullViewPanel(entityModel, this) , title, iconFile );
 	}
 	
 	public void saveCurrent()
@@ -95,21 +113,14 @@ public class GUIController {
 	{
 		Component c = mainFrame.getTabbedPane().getSelectedComponent();
 		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-		{
-			EntityModel entityModel = (EntityModel) ((MyPanel)c).getShownObject();
-			modelController.delete( entityModel.getEntity() );
-			closeCurrent();
-		}
+			delete( ((EntityModel) ((MyPanel)c).getShownObject()).getEntity() );
 	}
 	
 	public void copyCurrent()
 	{
 		Component c = mainFrame.getTabbedPane().getSelectedComponent();
 		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-		{
-			EntityModel entityModel = (EntityModel) ((MyPanel)c).getShownObject();
-			openEntityTab( modelController.createCopy( entityModel ), true );
-		}
+			openEntityTab( modelController.createCopy( (EntityModel) ((MyPanel)c).getShownObject() ), true );
 	}
 
 	public void openNew()
@@ -152,13 +163,35 @@ public class GUIController {
 
 	public void delete(Entity entity)
 	{
+		EntityModel entityModel = modelController.createModel(entity);
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
+		{
+			switch(entityModel.getRelationType(i))
+			{
+			case MANYTOMANY:
+				break;
+			case MANYTOONE:
+				break;
+			case ONETOMANY:
+				Set<?> set = (Set<?>) entityModel.getEntityMember(i);
+				for(Object o : set.toArray())
+					delete((Entity) o);
+				break;
+			case ONETOONE:
+//				delete((Entity) entityModel.getEntityMember(i));
+				break;
+			}
+		}		
 		for(Component c : mainFrame.getTabbedPane().getComponents() )
 			if(c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-			{
-				EntityModel entityModel = (EntityModel) ((MyPanel)c).getShownObject();
-				if(entityModel.getEntity().equals(entity))
+				if( ((EntityModel) ((MyPanel)c).getShownObject()).getEntity().equals(entity))
 					mainFrame.getTabbedPane().remove(c);
-			}
 		modelController.delete(entity);
+	}
+
+	public void closeAll()
+	{
+		while(mainFrame.getTabbedPane().getSelectedComponent() != null)
+			closeCurrent();
 	}
 }

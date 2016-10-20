@@ -1,13 +1,14 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.panels;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 @SuppressWarnings("serial")
-public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
+public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 
 
 	
@@ -16,7 +17,7 @@ public class BasicPanel extends JPanel implements MyPanel, ThemeConstants {
 
 	private EntityModel entityModel;
 	
-	public BasicPanel( EntityModel entityModel )
+	public BasicViewPanel( EntityModel entityModel )
 	{
 		this.entityModel = entityModel;
 		setLayout(null);

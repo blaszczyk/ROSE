@@ -82,8 +82,12 @@ public interface ThemeConstants {
 	public static final int MF_WIDTH = 1900;
 	public static final int MF_HEIGTH = 1000;
 	
-	// ToolBar
+	// StartPanel
 	
-	public static final int TOOLBAR_HEIGHT = 20;
+	public static final int START_BTN_HEIGHT = 50;
+	public static final int START_BTN_WIDTH = 300;
+	public static final Font START_BTN_FONT = new Font("Arial",Font.BOLD,36);
+	public static final int START_V_SPACING = 20;
+	public static final int START_H_SPACING = 20;
 	
 }

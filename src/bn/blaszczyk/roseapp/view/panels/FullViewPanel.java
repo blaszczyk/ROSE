@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.panels;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +14,12 @@ import javax.swing.JScrollPane;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.view.MemberTable;
+import bn.blaszczyk.roseapp.view.MemberTableModel;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 @SuppressWarnings("serial")
-public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
+public class FullViewPanel extends JPanel implements MyPanel, ThemeConstants {
 
 
 	private int width = 2 * H_SPACING;
@@ -26,7 +29,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	private GUIController controller;
 
 	
-	public FullPanel( EntityModel entityModel, GUIController controller )
+	public FullViewPanel( EntityModel entityModel, GUIController controller )
 	{
 		this.controller = controller;
 		this.entityModel = entityModel;
@@ -102,7 +105,7 @@ public class FullPanel extends JPanel implements MyPanel, ThemeConstants {
 	}
 	private void addBasicPanel( EntityModel entityModel )
 	{	
-		MyPanel myPanel = new BasicPanel(entityModel) ;
+		MyPanel myPanel = new BasicViewPanel(entityModel) ;
 		JPanel panel = myPanel.getPanel();
 		panel.setBounds(H_SPACING, height, myPanel.getWidth() , myPanel.getHeight() );
 		add(panel);
