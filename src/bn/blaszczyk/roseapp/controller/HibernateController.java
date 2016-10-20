@@ -44,10 +44,13 @@ public class HibernateController implements FullModelController {
 	}
 	
 	@Override
-	public void deleteEntityMember(Entity entity, String name, Entity value)
+	public void delete(Entity entity)
 	{
-		changedEntitys.add(entity);
-		controller.deleteEntityMember(entity, name, value);
+		Session sesson = sessionFactory.openSession();
+		Entity copy = (Entity) sesson.load(entity.getClass(), entity.getId());
+		sesson.delete(copy);
+		controller.delete(entity);
+		sesson.close();
 	}
 	
 

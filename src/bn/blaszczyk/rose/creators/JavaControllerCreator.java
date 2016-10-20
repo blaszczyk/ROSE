@@ -15,7 +15,7 @@ public class JavaControllerCreator {
 	public static final String SET_METHOD = "setMember";
 	public static final String SET_ENTITY_METHOD = "setEntity";
 	public static final String ADD_ENTITY_METHOD = "addEntity";
-	public static final String DEL_ENTITY_METHOD = "deleteEntity";
+	public static final String DELETE_METHOD = "delete";
 	
 	public static void create(List<Entity> entities, MetaData metadata)
 	{
@@ -57,13 +57,14 @@ public class JavaControllerCreator {
 								+ ADD_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 
-			//public void deleteEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void deleteEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
+			//public void delete( Entity entity );
+			writer.write("\t@Override\n\tpublic void delete( bn.blaszczyk.roseapp.model.Entity entity )\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
-								+ DEL_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
+								+ DELETE_METHOD +   "( ( " + entity.getClassName() + " ) entity );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 
+			
 			//public Entity createNew( String className);
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.Entity createNew( String className )\n\t{\n\t\tswitch( className.toLowerCase() )\n\t\t{\n" );
 			for(Entity entity : entities)
@@ -184,23 +185,29 @@ public class JavaControllerCreator {
 			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 			
-			// deleteEntity
-			writer.write("\tpublic static void " + DEL_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, Object value )\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
+			// delete()
+			writer.write("\tpublic static void " + DELETE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() + " )\n\t{\n");
 			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.getType().isSecondMany() )
+				switch(entityMember.getType())
 				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "s\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n"
-							+ "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "().remove( (" + entityMember.getEntity().getClassName() + ")value );\n"
-							+ "\t\t\telse\n"
-							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
-							+ "\t\t\tbreak;\n" );
-				}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
-			
+				case MANYTOONE:
+					writer.write("\t\tif(" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityMember) + "() != null)\n"
+							+ "\t\t\t" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityMember) 
+							+ "()." + JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().remove( " + entity.getObjectName() +" );\n");
+					break;
+				case ONETOMANY:
+					writer.write( "\t\tfor( " + entityMember.getEntity().getClassName() + " " + entityMember.getName() + " : " + entity.getObjectName() +"." 
+							+ JavaModelCreator.getGetterName(entityMember) + "() )\n"
+							+ "\t\t\t" + JavaControllerCreator.getControllerName(entityMember.getEntity(), metadata) + "." + DELETE_METHOD + "( " + entityMember.getName() + " );\n");
+					break;
+				case ONETOONE:
+					writer.write( "\t\t" + JavaControllerCreator.getControllerName(entityMember.getEntity(), metadata) + "." + DELETE_METHOD + "( " 
+							+ entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "() );\n");
+					break;
+				case MANYTOMANY:
+					break;
+				}
+			writer.write( "\t}\n\n");
 			
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);

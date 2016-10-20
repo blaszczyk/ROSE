@@ -8,7 +8,7 @@ public interface BasicModelController {
 	public void setMember( Entity entity, String name, Object value);
 	public void setEntityMember( Entity entity, String name, Entity value);
 	public void addEntityMember( Entity entity, String name, Entity value);
-	public void deleteEntityMember( Entity entity, String name, Entity value);
+	public void delete( Entity entity );
 	
 	public Entity createNew( String className);
 	

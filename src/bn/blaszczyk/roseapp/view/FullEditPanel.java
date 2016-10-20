@@ -121,7 +121,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		MemberTable table = new MemberTable( tableModel, guiController );
 		table.setButtonColumn(0, "edit.png", e -> guiController.openEdit( e ));
 		table.setButtonColumn(1, "copy.png", e -> guiController.openEdit( modelController.createCopy(e) ) );
-		table.setButtonColumn(2, "delete.png", e -> modelController.deleteEntityMember(entity, name, e.getEntity()) );
+		table.setButtonColumn(2, "delete.png", e -> modelController.delete(e.getEntity()) );
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(2 * H_SPACING, height, table.getWidth(), table.getHeight());
 		add(scrollPane);
