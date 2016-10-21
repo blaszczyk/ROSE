@@ -97,7 +97,7 @@ public class JavaEntityModelCreator {
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().getName().toUpperCase() + ";\n" );
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().name() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
 			// public Class<?> getEntityClass( int index );	

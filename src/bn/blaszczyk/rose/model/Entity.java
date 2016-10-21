@@ -10,6 +10,7 @@ public class Entity {
 	private String toString;
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
+	private List<EnumMember> enummembers = new ArrayList<>();
  
 	public Entity(String classname, String packagename)
 	{
@@ -36,7 +37,6 @@ public class Entity {
 		return classname;
 	}
 
-	
 	public String getToString()
 	{
 		return toString;
@@ -57,11 +57,16 @@ public class Entity {
 		return entitymembers;
 	}
 	
+	public List<EnumMember> getEnumMembers()
+	{
+		return enummembers;
+	}
+	
 	public void addMember(Member member)
 	{
 		members.add(member);
 	}
-	
+
 	public void addEntityMember(EntityMember entitymember)
 	{
 		entitymembers.add(entitymember);
@@ -79,7 +84,11 @@ public class Entity {
 		default:
 			break;
 		}
-	}
+	}	
 	
+	public void addEnumMember(EnumMember enummember)
+	{
+		enummembers.add(enummember);
+	}	
 	
 }

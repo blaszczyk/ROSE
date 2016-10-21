@@ -10,6 +10,7 @@ import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EntityMember;
+import bn.blaszczyk.rose.model.EnumMember;
 import bn.blaszczyk.rose.model.Member;
 import bn.blaszczyk.roseapp.model.RelationType;
 
@@ -66,6 +67,12 @@ public class SQLCreator {
 		for(Member member : entity.getMembers())
 		{
 			writer.write( "\t" + member.getName() + " " + member.getSqltype() + ",\n");
+		}
+		
+		// enum columns
+		for(EnumMember enumMember : entity.getEnumMembers())
+		{
+			writer.write( "\t" + enumMember.getName() + " int,\n");
 		}
 		
 		// relational columns

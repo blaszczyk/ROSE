@@ -9,7 +9,7 @@ public enum MemberType {
 	BOOLEAN("boolean","Boolean","false","%s");
 	// TODO:
 	// FILE("file","java.io.File","", "new java.io.File(%s)")
-	// ENUM
+	// ENUM  -> EntityMembers
 	// DATETIME
 	
 	private String sqlname;

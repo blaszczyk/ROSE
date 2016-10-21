@@ -1,27 +1,19 @@
 package bn.blaszczyk.roseapp.model;
 
 public enum RelationType {
-	ONETOONE("onetoone",false,false),
-	ONETOMANY("onetomany",false,true),
-	MANYTOONE("manytoone",true,false),
-	MANYTOMANY("manytomany",true,true);
+	ONETOONE(false,false),
+	ONETOMANY(false,true),
+	MANYTOONE(true,false),
+	MANYTOMANY(true,true),
+	ENUM(true,false);
 	
-	private String name;
 	private boolean firstMany;
 	private boolean secondMany;
 	
-	
-
-	private RelationType(String name, boolean firstMany, boolean secondMany)
+	private RelationType(boolean firstMany, boolean secondMany)
 	{
-		this.name = name;
 		this.firstMany = firstMany;
 		this.secondMany = secondMany;
-	}
-
-	public String getName()
-	{
-		return name;
 	}
 
 	public boolean isFirstMany()
