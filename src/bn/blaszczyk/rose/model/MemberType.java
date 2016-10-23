@@ -8,8 +8,6 @@ public enum MemberType {
 	NUMERIC("numeric","java.math.BigDecimal","0","new java.math.BigDecimal(%s)"),
 	BOOLEAN("boolean","Boolean","false","%s");
 	// TODO:
-	// FILE("file","java.io.File","", "new java.io.File(%s)")
-	// ENUM  -> EntityMembers
 	// DATETIME
 	
 	private String sqlname;

@@ -7,6 +7,7 @@ import javax.swing.SwingConstants;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.model.RelationType;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
+import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
 @SuppressWarnings("serial")
 public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
@@ -24,7 +25,10 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		setLayout(null);
 		setBackground(BASIC_PNL_BACKGROUND);
 		for(int i = 0; i < entityModel.getMemberCount(); i++)
-			addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
+			if( FileInputPanel.isFileName(entityModel.getMemberValue(i).toString() ) )
+				addFile( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
+			else
+				addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 			if(entityModel.getRelationType(i) == RelationType.ENUM)
 				addValue(entityModel.getEntityName(i), entityModel.getEntityMember(i).toString());
@@ -47,7 +51,16 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		lblValue.setForeground(VALUE_FG);
 		lblValue.setBackground(VALUE_BG);
 		add(lblValue);
-				
+			
+		height += LBL_HEIGHT + V_SPACING;
+	}	
+	
+	private void addFile(String property, String value)
+	{
+		FileInputPanel panel = new FileInputPanel(property, value, false);
+		panel.setBounds( H_SPACING , height, PROPERTY_WIDTH + H_SPACING + VALUE_WIDTH, LBL_HEIGHT );
+		add(panel);
+			
 		height += LBL_HEIGHT + V_SPACING;
 	}
 

@@ -42,7 +42,10 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		String name = entityModel.getMemberName(index);
 		Object value = entityModel.getMemberValue(index);
 		if( value instanceof String )
-			panel = new StringInputPanel( name, (String) value, entityModel.getLength1(index) );
+			if( FileInputPanel.isFileName(entityModel.getMemberValue(index).toString() ) )
+				panel = new FileInputPanel(entityModel.getMemberName(index), entityModel.getMemberValue(index).toString(), true);
+			else
+				panel = new StringInputPanel( name, (String) value, entityModel.getLength1(index) );
 		else if( value instanceof Boolean )
 			panel = new BooleanInputPanel( name, (Boolean) value );
 		else if( value instanceof Integer)
