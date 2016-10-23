@@ -1,35 +1,19 @@
 package bn.blaszczyk.roseapp.view.inputpanels;
 
-import java.awt.event.ActionListener;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class DateInputPanel extends AbstractInputPanel<Date> {
 	
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yy");
+	private final Date defvalue;
+//	private final static DateFormat DATEFORMAT = new SimpleDateFormat("dd.MM.yyyy");
 	
-	private final JLabel label = new JLabel();
-	private final JTextField textField = new JTextField();
-	
-	private Date defValue;
-	
-	public DateInputPanel( String name, Date defValue )
+	public DateInputPanel( String name, Date defvalue )
 	{
-		this.defValue = defValue;
-		
-		label.setText(name);
-		label.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
-		add(label);
-		
-		setValue(defValue);
-		textField.setBounds( PROPERTY_WIDTH + H_SPACING , 0, VALUE_WIDTH, LBL_HEIGHT);
-		add(textField);
+		super(name);
+		this.defvalue = defvalue;
+		setValue(defvalue);
 	}
 	
 	@Override
@@ -41,32 +25,34 @@ public class DateInputPanel extends AbstractInputPanel<Date> {
 		}
 		catch (ParseException e)
 		{
-			return defValue;
+			return null;
 		}
 	}
 	
 	@Override
 	public void setValue(Date value)
 	{	
-		textField.setText( DATE_FORMAT.format(value) );
+		textField.setText(DATE_FORMAT.format(value));
 	}
-		
+
 	@Override
-	public String getName()
+	public boolean hasChanged()
 	{
-		return label.getText();
+		return defvalue.getTime() != getValue().getTime() ;
 	}
-	
+
 	@Override
-	public void addActionListener(ActionListener l)
+	public boolean isInputValid()
 	{
-		textField.addActionListener(l);
-	}
-	
-	@Override
-	public void removeActionListener(ActionListener l)
-	{
-		textField.removeActionListener(l);
+		try
+		{
+			DATE_FORMAT.parse(textField.getText());
+			return true;
+		}
+		catch (ParseException e)
+		{
+			return false;
+		}
 	}
 	
 }

@@ -13,6 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.*;
@@ -30,12 +32,17 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 
 	private BasicEditPanel basicPanel;
 	private List<BasicEditPanel> basicPanels = new ArrayList<>();
-	private Map<String,MyComboBox<Entity>> entityBoxes = new HashMap<>();
+	private Map<Integer,MyComboBox<Entity>> entityBoxes = new HashMap<>();
 	
 	private FullModelController modelController;
 	private GUIController guiController;
 	private EntityModel entityModel;
-	
+
+	public FullEditPanel( EntityModel entityModel, FullModelController modelController, GUIController guiController, ChangeListener listener )
+	{
+		this(entityModel, modelController, guiController);
+		setChangeListener(listener);		
+	}
 	public FullEditPanel( EntityModel entityModel, FullModelController modelController, GUIController guiController )
 	{
 		this.modelController = modelController;
@@ -64,6 +71,8 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 				addSelectionBox( i );
 				break;
 			case MANYTOMANY:
+				break;
+			case ENUM:
 				break;
 			}	
 		}
@@ -161,7 +170,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 			selectBox.setSelectedItem(entityModel.getEntityMember(index));
 		selectBox.setBounds( 2* H_SPACING, height, 600, 30);
 		add(selectBox);
-		entityBoxes.put(entityModel.getEntityName(index), selectBox);
+		entityBoxes.put(index, selectBox);
 		computeDimensions(30, 600);
 	}
 	
@@ -170,8 +179,8 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		basicPanel.save(modelController);
 		for(BasicEditPanel panel : basicPanels)
 			panel.save(modelController);
-		for(String name : entityBoxes.keySet() )
-			modelController.setEntityMember(entityModel.getEntity(), name, ( (Entity)entityBoxes.get(name).getSelectedItem() ) );
+		for(Integer index : entityBoxes.keySet() )
+			modelController.setEntityMember(entityModel.getEntity(), entityModel.getEntityName(index), ( (Entity)entityBoxes.get(index).getSelectedItem() ) );
 	}
 	
 	private void computeDimensions( int height, int width )
@@ -208,6 +217,23 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	@Override
 	public boolean hasChanged()
 	{
-		return true; // TODO
+		if(basicPanel.hasChanged())
+			return true;
+		for(BasicEditPanel panel : basicPanels)
+			if(panel.hasChanged())
+				return true;
+		for(Integer index : entityBoxes.keySet() )
+			if( entityModel.getEntityMember(index).equals( entityBoxes.get(index).getSelectedItem() ) )
+				return true;
+		return false;
+	}
+	
+	public void setChangeListener(ChangeListener l)
+	{
+		basicPanel.setChangeListener(l);
+		for(BasicEditPanel panel : basicPanels)
+			panel.setChangeListener(l);
+		for(Integer index : entityBoxes.keySet() )
+			entityBoxes.get(index).addItemListener(e -> l.stateChanged(new ChangeEvent(entityBoxes.get(index))));
 	}
 }

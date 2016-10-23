@@ -9,6 +9,7 @@ import java.util.List;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EnumType;
 
 public class HibernateCreator {
 
@@ -20,7 +21,7 @@ public class HibernateCreator {
 	
 	private static final String XML_FOOTER = "\t</session-factory>\n</hibernate-configuration>";
 	
-	public static void create(List<Entity> entities, MetaData metadata)
+	public static void create(List<Entity> entities, List<EnumType> enums, MetaData metadata)
 	{
 		DBType dbType = DBType.getType(metadata.getDbtype());
 		String fullpath = metadata.getSrcpath() + "hibernate.cfg.xml";
@@ -52,7 +53,7 @@ public class HibernateCreator {
 	{
 		writer.write("\t\t<property name=\"" + name + "\">" + value + "</property>\n");
 	}
-	
+
 	private static void writeEntity(Entity entity, MetaData metadata, Writer writer) throws IOException
 	{
 		writer.write("\t\t<mapping class=\"" + metadata.getModelpackage() + "." + entity.getSimpleClassName() + "\"/>\n");

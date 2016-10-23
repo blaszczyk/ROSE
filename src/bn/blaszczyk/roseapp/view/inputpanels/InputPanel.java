@@ -1,16 +1,18 @@
 package bn.blaszczyk.roseapp.view.inputpanels;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
 
-public interface InputPanel<T> {
+import bn.blaszczyk.roseapp.view.ThemeConstants;
+
+public interface InputPanel<T> extends ThemeConstants{
 	
 	public T getValue();
 	public void setValue( T value );
 	public String getName();
 	public JPanel getPanel();
-	public void addActionListener(ActionListener l);
-	public void removeActionListener(ActionListener l);
+	public boolean hasChanged();
+	public boolean isInputValid();
+	public void setChangeListener( ChangeListener l);
 	
 }

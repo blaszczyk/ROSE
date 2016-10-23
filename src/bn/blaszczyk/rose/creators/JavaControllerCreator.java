@@ -164,6 +164,17 @@ public class JavaControllerCreator {
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
 				}			
+			for(EnumMember enumMember : entity.getEnumMembers())
+			{
+				writer.write("\t\tcase \"" + enumMember.getName().toLowerCase() + "\":\n"
+						+ "\t\t\tif( value instanceof " + enumMember.getEnumType().getClassName() + " )\n\t\t\t{\n");
+				writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(enumMember) 
+						+ "( (" + enumMember.getEnumType().getClassName() + ")value );\n" 
+						+ "\t\t\t}\n"
+						+ "\t\t\telse\n"
+						+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
+						+ "\t\t\tbreak;\n" );
+			}			
 			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 			
@@ -205,6 +216,8 @@ public class JavaControllerCreator {
 							+ entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "() );\n");
 					break;
 				case MANYTOMANY:
+					break;
+				case ENUM:
 					break;
 				}
 			writer.write( "\t}\n\n");

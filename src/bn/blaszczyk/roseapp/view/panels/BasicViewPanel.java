@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.RelationType;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 @SuppressWarnings("serial")
@@ -24,6 +25,9 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		setBackground(BASIC_PNL_BACKGROUND);
 		for(int i = 0; i < entityModel.getMemberCount(); i++)
 			addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
+		for(int i = 0; i < entityModel.getEntityCount(); i++)
+			if(entityModel.getRelationType(i) == RelationType.ENUM)
+				addValue(entityModel.getEntityName(i), entityModel.getEntityMember(i).toString());
 	}
 
 	private void addValue(String property, String value)

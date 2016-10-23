@@ -18,7 +18,7 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	public MainFrame(FullModelController modelController, GUIController guiController, String title)
 	{
 		super(title);
-		actions = new Actions(modelController, guiController);
+		actions = new Actions(this, guiController);
 		setLayout(new BorderLayout());
 		
 		ToolBar toolBar = new ToolBar(actions);
@@ -67,5 +67,11 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	{
 		return tabbedPane;
 	}
+
+	public Actions getActions()
+	{
+		return actions;
+	}
+	
 	
 }

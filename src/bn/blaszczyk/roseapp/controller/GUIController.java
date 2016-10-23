@@ -78,7 +78,7 @@ public class GUIController {
 				else
 				{
 					if(edit)
-						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this) , title, iconFile );
+						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this, mainFrame.getActions()) , title, iconFile );
 					else
 						mainFrame.replaceTab(i, new FullViewPanel(entityModel, this) , title, iconFile );
 				}
@@ -86,7 +86,7 @@ public class GUIController {
 			}
 		}
 		if(edit)
-			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this) , title, iconFile );
+			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this, mainFrame.getActions()) , title, iconFile );
 		else
 			mainFrame.addTab( new FullViewPanel(entityModel, this) , title, iconFile );
 	}
@@ -179,6 +179,8 @@ public class GUIController {
 				break;
 			case ONETOONE:
 //				delete((Entity) entityModel.getEntityMember(i));
+				break;
+			case ENUM:
 				break;
 			}
 		}		

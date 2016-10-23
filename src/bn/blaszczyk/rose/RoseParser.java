@@ -46,7 +46,7 @@ public class RoseParser {
 			SQLCreator.create(entities, metadata);
 			break;
 		case "hibernate":
-			HibernateCreator.create(entities, metadata);
+			HibernateCreator.create(entities, enums, metadata);
 			break;
 		case "javamodels":
 			for(EnumType enumType : enums)

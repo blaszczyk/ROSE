@@ -31,7 +31,8 @@ public class HibernateController implements FullModelController {
 	public void setEntityMember(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
-		changedEntitys.add(value);
+		if(!(value instanceof Enum))
+			changedEntitys.add(value);
 		controller.setEntityMember(entity, name, value);
 	}
 	
@@ -99,6 +100,7 @@ public class HibernateController implements FullModelController {
 					addEntityMember(copy, entityModel.getEntityName(i), createCopy((Entity) o));
 				break;
 			case MANYTOONE:
+			case ENUM:
 				setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
 				break;
 			case MANYTOMANY:
@@ -151,7 +153,7 @@ public class HibernateController implements FullModelController {
 			{
 				for(int i = 0; i < entityModel.getEntityCount(); i++)
 				{
-					if(!entityModel.getRelationType(i).isSecondMany())
+					if(entityModel.getRelationType(i) == RelationType.ONETOONE || entityModel.getRelationType(i) == RelationType.MANYTOONE)
 					{
 						Entity oldEntity = (Entity) entityModel.getEntityMember(i);
 						if(oldEntity == null)

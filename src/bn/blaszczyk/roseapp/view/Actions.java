@@ -10,7 +10,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
@@ -18,8 +17,7 @@ import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 public class Actions implements ChangeListener{
 	
-//	private FullModelController modelController;
-//	private GUIController guiController;
+	private MainFrame mainFrame;
 	
 	private Action actnStart;
 	private Action actnClose;
@@ -31,11 +29,9 @@ public class Actions implements ChangeListener{
 	private Action actnNew;
 	private Action actnCopy;
 	
-	public Actions(FullModelController modelController, GUIController guiController)
-	{
-//		this.modelController = modelController;
-//		this.guiController = guiController;
-		
+	public Actions( MainFrame mainFrame, GUIController guiController)
+	{	
+		this.mainFrame = mainFrame;
 		actnStart = createAction( e -> guiController.openStartTab() );
 		actnClose = createAction( e -> guiController.closeCurrent() );
 		actnCloseAll = createAction( e -> guiController.closeAll() );
@@ -108,50 +104,47 @@ public class Actions implements ChangeListener{
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
-		if( e.getSource() instanceof JTabbedPane )
-		{
-			JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
-			
-			actnSaveAll.setEnabled(false);
-			for(Component c : tabbedPane.getComponents())
-				if( c instanceof MyPanel)
-				{
-					MyPanel panel = (MyPanel) c;
-					if(panel.hasChanged())
-						actnSaveAll.setEnabled(true);
-				}
-			
-			Component c = tabbedPane.getSelectedComponent();
-			actnClose.setEnabled( c instanceof MyPanel );
+		JTabbedPane tabbedPane = mainFrame.getTabbedPane();
+		
+		actnSaveAll.setEnabled(false);
+		for(Component c : tabbedPane.getComponents())
 			if( c instanceof MyPanel)
 			{
 				MyPanel panel = (MyPanel) c;
-				Object o = panel.getShownObject();
-				if( o instanceof Class<?>)
-				{
-					actnNew.setEnabled(true);
-					actnSave.setEnabled(false);
-					actnCopy.setEnabled(false);
-					actnDelete.setEnabled(false);
-					actnEdit.setEnabled(false);
-				}
-				else if( o instanceof EntityModel )
-				{
-					actnNew.setEnabled(true);
-					actnCopy.setEnabled(true);
-					actnDelete.setEnabled(true);
-					actnEdit.setEnabled(panel instanceof FullViewPanel );
-					actnSave.setEnabled(panel.hasChanged());
-				}
+				if(panel.hasChanged())
+					actnSaveAll.setEnabled(true);
 			}
-			else
+		
+		Component c = tabbedPane.getSelectedComponent();
+		actnClose.setEnabled( c instanceof MyPanel );
+		if( c instanceof MyPanel)
+		{
+			MyPanel panel = (MyPanel) c;
+			Object o = panel.getShownObject();
+			if( o instanceof Class<?>)
 			{
-				actnNew.setEnabled(false);
+				actnNew.setEnabled(true);
 				actnSave.setEnabled(false);
 				actnCopy.setEnabled(false);
 				actnDelete.setEnabled(false);
 				actnEdit.setEnabled(false);
 			}
+			else if( o instanceof EntityModel )
+			{
+				actnNew.setEnabled(true);
+				actnCopy.setEnabled(true);
+				actnDelete.setEnabled(true);
+				actnEdit.setEnabled(panel instanceof FullViewPanel );
+				actnSave.setEnabled(panel.hasChanged());
+			}
+		}
+		else
+		{
+			actnNew.setEnabled(false);
+			actnSave.setEnabled(false);
+			actnCopy.setEnabled(false);
+			actnDelete.setEnabled(false);
+			actnEdit.setEnabled(false);
 		}
 	}
 	

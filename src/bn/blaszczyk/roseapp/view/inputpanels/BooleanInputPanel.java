@@ -1,16 +1,19 @@
 package bn.blaszczyk.roseapp.view.inputpanels;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
-public class BooleanInputPanel extends AbstractInputPanel<Boolean> {
-	
-	private JCheckBox checkBox = new JCheckBox();
+public class BooleanInputPanel extends JPanel implements InputPanel<Boolean>
+{
+
+	private final JCheckBox checkBox = new JCheckBox();
+	private final boolean defValue;
 	
 	public BooleanInputPanel(String name, Boolean defValue)
 	{
+		this.defValue = defValue;
 		checkBox.setSelected(defValue);
 		checkBox.setText(name);
 		checkBox.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
@@ -28,17 +31,35 @@ public class BooleanInputPanel extends AbstractInputPanel<Boolean> {
 	{
 		checkBox.setSelected(value);
 	}
-	
+
 	@Override
-	public void addActionListener(ActionListener l)
+	public String getName()
 	{
-		checkBox.addActionListener(l);
+		return checkBox.getText();
 	}
-	
+
 	@Override
-	public void removeActionListener(ActionListener l)
+	public JPanel getPanel()
 	{
-		checkBox.removeActionListener(l);
+		return this;
+	}
+
+	@Override
+	public boolean hasChanged()
+	{
+		return defValue ^ checkBox.isSelected();
+	}
+
+	@Override
+	public boolean isInputValid()
+	{
+		return true;
+	}
+
+	@Override
+	public void setChangeListener(ChangeListener l)
+	{
+		checkBox.addChangeListener(l);
 	}
 	
 }

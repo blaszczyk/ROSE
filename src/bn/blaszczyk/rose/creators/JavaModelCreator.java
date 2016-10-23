@@ -230,7 +230,6 @@ public class JavaModelCreator {
 					+ "\t\t\treturn false;\n\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\n"
 					+ "\t}\n\n");
 			
-			// TODO? hashValue	
 			// fin
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);
@@ -260,21 +259,25 @@ public class JavaModelCreator {
 			writer.write("package " + metadata.getModelpackage() + ";\n\n");
 			
 			// class declaration
-			writer.write("\npublic enum " + enumType.getSimpleClassName() + "\n{");
+			writer.write("\npublic enum " + enumType.getSimpleClassName() + " implements bn.blaszczyk.roseapp.model.Entity\n{");
 			
 			// options variables
 			boolean first = true;
+			int count = 1;
 			for(String option : enumType)
 			{
 				if(first)
 					first = false;
 				else
 					writer.write( "," );
-				writer.write("\n\t" + option );
+				writer.write("\n\t" + option + "(" + count++ + ")" );
 			}
 			
+			writer.write(";\n\n\tprivate int id;\n\n\tprivate " + enumType.getSimpleClassName() + "(int id)\n\t{\n\t\tthis.id = id;\n\t}\n\n"
+					+ "\t@Override\n\tpublic Integer getId()\n\t{\n\t\treturn id;\n\t}\n\n"
+					+ "\t@Override\n\tpublic void setId(Integer id)\n\t{\n\t}");
 			// fin
-			writer.write(";\n}\n");
+			writer.write("\n}\n");
 			System.out.println( "File created: " + fullpath);
 		}
 		catch (IOException e)

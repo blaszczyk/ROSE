@@ -7,6 +7,7 @@ import java.util.List;
 
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
+import bn.blaszczyk.roseapp.model.RelationType;
 
 
 public class JavaEntityModelCreator {
@@ -77,13 +78,15 @@ public class JavaEntityModelCreator {
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public int getEntityCount();
-			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + entity.getEntityMembers().size() + ";\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + ( entity.getEntityMembers().size() + entity.getEnumMembers().size() ) + ";\n\t}\n\n");
 			
 			// public Object getEntityMember( int index );
 			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
+			for(EnumMember enumMember : entity.getEnumMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(enumMember)+ "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public String getEntityName( int index );
@@ -91,6 +94,8 @@ public class JavaEntityModelCreator {
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.getType().isSecondMany() ? "s" : "" ) +  "\";\n" );
+			for(EnumMember enumMember : entity.getEnumMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + enumMember.getCapitalName() +  "\";\n" );
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
 
 			// public RelationType getRelationType( int index );			
@@ -98,13 +103,17 @@ public class JavaEntityModelCreator {
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().name() + ";\n" );
-			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
+//			for(EnumMember enumMember : entity.getEnumMembers())
+//				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + RelationType.ENUM.name() + ";\n" );
+			writer.write("\t\t}\n\t\treturn bn.blaszczyk.roseapp.model.RelationType." + RelationType.ENUM.name() + ";\n\t}\n\n");
 
 			// public Class<?> getEntityClass( int index );	
 			writer.write("\t@Override\n\tpublic Class<?> getEntityClass(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
 			for(EntityMember entityMember : entity.getEntityMembers())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityMember.getEntity().getClassName() + ".class;\n" );
+			for(EnumMember enumMember : entity.getEnumMembers())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + enumMember.getEnumType().getClassName() + ".class;\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public int getLength1( int index );			
@@ -126,7 +135,7 @@ public class JavaEntityModelCreator {
 						+ metadata.getEntitymodelfactoryclass() + ".createModel( entity );\n\t}\n\n");
 
 			// public String toString();
-			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn \"[\" + getEntity() + \"]\";\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn getEntity().toString();\n\t}\n\n");
 			
 			// public boolean equals( Object that );
 			writer.write("\t@Override\n\tpublic boolean equals( Object that )\n\t{\n\t\tif(!(that instanceof " + classname + "))\n"

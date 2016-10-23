@@ -59,8 +59,9 @@ public interface ThemeConstants {
 	
 	public static final int BUTTON_WIDTH = 24;
 
-	public static final DateFormat  DATE_FORMAT = new SimpleDateFormat("dd.MM.YY");
+	public static final DateFormat  DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
+	public static final DecimalFormat BIG_DEC_FORMAT = ((DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH));
 	public static final NumberFormat DOUBLE_FORMAT = new DecimalFormat("0.000",DecimalFormatSymbols.getInstance(Locale.GERMAN));
 	
 	public static final Color ODD_BG = Color.WHITE;

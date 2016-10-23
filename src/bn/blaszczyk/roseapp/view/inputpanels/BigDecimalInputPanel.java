@@ -1,41 +1,28 @@
 package bn.blaszczyk.roseapp.view.inputpanels;
 
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Locale;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 @SuppressWarnings("serial")
-public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> implements KeyListener {
-
-	private static final DecimalFormat BIG_DEC_FORMAT = (DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> {
+	
+	private final BigDecimal defvalue;	
+	private final int maxLength;
+	private final int precision;
 	
 	static{
-		BIG_DEC_FORMAT.setParseBigDecimal(true);
+		ThemeConstants.BIG_DEC_FORMAT.setParseBigDecimal(true);
 	}
 	
-	private final JLabel label = new JLabel();
-	private final JTextField textField = new JTextField();
-	
-	public BigDecimalInputPanel( String name, BigDecimal defvalue )
+	public BigDecimalInputPanel( String name, BigDecimal defvalue, int maxLength, int precision )
 	{
-		
-		label.setText(name);
-		label.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
-		add(label);
-		
-		textField.setText( "" + defvalue);
-		textField.setBounds( PROPERTY_WIDTH + H_SPACING , 0, VALUE_WIDTH, LBL_HEIGHT);
-		textField.addKeyListener(this);
-		add(textField);
+		super(name);
+		this.defvalue = defvalue;
+		this.maxLength = maxLength;
+		this.precision = precision;
+		setValue(defvalue);
 	}
 	
 	@Override
@@ -43,62 +30,41 @@ public class BigDecimalInputPanel extends AbstractInputPanel<BigDecimal> impleme
 	{
 		try
 		{
-			return (BigDecimal) BIG_DEC_FORMAT.parse(textField.getText());
+			BigDecimal retValue = (BigDecimal) BIG_DEC_FORMAT.parse( textField.getText() );
+			retValue.setScale(precision,BigDecimal.ROUND_HALF_UP);
+			return retValue;
 		}
 		catch (ParseException e)
 		{
-			return BigDecimal.ZERO;
+			return null;
 		}
 	}
 	
 	@Override
 	public void setValue(BigDecimal value)
 	{	
-		textField.setText("" + value);
-	}
-		
-	@Override
-	public String getName()
-	{
-		return label.getText();
-	}
-	
-	@Override
-	public void addActionListener(ActionListener l)
-	{
-		textField.addActionListener(l);
-	}
-	
-	@Override
-	public void removeActionListener(ActionListener l)
-	{
-		textField.removeActionListener(l);
-	}
-
-
-	/*
-	 * KeyListener Methods
-	 */
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
+		textField.setText(BIG_DEC_FORMAT.format(value));
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e)
+	public boolean hasChanged()
 	{
-		textField.requestFocusInWindow();
+		return !defvalue.equals(getValue()) ;
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e)
+	public boolean isInputValid()
 	{
-		textField.replaceSelection(null);
-		char c = e.getKeyChar();
-		if (!Character.isISOControl(c) && !Character.isDigit(c) && !"-.,".contains("" + c) )
+		try
 		{
-			Toolkit.getDefaultToolkit().beep();
-			e.consume();
+			BigDecimal value = (BigDecimal) BIG_DEC_FORMAT.parse( textField.getText() );
+			if(	value.longValue() >= Math.pow(10, maxLength-precision) )
+					return false;
+			return true;
+		}
+		catch (ParseException e)
+		{
+			return false;
 		}
 	}
 	
