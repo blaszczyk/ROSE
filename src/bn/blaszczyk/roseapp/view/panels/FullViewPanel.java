@@ -97,8 +97,7 @@ public class FullViewPanel extends JPanel implements MyPanel, ThemeConstants {
 				e.printStackTrace();
 			}
 			btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height , 100, SUBTITLE_HEIGHT);
-			final EntityModel entityModelCpy = entityModel;
-			btnView.addActionListener( e -> controller.openEntityTab(entityModelCpy, false) );
+			btnView.addActionListener( e -> controller.openEntityTab(entityModel.createModel( (Entity) entityModel.getEntityMember(index) ), false) );
 			add(btnView);
 		}		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
@@ -115,7 +114,7 @@ public class FullViewPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addMemberTable( List<EntityModel> entityModels )
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
-		MemberTable table = new MemberTable( tableModel );
+		MemberTable table = new MemberTable( tableModel, BASIC_WIDTH );
 		table.setButtonColumn(0, "view.png", e -> controller.openEntityTab( e, false ));
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds( 2 * H_SPACING, height, table.getWidth(), table.getHeight());

@@ -59,7 +59,7 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 			System.out.printf( "Unknown type %s \n", value);
 			return;
 		}
-		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH, LBL_HEIGHT );
+		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH + H_SPACING, LBL_HEIGHT );
 		panels.add(panel);
 		add(panel.getPanel());
 		height += LBL_HEIGHT + V_SPACING;
@@ -67,7 +67,7 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addEnumPanel(int index)
 	{
 		InputPanel<?> panel = new EnumInputPanel(entityModel.getEntityName(index), (Enum<?>) entityModel.getEntityMember(index));
-		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH, LBL_HEIGHT );
+		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH + H_SPACING, LBL_HEIGHT );
 		panels.add(panel);
 		add(panel.getPanel());
 		height += LBL_HEIGHT + V_SPACING;

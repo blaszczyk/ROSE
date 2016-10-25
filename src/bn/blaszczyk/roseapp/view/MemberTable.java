@@ -47,8 +47,8 @@ public class MemberTable extends JTable implements ThemeConstants {
 				text = INT_FORMAT.format(value);
 			else if(value instanceof BigDecimal)
 				text = DOUBLE_FORMAT.format(value);
-			else if(value instanceof String)
-				text = (String) value;
+			else 
+				text = value.toString();
 			
 			JLabel c = new JLabel( text );
 			c.setOpaque(true);
@@ -76,23 +76,18 @@ public class MemberTable extends JTable implements ThemeConstants {
 		}
 	};
 	
-//	private MemberTableModel tableModel;
-//	private GUIController controller;
 	private EntityAction[] buttonActions;
 	private MemberTableModel tableModel;
 	
-	private int width = TABLE_WIDTH;
+	private int width = FULL_TABLE_WIDTH;
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public MemberTable(MemberTableModel tableModel )
+	public MemberTable(MemberTableModel tableModel, int maxWidth )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
-//		this.controller = controller;
 		buttonActions = new EntityAction[tableModel.getButtonCount()];
-
-		
 
 		setShowGrid(false);
 		setIntercellSpacing(new Dimension(CELL_SPACING, CELL_SPACING));
@@ -103,7 +98,6 @@ public class MemberTable extends JTable implements ThemeConstants {
 		
 		addMouseListener( new MouseAdapter() 
 		{
-
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
@@ -114,14 +108,13 @@ public class MemberTable extends JTable implements ThemeConstants {
 					if(col < tableModel.getButtonCount() )
 						buttonActions[col].performAction(tableModel.getEntityModel(row));						
 				}
-			}
-			
+			}			
 		});
 		
 		setRowHeight(ODD_FONT.getSize() + 10);
 		
 		setCellRenderer();
-		setDimns();
+		setDimns(maxWidth);
 	}
 	
 	
@@ -165,21 +158,32 @@ public class MemberTable extends JTable implements ThemeConstants {
 			getColumnModel().getColumn(columnIndex).setCellRenderer( cellRenderer );
 	}
 	
-	private void setDimns()
+	private void setDimns( int maxWidth )
 	{
-		this.width = 0;
+		this.width = maxWidth;
+		int newWidth = 0;
 		for(int i = 0 ; i < this.getColumnCount(); i++)
-		{
-//			int width = i < tableModel.getButtonCount() ? BUTTON_WIDTH : Math.max( CELL_WIDTH, TABLE_WIDTH / getColumnCount() );
-			int width = tableModel.getColumnWidth(i) * 2;
-			if( width >= 0 )
+			newWidth += tableModel.getColumnWidth(i) + CELL_SPACING;
+		for(int i = 0 ; i < this.getColumnCount(); i++)
+			if( tableModel.getColumnClass(i) == Icon.class)
 			{
-				getColumnModel().getColumn(i).setPreferredWidth(width);
-				getColumnModel().getColumn(i).setMinWidth(width);
-				getColumnModel().getColumn(i).setMaxWidth(width);
-				this.width += width + CELL_SPACING;
+				getColumnModel().getColumn(i).setPreferredWidth(BUTTON_WIDTH);
+				getColumnModel().getColumn(i).setMinWidth(BUTTON_WIDTH);
+				getColumnModel().getColumn(i).setMaxWidth(BUTTON_WIDTH);
+				
 			}
-		}
+			else
+			{
+				int width =  tableModel.getColumnWidth(i) ;
+				if(newWidth < maxWidth)
+					width = width * maxWidth / newWidth;
+				if( width >= 0 )
+				{
+					getColumnModel().getColumn(i).setPreferredWidth(width);
+//					getColumnModel().getColumn(i).setMinWidth(width);
+//					getColumnModel().getColumn(i).setMaxWidth(width);
+				}
+			}
 	}
 	
 }

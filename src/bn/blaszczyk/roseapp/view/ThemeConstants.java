@@ -29,6 +29,8 @@ public interface ThemeConstants {
 	
 	public static final Color BASIC_PNL_BACKGROUND = Color.DARK_GRAY;
 	
+	public static final int BASIC_WIDTH = VALUE_WIDTH + H_SPACING + PROPERTY_WIDTH;
+	
 	
 	// Full Panel
 	
@@ -54,8 +56,6 @@ public interface ThemeConstants {
 	public static final int CELL_WIDTH = 100;
 	
 	public static final int CELL_SPACING = 0;
-	public static final int TABLE_HEIGHT = 150;
-	public static final int TABLE_WIDTH = 800;
 	
 	public static final int BUTTON_WIDTH = 24;
 
@@ -76,12 +76,14 @@ public interface ThemeConstants {
 	public static final Color HEADER_BG = new Color(238,238,238);
 	
 	// Main Frame
-	
+
+	public static final int MF_WIDTH = 1920;
+	public static final int MF_HEIGTH = 1000;
 	
 	public static final int FULL_TABLE_HEIGHT = 700;
+	public static final int TABLE_HEIGHT = 150;
+	public static final int FULL_TABLE_WIDTH = MF_WIDTH - 3 * H_SPACING;
 	
-	public static final int MF_WIDTH = 1900;
-	public static final int MF_HEIGTH = 1000;
 	
 	// StartPanel
 	

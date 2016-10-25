@@ -24,13 +24,13 @@ public class FullListPanel extends JPanel implements ThemeConstants, MyPanel {
 		List<EntityModel> entityModels = modelController.getAllModels(type);
 		entityModels.sort((e1,e2) -> Integer.compare(e1.getId(), e2.getId()));
 		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
-		MemberTable table = new MemberTable(tableModel);
+		MemberTable table = new MemberTable(tableModel, FULL_TABLE_WIDTH);
 		table.setHeight(FULL_TABLE_HEIGHT);
 		table.setButtonColumn(0, "view.png", e -> guiController.openEntityTab( e, false ));
 		table.setButtonColumn(1, "edit.png", e -> guiController.openEntityTab( e, true ));
 		table.setButtonColumn(2, "copy.png", e -> guiController.openEntityTab( modelController.createCopy( e ), true));
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(H_SPACING, V_SPACING, table.getWidth(), FULL_TABLE_HEIGHT);
+		scrollPane.setBounds(H_SPACING, V_SPACING, FULL_TABLE_WIDTH, FULL_TABLE_HEIGHT);
 		add(scrollPane);
 	}
 

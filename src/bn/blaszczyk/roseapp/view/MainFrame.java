@@ -15,7 +15,7 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	private JTabbedPane tabbedPane = new JTabbedPane();
 	private Actions actions;
 	
-	public MainFrame(FullModelController modelController, GUIController guiController, String title)
+	public MainFrame(GUIController guiController, String title)
 	{
 		super(title);
 		actions = new Actions(this, guiController);
@@ -26,7 +26,8 @@ public class MainFrame extends JFrame implements ThemeConstants {
 
 		tabbedPane.addChangeListener(actions);
 		add(tabbedPane,BorderLayout.CENTER);
-		setSize( MF_WIDTH, MF_HEIGTH );
+//		setSize( MF_WIDTH, MF_HEIGTH );
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setVisible(true);	

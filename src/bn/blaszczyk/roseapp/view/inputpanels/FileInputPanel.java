@@ -77,7 +77,8 @@ public class FileInputPanel extends JPanel implements InputPanel<String>, ThemeC
 					switch( chooser.showOpenDialog(null) )
 					{
 					case JFileChooser.APPROVE_OPTION:
-						setValue( chooser.getSelectedFile().toURI().toString());
+						String filename = chooser.getSelectedFile().toURI().toString();
+						setValue( filename );
 						if(listener != null)
 							listener.stateChanged(new ChangeEvent(this));
 						break;

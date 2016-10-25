@@ -171,7 +171,7 @@ public class JavaModelCreator {
 					switch (entityMember.getType())
 					{
 					case ONETOONE:
-						writer.write("\t@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "\")\n" );
+						writer.write("\t@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );
 						break;
 					case ONETOMANY:
 						writer.write("\t@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityMember.getCounterName() + "\")\n");

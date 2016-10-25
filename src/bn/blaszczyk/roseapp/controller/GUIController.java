@@ -30,7 +30,7 @@ public class GUIController {
 	
 	public void createMainFrame(Class<?>[] types, String title)
 	{
-		mainFrame = new MainFrame (modelController, this, title);
+		mainFrame = new MainFrame ( this, title);
 		this.types = types;
 		openStartTab();
 	}

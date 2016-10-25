@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -15,18 +16,28 @@ import bn.blaszczyk.roseapp.view.ThemeConstants;
 @SuppressWarnings("serial")
 public abstract class AbstractInputPanel<T> extends JPanel implements InputPanel<T>, ThemeConstants, KeyListener {
 	
-	private final JLabel label = new JLabel();
+	private final JLabel label;
 	protected final JTextField textField = new JTextField();
 	private ChangeListener listener = null;
 	
 	public AbstractInputPanel( String name )
 	{
 		setLayout(null);
-		label.setText(name);
+		setBackground(BASIC_PNL_BACKGROUND);
+		
+		label =  new JLabel( name + ": ", SwingConstants.RIGHT);
+		label.setFont(PROPERTY_FONT);
+		label.setOpaque(true);
+		label.setForeground(PROPERTY_FG);
+		label.setBackground(PROPERTY_BG);
 		label.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
 		add(label);
 		
 		textField.setBounds( PROPERTY_WIDTH + H_SPACING , 0, VALUE_WIDTH, LBL_HEIGHT);
+//		lblFileName.setBounds( PROPERTY_WIDTH + H_SPACING , 0, VALUE_WIDTH - LBL_HEIGHT - H_SPACING, LBL_HEIGHT);
+		textField.setFont(VALUE_FONT);
+		textField.setOpaque(true);
+		textField.setForeground(VALUE_FG);
 		add(textField);
 		textField.addKeyListener(this);
 	}

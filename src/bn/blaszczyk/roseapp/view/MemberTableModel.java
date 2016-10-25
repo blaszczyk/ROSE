@@ -8,6 +8,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
 public class MemberTableModel implements TableModel, ThemeConstants {
 	
@@ -76,7 +77,10 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	{
 		if(columnIndex < buttonCount)
 			return buttonIcons[columnIndex];
-		return entityModels.get(rowIndex).getMemberValue(columnIndex - buttonCount);
+		Object o =  entityModels.get(rowIndex).getMemberValue(columnIndex - buttonCount);
+		if( o instanceof String && FileInputPanel.isFileName(o.toString()))
+			return o.toString().substring( o.toString().lastIndexOf("/")+1);
+		return o;
 	}
 	
 	@Override

@@ -1,5 +1,7 @@
 package bn.blaszczyk.roseapp.view.panels;
 
+import java.util.Date;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -28,13 +30,13 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 			if( FileInputPanel.isFileName(entityModel.getMemberValue(i).toString() ) )
 				addFile( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
 			else
-				addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
+				addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i) );
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 			if(entityModel.getRelationType(i) == RelationType.ENUM)
 				addValue(entityModel.getEntityName(i), entityModel.getEntityMember(i).toString());
 	}
 
-	private void addValue(String property, String value)
+	private void addValue(String property, Object value)
 	{
 		JLabel lblProperty = new JLabel(property + ": ", SwingConstants.RIGHT);
 		lblProperty.setBounds( H_SPACING, height, PROPERTY_WIDTH, LBL_HEIGHT );
@@ -45,6 +47,8 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		add(lblProperty);
 		
 		JLabel lblValue = new JLabel( " " + value);
+		if(value instanceof Date)
+			lblValue.setText(" " +  DATE_FORMAT.format(value));
 		lblValue.setBounds( 2 * H_SPACING + PROPERTY_WIDTH , height, VALUE_WIDTH, LBL_HEIGHT);
 		lblValue.setFont(VALUE_FONT);
 		lblValue.setOpaque(true);

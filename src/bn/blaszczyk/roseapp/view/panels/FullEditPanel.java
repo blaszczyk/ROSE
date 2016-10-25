@@ -93,17 +93,6 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		
 		computeDimensions(TITLE_HEIGHT, TITLE_WIDTH);		
 	}
-
-//	private void addSubTitle( String subtitle, EntityModel entityModel )
-//	{	
-//		JButton btnView = new JButton("View");
-//		btnView.setBounds(2 * H_SPACING + SUBTITLE_WIDTH, height + V_OFFSET, 100, SUBTITLE_HEIGHT);
-//		final EntityModel entityModelCpy = entityModel;
-//		btnView.addActionListener( e -> GUIController.createFullPanelDialog(null, entityModelCpy) );
-//		add(btnView);
-//		
-//		addSubTitle(subtitle);		
-//	}
 	
 	private void addSubTitle( int index )
 	{
@@ -149,7 +138,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	private void addMemberTable( List<EntityModel> entityModels, Entity entity, String name )
 	{
 		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
-		MemberTable table = new MemberTable( tableModel );
+		MemberTable table = new MemberTable( tableModel, BASIC_WIDTH );
 		table.setButtonColumn(0, "edit.png", e -> guiController.openEntityTab( e, true ));
 		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy(e), true ) );
 		table.setButtonColumn(2, "delete.png", e -> guiController.delete(e.getEntity()) );
@@ -168,7 +157,9 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, 300, true);
 		if(entityModel.getEntityMember(index) != null)
 			selectBox.setSelectedItem(entityModel.getEntityMember(index));
-		selectBox.setBounds( 2* H_SPACING, height, 600, 30);
+		selectBox.setBounds( 2* H_SPACING, height, BASIC_WIDTH, LBL_HEIGHT);
+		selectBox.setFont(VALUE_FONT);
+		selectBox.setForeground(VALUE_FG);
 		add(selectBox);
 		entityBoxes.put(index, selectBox);
 		computeDimensions(30, 600);

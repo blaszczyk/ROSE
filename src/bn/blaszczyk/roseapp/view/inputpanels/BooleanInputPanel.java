@@ -4,6 +4,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
+
 @SuppressWarnings("serial")
 public class BooleanInputPanel extends JPanel implements InputPanel<Boolean>
 {
@@ -14,9 +15,15 @@ public class BooleanInputPanel extends JPanel implements InputPanel<Boolean>
 	public BooleanInputPanel(String name, Boolean defValue)
 	{
 		this.defValue = defValue;
+		setLayout(null);
+		setBackground(BASIC_PNL_BACKGROUND);
 		checkBox.setSelected(defValue);
 		checkBox.setText(name);
-		checkBox.setBounds(0, 0, PROPERTY_WIDTH, LBL_HEIGHT);
+		checkBox.setFont(PROPERTY_FONT);
+		checkBox.setForeground(PROPERTY_FG);
+		checkBox.setBackground(PROPERTY_BG);
+		checkBox.setOpaque(true);
+		checkBox.setBounds(PROPERTY_WIDTH + H_SPACING, 0, VALUE_WIDTH, LBL_HEIGHT);
 		add(checkBox);
 	}
 	
