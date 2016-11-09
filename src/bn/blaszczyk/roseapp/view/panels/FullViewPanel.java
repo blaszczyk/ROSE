@@ -39,7 +39,7 @@ public class FullViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
-			if( entityModel.getEntityMember(i) == null )
+			if( entityModel.getEntityMember(i) == null || entityModel.getEntityMember(i) instanceof Enum<?> )
 				continue;
 			else if( entityModel.getRelationType(i).isSecondMany())
 			{

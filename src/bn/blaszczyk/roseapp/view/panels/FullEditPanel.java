@@ -54,13 +54,14 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		basicPanel = addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
-			addSubTitle( i );
 			switch( entityModel.getRelationType(i))
 			{
 			case ONETOONE:
+				addSubTitle( i );
 				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityMember(i))));
 				break;
 			case ONETOMANY:
+				addSubTitle( i );
 				List<EntityModel> entityModels = new ArrayList<>();
 				Set<?> objects =  (Set<?>) entityModel.getEntityMember(i);
 				for(Object object : objects)
@@ -68,6 +69,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 				addMemberTable( entityModels, entityModel.getEntity(),entityModel.getEntityName(i) );
 				break;
 			case MANYTOONE:
+				addSubTitle( i );
 				addSelectionBox( i );
 				break;
 			case MANYTOMANY:
@@ -214,7 +216,7 @@ public class FullEditPanel extends JPanel implements MyPanel, ThemeConstants {
 			if(panel.hasChanged())
 				return true;
 		for(Integer index : entityBoxes.keySet() )
-			if( entityModel.getEntityMember(index).equals( entityBoxes.get(index).getSelectedItem() ) )
+			if( entityBoxes.get(index).getSelectedItem().equals( entityModel.getEntityMember(index) ) )
 				return true;
 		return false;
 	}
