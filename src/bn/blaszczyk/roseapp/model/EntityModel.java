@@ -16,13 +16,13 @@ public interface EntityModel {
 	public String getEntityName( int index );
 	public RelationType getRelationType( int index );
 	public Class<?> getEntityClass( int index );
+	
+	public String getTableCols();
 
 	public int getLength1( int index );	
 	public int getLength2( int index );	
-	// to create instances is Factory
-	public EntityModel createModel( Entity entity );
 	
-	/*
-	 *  TODO: setters (parser?, controller?)
-	 */
+	// to create instances in Factory
+	public EntityModel createModel( Entity entity );
+
 }

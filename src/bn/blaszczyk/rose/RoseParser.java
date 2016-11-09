@@ -128,8 +128,20 @@ public class RoseParser {
 				if(split.length == 2)
 					entity.setToString(split[1]);
 			}
+			else if( command.equalsIgnoreCase("tablecols"))
+			{
+				if(split.length == 2)
+					entity.setTableCols(split[1]);
+			}
 			else 
 				System.out.println("Invalid Member: " + line);
+		}
+		if(entity.getTableCols() == null)
+		{
+			if(entity.getMembers().size() > 0)
+				entity.setTableCols("%" + entity.getMembers().get(0).getName());
+			for(int i = 1; i < entity.getMembers().size(); i++)
+				entity.setTableCols(entity.getTableCols() +";%" + entity.getMembers().get(i).getName());
 		}
 		entities.add(entity);
 	}

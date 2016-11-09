@@ -116,6 +116,30 @@ public class JavaEntityModelCreator {
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + enumMember.getEnumType().getClassName() + ".class;\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
+
+			//public String getTableCols();
+			String cols = entity.getTableCols();
+			count = 0;
+			for(Member member : entity.getMembers() )
+			{
+				cols = cols.replaceAll("\\%" + member.getName(), "M" + count);	
+				count++;
+			}
+			count = 0;
+			for(EnumMember enumMember : entity.getEnumMembers() )
+			{
+				cols = cols.replaceAll("\\%" + enumMember.getName(), "E" + ( entity.getEntityMembers().size() + count ) );
+				count++;
+			}
+			count = 0;
+			for(EntityMember entityMember : entity.getEntityMembers() )
+			{
+				cols = cols.replaceAll("\\%" + entityMember.getName(), "E" + count);			
+				count++;
+			}
+			cols.replaceAll("\\s+", "");
+			writer.write("\t@Override\n\tpublic String getTableCols()\n\t{\n\t\treturn \"" + cols +  "\";\n\t}\n\n");
+			
 			// public int getLength1( int index );			
 			writer.write("\t@Override\n\tpublic int getLength1(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;

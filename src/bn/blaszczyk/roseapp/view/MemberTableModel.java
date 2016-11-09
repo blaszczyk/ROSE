@@ -1,6 +1,7 @@
 package bn.blaszczyk.roseapp.view;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
@@ -12,20 +13,71 @@ import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
 public class MemberTableModel implements TableModel, ThemeConstants {
 	
-	private List<EntityModel> entityModels;
+	private enum ColType {
+		ICON,
+		MEMBER,
+		ENTITY;
+	}
+	
+	private class ColContent {
+		private ColType colType;
+		private int index;
+		private Icon icon;
+		
+		public ColContent(ColType colType, int index)
+		{
+			this.colType = colType;
+			this.index = index;
+		}
+		
+		public ColContent()
+		{
+			this.colType = ColType.ICON;
+		}
+		public ColType getColType()
+		{
+			return colType;
+		}
+		public int getIndex()
+		{
+			return index;
+		}
+		public Icon getIcon()
+		{
+			return icon;
+		}
+		public void setIcon(Icon icon)
+		{
+			this.icon = icon;
+		}
+	}
+	
+	private final List<EntityModel> entityModels;
 	private boolean empty;
 	private EntityModel first;
-	private int buttonCount = 0;
-	private Icon[] buttonIcons;
+	private final int buttonCount;
+//	private final Icon[] buttonIcons;
+	private final List<ColContent> colContents = new ArrayList<>();
+	
 	
 	public MemberTableModel(List<EntityModel> entityModels, int buttonCount)
 	{
 		this.entityModels = entityModels;
 		this.empty = entityModels.isEmpty();
+		for( int i = 0; i < buttonCount; i++)
+			colContents.add(new ColContent() );
 		if(!empty)
+		{
 			first = entityModels.get(0);
+			for( String col : first.getTableCols().replaceAll(" ", "").split(";") )
+				if(col.substring(0, 1).equalsIgnoreCase("m") )
+					colContents.add(new ColContent(ColType.MEMBER, Integer.parseInt(col.substring(1))));
+				else 
+					if(col.substring(0, 1).equalsIgnoreCase("e") )
+						colContents.add(new ColContent(ColType.ENTITY, Integer.parseInt(col.substring(1))));
+		}
 		this.buttonCount = buttonCount > 0 ? buttonCount : 0;
-		buttonIcons = new Icon[buttonCount];
+//		buttonIcons = new Icon[buttonCount];
 	}
 
 	public EntityModel getEntityModel(int row)
@@ -35,7 +87,8 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	
 	public void setButtonIcon(int columnIndex, Icon icon)
 	{
-		buttonIcons[columnIndex] = icon;
+		colContents.get(columnIndex).setIcon(icon);
+//		buttonIcons[columnIndex] = icon;
 	}
 	
 	@Override
@@ -47,40 +100,78 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	@Override
 	public int getColumnCount()
 	{
-		return empty ? 0 : ( first.getMemberCount() + buttonCount );
+		return colContents.size();
+//		return empty ? 0 : ( first.getMemberCount() + buttonCount );
 	}
 	
 	@Override
 	public String getColumnName(int columnIndex)
 	{
-		if(columnIndex < buttonCount)
+		switch (colContents.get(columnIndex).getColType())	
+		{
+		case MEMBER:
+			return first.getMemberName(colContents.get(columnIndex).getIndex());
+		case ENTITY:
+			return first.getEntityName(colContents.get(columnIndex).getIndex());
+		default:
 			return "";
-		return first.getMemberName(columnIndex - buttonCount);
+		}		
+//		if(columnIndex < buttonCount || empty )
+//			return "";
+//		return first.getMemberName(columnIndex - buttonCount);
 	}
 	
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
-		if(columnIndex < buttonCount)
+		switch (colContents.get(columnIndex).getColType())
+		{
+		case ICON:
 			return Icon.class;
-		return first.getMemberValue(columnIndex - buttonCount).getClass();
+		case MEMBER:
+			return first.getMemberValue(colContents.get(columnIndex).getIndex()).getClass();
+		case ENTITY:
+			return first.getEntityMember(colContents.get(columnIndex).getIndex()).getClass();
+		default:
+			return null;
+		}
+//		if(columnIndex < buttonCount)
+//			return Icon.class;
+//		if( empty )
+//			return String.class;
+//		return first.getMemberValue(columnIndex - buttonCount).getClass();
 	}
 	
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		return columnIndex < buttonCount;
+		return colContents.get(columnIndex).getColType().equals(ColType.ICON);
+//		return columnIndex < buttonCount;
 	}
 	
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{
-		if(columnIndex < buttonCount)
-			return buttonIcons[columnIndex];
-		Object o =  entityModels.get(rowIndex).getMemberValue(columnIndex - buttonCount);
-		if( o instanceof String && FileInputPanel.isFileName(o.toString()))
-			return o.toString().substring( o.toString().lastIndexOf("/")+1);
-		return o;
+		switch (colContents.get(columnIndex).getColType())
+		{
+		case ICON:
+			return colContents.get(columnIndex).getIcon();
+		case MEMBER:
+			Object o =  entityModels.get(rowIndex).getMemberValue(colContents.get(columnIndex).getIndex());
+			if( o instanceof String && FileInputPanel.isFileName(o.toString()))
+				return o.toString().substring( o.toString().lastIndexOf("/")+1);
+			return o;
+		case ENTITY:
+			return entityModels.get(rowIndex).getEntityMember(colContents.get(columnIndex).getIndex());
+		default:
+			return null;
+		}
+//		if(columnIndex < buttonCount)
+//			return buttonIcons[columnIndex];
+//		Object o =  entityModels.get(rowIndex).getMemberValue(columnIndex - buttonCount);
+//		if( o instanceof String && FileInputPanel.isFileName(o.toString()))
+//			return o.toString().substring( o.toString().lastIndexOf("/")+1);
+//		return o;
 	}
 	
 	@Override
@@ -106,9 +197,9 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	public int getColumnWidth( int columnIndex )
 	{
 		if( getColumnClass(columnIndex) == String.class )
-			return 7 * first.getLength1(columnIndex-buttonCount);
+			return 7 * first.getLength1(colContents.get(columnIndex).getIndex());
 		else if( getColumnClass(columnIndex) == BigDecimal.class )
-			return 15 * first.getLength1(columnIndex-buttonCount);
+			return 15 * first.getLength1(colContents.get(columnIndex).getIndex());
 		else if( getColumnClass(columnIndex) == Icon.class )
 			return BUTTON_WIDTH;
 		else 

@@ -8,6 +8,7 @@ public class Entity {
 	private String javaname;
 	private String packagename;
 	private String toString;
+	private String tableCols;
 	private List<Member> members = new ArrayList<>();
 	private List<EntityMember> entitymembers = new ArrayList<>();
 	private List<EnumMember> enummembers = new ArrayList<>();
@@ -47,6 +48,16 @@ public class Entity {
 		this.toString = toString;
 	}
 
+	public String getTableCols()
+	{
+		return tableCols;
+	}
+
+	public void setTableCols(String tableCols)
+	{
+		this.tableCols = tableCols;
+	}	
+	
 	public List<Member> getMembers()
 	{
 		return members;
@@ -89,6 +100,6 @@ public class Entity {
 	public void addEnumMember(EnumMember enummember)
 	{
 		enummembers.add(enummember);
-	}	
+	}
 	
 }

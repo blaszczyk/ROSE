@@ -9,17 +9,14 @@ public class Rose {
 	
 	public static void main(String[] args)
 	{
-		String roseFile = "roland.rose";
-//		if(args.length == 0)
-//			System.out.println("Use:java -jar rose.jar filename");
-//		for(String roseFile : args)
-			try
-			{
-				RoseParser.parse(roseFile);
-			}
-			catch (FileNotFoundException | ParseException  e)
-			{
-				e.printStackTrace();
-			}
+		String roseFile = "rose/maphyx.rose";
+		try
+		{
+			RoseParser.parse(roseFile);
+		}
+		catch (FileNotFoundException | ParseException  e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

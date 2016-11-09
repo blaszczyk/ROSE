@@ -221,11 +221,11 @@ public class JavaModelCreator {
 			// toString
 			String toString = "\"" + entity.getToString() + "\"";
 			for(Member member : entity.getMembers() )
-				toString = toString.replaceAll("\\%" + member.getName(), "\" + " + member.getName() + " + \"");		
+				toString = toString.replaceAll("\\%" + member.getName(), "\" + " + member.getName() + " + \"");	
 			for(EnumMember enumMember : entity.getEnumMembers() )
 				toString = toString.replaceAll("\\%" + enumMember.getName(), "\" + " + enumMember.getName() + ".name() + \"");	
 			for(EntityMember entityMember : entity.getEntityMembers() )
-				toString = toString.replaceAll("\\%" + entityMember.getName(), "\" + " + entityMember.getName() + ".toString() + \"");		
+				toString = toString.replaceAll("\\%" + entityMember.getName(), "\" + " + entityMember.getName() + ".toString() + \"");			
 			toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
 			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn " + toString + ";\n\t}\n\n");
 			

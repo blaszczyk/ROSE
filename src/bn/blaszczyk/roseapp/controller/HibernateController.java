@@ -31,7 +31,7 @@ public class HibernateController implements FullModelController {
 	public void setEntityMember(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
-		if(!(value instanceof Enum))
+		if(value !=  null && !(value instanceof Enum))
 			changedEntitys.add(value);
 		controller.setEntityMember(entity, name, value);
 	}

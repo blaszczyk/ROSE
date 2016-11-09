@@ -15,7 +15,7 @@ public interface ThemeConstants {
 	
 	public static final int LBL_HEIGHT = 30;
 	public static final int H_SPACING = 10;
-	public static final int V_SPACING = 10;
+	public static final int V_SPACING = 5;
 	
 	public static final int PROPERTY_WIDTH = 200;
 	public static final Font PROPERTY_FONT = new Font("Arial", Font.BOLD, 20);
@@ -53,7 +53,7 @@ public interface ThemeConstants {
 	// Table
 	
 	public static final int CELL_HEIGTH = 25;
-	public static final int CELL_WIDTH = 100;
+	public static final int CELL_WIDTH = 30;
 	
 	public static final int CELL_SPACING = 0;
 	
