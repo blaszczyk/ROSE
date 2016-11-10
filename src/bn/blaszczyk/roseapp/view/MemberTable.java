@@ -12,9 +12,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
-public class MemberTable extends JTable implements ThemeConstants {
+public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 
 	
 	public interface EntityAction
@@ -83,10 +84,11 @@ public class MemberTable extends JTable implements ThemeConstants {
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public MemberTable(MemberTableModel tableModel, int maxWidth )
+	public MemberTable(MemberTableModel tableModel, int maxWidth, int height )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
+		this.height = height;
 		buttonActions = new EntityAction[tableModel.getButtonCount()];
 
 		setShowGrid(false);
@@ -145,10 +147,10 @@ public class MemberTable extends JTable implements ThemeConstants {
 		return height;
 	}
 	
-	public void setHeight( int height )
-	{
-		this.height = height;
-	}
+//	public void setHeight( int height )
+//	{
+//		this.height = height;
+//	}
 
 	
 	private void setCellRenderer()
@@ -178,12 +180,29 @@ public class MemberTable extends JTable implements ThemeConstants {
 				if(newWidth < maxWidth)
 					width = width * maxWidth / newWidth;
 				if( width >= 0 )
-				{
 					getColumnModel().getColumn(i).setPreferredWidth(width);
-//					getColumnModel().getColumn(i).setMinWidth(width);
-//					getColumnModel().getColumn(i).setMaxWidth(width);
-				}
 			}
+	}
+
+
+	@Override
+	public Object getShownObject()
+	{
+		return null;
+	}
+
+
+	@Override
+	public JPanel getPanel()
+	{
+		return null;
+	}
+
+
+	@Override
+	public boolean hasChanged()
+	{
+		return false;
 	}
 	
 }

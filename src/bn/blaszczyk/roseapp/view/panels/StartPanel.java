@@ -20,6 +20,7 @@ public class StartPanel extends JPanel implements ThemeConstants, MyPanel {
 		{
 			JButton button = new JButton(type.getSimpleName() + "s");
 			button.setBounds(START_H_SPACING, heigth, START_BTN_WIDTH, START_BTN_HEIGHT);
+			button.setFont(START_BTN_FONT);
 			button.addActionListener( e -> guiController.openFullListTab(type));
 			add(button);
 			heigth += START_V_SPACING + START_BTN_HEIGHT;

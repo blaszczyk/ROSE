@@ -56,7 +56,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	private boolean empty;
 	private EntityModel first;
 	private final int buttonCount;
-//	private final Icon[] buttonIcons;
 	private final List<ColContent> colContents = new ArrayList<>();
 	
 	
@@ -77,7 +76,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 						colContents.add(new ColContent(ColType.ENTITY, Integer.parseInt(col.substring(1))));
 		}
 		this.buttonCount = buttonCount > 0 ? buttonCount : 0;
-//		buttonIcons = new Icon[buttonCount];
 	}
 
 	public EntityModel getEntityModel(int row)
@@ -88,7 +86,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	public void setButtonIcon(int columnIndex, Icon icon)
 	{
 		colContents.get(columnIndex).setIcon(icon);
-//		buttonIcons[columnIndex] = icon;
 	}
 	
 	@Override
@@ -101,7 +98,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	public int getColumnCount()
 	{
 		return colContents.size();
-//		return empty ? 0 : ( first.getMemberCount() + buttonCount );
 	}
 	
 	@Override
@@ -116,9 +112,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		default:
 			return "";
 		}		
-//		if(columnIndex < buttonCount || empty )
-//			return "";
-//		return first.getMemberName(columnIndex - buttonCount);
 	}
 	
 	@Override
@@ -135,18 +128,12 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		default:
 			return null;
 		}
-//		if(columnIndex < buttonCount)
-//			return Icon.class;
-//		if( empty )
-//			return String.class;
-//		return first.getMemberValue(columnIndex - buttonCount).getClass();
 	}
 	
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
 		return colContents.get(columnIndex).getColType().equals(ColType.ICON);
-//		return columnIndex < buttonCount;
 	}
 	
 	@Override
@@ -166,12 +153,6 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		default:
 			return null;
 		}
-//		if(columnIndex < buttonCount)
-//			return buttonIcons[columnIndex];
-//		Object o =  entityModels.get(rowIndex).getMemberValue(columnIndex - buttonCount);
-//		if( o instanceof String && FileInputPanel.isFileName(o.toString()))
-//			return o.toString().substring( o.toString().lastIndexOf("/")+1);
-//		return o;
 	}
 	
 	@Override

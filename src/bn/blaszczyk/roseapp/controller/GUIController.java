@@ -78,17 +78,17 @@ public class GUIController {
 				else
 				{
 					if(edit)
-						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this, mainFrame.getActions()) , title, iconFile );
+						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this, true, mainFrame.getActions()) , title, iconFile );
 					else
-						mainFrame.replaceTab(i, new FullViewPanel(entityModel, this) , title, iconFile );
+						mainFrame.replaceTab(i, new FullViewPanel(entityModel, this, true) , title, iconFile );
 				}
 				return;
 			}
 		}
 		if(edit)
-			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this, mainFrame.getActions()) , title, iconFile );
+			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this, true, mainFrame.getActions()) , title, iconFile );
 		else
-			mainFrame.addTab( new FullViewPanel(entityModel, this) , title, iconFile );
+			mainFrame.addTab( new FullViewPanel(entityModel, this, true) , title, iconFile );
 	}
 	
 	public void saveCurrent()
