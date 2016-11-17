@@ -4,8 +4,7 @@ public enum RelationType {
 	ONETOONE(false,false),
 	ONETOMANY(false,true),
 	MANYTOONE(true,false),
-	MANYTOMANY(true,true),
-	ENUM(true,false);
+	MANYTOMANY(true,true);
 	
 	private boolean firstMany;
 	private boolean secondMany;

@@ -1,13 +1,13 @@
 package bn.blaszczyk.rose.model;
 
-public class EnumMember {
+public class EnumField implements Field{
 	
 	private EnumType enumType;
 	private String name;
 	private String capitalName;
 	private String defValue;
 
-	public EnumMember(EnumType enumType, String name, String defValue)
+	public EnumField(EnumType enumType, String name, String defValue)
 	{
 		this.name = name;
 		this.enumType = enumType;
@@ -15,11 +15,16 @@ public class EnumMember {
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 	}
 	
+
 	
-	
-	public EnumMember(EnumType enumType, String name)
+	public EnumField(EnumType enumType, String name)
 	{
 		this(enumType, name, enumType.iterator().next());
+	}
+	
+	public EnumField(EnumType enumType )
+	{
+		this(enumType, enumType.getObjectName() );
 	}
 
 
@@ -29,11 +34,13 @@ public class EnumMember {
 		return enumType;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 	
+	@Override
 	public String getCapitalName()
 	{
 		return capitalName;
@@ -44,6 +51,14 @@ public class EnumMember {
 	public String getDefValue()
 	{
 		return defValue;
+	}
+
+
+
+	@Override
+	public String getSqlType()
+	{
+		return "int";
 	}
 
 	

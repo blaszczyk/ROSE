@@ -9,9 +9,9 @@ public class Entity {
 	private String packagename;
 	private String toString;
 	private String tableCols;
-	private List<Member> members = new ArrayList<>();
-	private List<EntityMember> entitymembers = new ArrayList<>();
-	private List<EnumMember> enummembers = new ArrayList<>();
+	private List<Field> fields = new ArrayList<>();
+	private List<EntityField> entityFields = new ArrayList<>();
+//	private List<EnumField> enummembers = new ArrayList<>();
  
 	public Entity(String classname, String packagename)
 	{
@@ -58,48 +58,40 @@ public class Entity {
 		this.tableCols = tableCols;
 	}	
 	
-	public List<Member> getMembers()
+	public List<Field> getFields()
 	{
-		return members;
+		return fields;
 	}
 
-	public List<EntityMember> getEntityMembers()
+	public List<EntityField> getEntityFields()
 	{
-		return entitymembers;
+		return entityFields;
 	}
 	
-	public List<EnumMember> getEnumMembers()
-	{
-		return enummembers;
-	}
+//	public List<EnumField> getEnumMembers()
+//	{
+//		return enummembers;
+//	}
 	
-	public void addMember(Member member)
+	public void addField(Field field)
 	{
-		members.add(member);
+		fields.add(field);
 	}
 
-	public void addEntityMember(EntityMember entitymember)
+	public void addEntityField(EntityField entityField, boolean cascade)
 	{
-		entitymembers.add(entitymember);
-		switch(entitymember.getType())
+		entityFields.add(entityField);
+		if( cascade && entityField.getType().isFirstMany() )
 		{
-		case ONETOONE:
-			break;
-		case MANYTOONE:
-			EntityMember counterpart = new EntityMember(this, entitymember);
-			entitymember.setCouterpart(counterpart);
-			entitymember.getEntity().addEntityMember( counterpart );
-			break;
-		case ONETOMANY:
-			break;
-		default:
-			break;
+			EntityField counterpart = new EntityField(this, entityField);
+			entityField.setCouterpart(counterpart);
+			entityField.getEntity().addEntityField( counterpart, false );
 		}
 	}	
 	
-	public void addEnumMember(EnumMember enummember)
-	{
-		enummembers.add(enummember);
-	}
+//	public void addEnumMember(EnumField enummember)
+//	{
+//		enummembers.add(enummember);
+//	}
 	
 }

@@ -71,10 +71,10 @@ public class JavaControllerCreator {
 			{
 				writer.write("\t\tcase \"" + entity.getSimpleClassName().toLowerCase() + "\":\n\t\t\t" + entity.getClassName() + " " + entity.getObjectName() 
 							+ " = new " + entity.getClassName() + "();\n" );
-				for(EntityMember entityMember : entity.getEntityMembers())
-					if(entityMember.getType() == RelationType.ONETOONE )
-						writer.write( "\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityMember) + "( (" 
-									+ entityMember.getEntity().getClassName() + ") createNew( \"" + entityMember.getEntity().getSimpleClassName() + "\" ) );\n" );
+				for(EntityField entityField : entity.getEntityFields())
+					if(entityField.getType() == RelationType.ONETOONE )
+						writer.write( "\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityField) + "( (" 
+									+ entityField.getEntity().getClassName() + ") createNew( \"" + entityField.getEntity().getSimpleClassName() + "\" ) );\n" );
 				writer.write("\t\t\treturn " + entity.getObjectName() + ";\n");
 			}
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
@@ -116,29 +116,43 @@ public class JavaControllerCreator {
 			writer.write("\tpublic static void " + SET_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(Member member : entity.getMembers())
-			{
-				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(member) + "( " );
-				switch(member.getType())
+			for(Field field : entity.getFields())
+				if( field instanceof PrimitiveField)
 				{
-				case VARCHAR:
-				case CHAR:
-					writer.write( "value.toString()" );
-					break;
-				case INT:
-					writer.write( "(Integer) value" );
-					break;
-				case DATE:
-					writer.write( "(java.util.Date) value" );
-					break;
-				case NUMERIC:
-					writer.write( "(java.math.BigDecimal) value" );
-					break;
-				case BOOLEAN:
-					writer.write( "(Boolean) value" ) ;
+					PrimitiveField primitiveField = (PrimitiveField) field;
+					writer.write("\t\tcase \"" + primitiveField.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
+					switch(primitiveField.getType())
+					{
+					case VARCHAR:
+					case CHAR:
+						writer.write( "value.toString()" );
+						break;
+					case INT:
+						writer.write( "(Integer) value" );
+						break;
+					case DATE:
+						writer.write( "(java.util.Date) value" );
+						break;
+					case NUMERIC:
+						writer.write( "(java.math.BigDecimal) value" );
+						break;
+					case BOOLEAN:
+						writer.write( "(Boolean) value" ) ;
+					}
+					writer.write( " );\n\t\t\tbreak;\n" );
 				}
-				writer.write( " );\n\t\t\tbreak;\n" );
-			}			
+				else if( field instanceof EnumField )
+				{
+					EnumField enumField = (EnumField) field;
+					writer.write("\t\tcase \"" + enumField.getName().toLowerCase() + "\":\n"
+							+ "\t\t\tif( value instanceof " + enumField.getEnumType().getClassName() + " )\n\t\t\t{\n");
+					writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(enumField) 
+							+ "( (" + enumField.getEnumType().getClassName() + ")value );\n" 
+							+ "\t\t\t}\n"
+							+ "\t\t\telse\n"
+							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
+							+ "\t\t\tbreak;\n" );					
+				}
 			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 
@@ -146,35 +160,24 @@ public class JavaControllerCreator {
 			writer.write("\tpublic static void " + SET_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if( !entityMember.getType().isSecondMany() )
+			for(EntityField entityField : entity.getEntityFields())
+				if( !entityField.getType().isSecondMany() )
 				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n\t\t\t{\n");
-					if(entityMember.getType().isFirstMany())
-						writer.write( "\t\t\t\tif(" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "() != null)\n"
-								+ "\t\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "()."
-								+ JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().remove(" + entity.getObjectName() + ");\n"
-								+ "\t\t\t\t((" + entityMember.getEntity().getClassName() +  ")value)." 
-								+ JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().add(" + entity.getObjectName() + ");\n");
-					writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityMember) 
-							+ "( (" + entityMember.getEntity().getClassName() + ")value );\n" 
+					writer.write("\t\tcase \"" + entityField.getName().toLowerCase() + "\":\n"
+							+ "\t\t\tif( value instanceof " + entityField.getEntity().getClassName() + " )\n\t\t\t{\n");
+					if(entityField.getType().isFirstMany())
+						writer.write( "\t\t\t\tif(" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityField) + "() != null)\n"
+								+ "\t\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityField) + "()."
+								+ JavaModelCreator.getGetterName(entityField.getCouterpart()) + "().remove(" + entity.getObjectName() + ");\n"
+								+ "\t\t\t\t((" + entityField.getEntity().getClassName() +  ")value)." 
+								+ JavaModelCreator.getGetterName(entityField.getCouterpart()) + "().add(" + entity.getObjectName() + ");\n");
+					writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(entityField) 
+							+ "( (" + entityField.getEntity().getClassName() + ")value );\n" 
 							+ "\t\t\t}\n"
 							+ "\t\t\telse\n"
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
-				}			
-			for(EnumMember enumMember : entity.getEnumMembers())
-			{
-				writer.write("\t\tcase \"" + enumMember.getName().toLowerCase() + "\":\n"
-						+ "\t\t\tif( value instanceof " + enumMember.getEnumType().getClassName() + " )\n\t\t\t{\n");
-				writer.write( "\t\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(enumMember) 
-						+ "( (" + enumMember.getEnumType().getClassName() + ")value );\n" 
-						+ "\t\t\t}\n"
-						+ "\t\t\telse\n"
-						+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
-						+ "\t\t\tbreak;\n" );
-			}			
+				}		
 			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 			
@@ -182,13 +185,13 @@ public class JavaControllerCreator {
 			writer.write("\tpublic static void " + ADD_ENTITY_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if( entityMember.getType().isSecondMany() )
+			for(EntityField entityField : entity.getEntityFields())
+				if( entityField.getType().isSecondMany() )
 				{
-					writer.write("\t\tcase \"" + entityMember.getName().toLowerCase() + "s\":\n"
-							+ "\t\t\tif( value instanceof " + entityMember.getEntity().getClassName() + " )\n"
-							+ "\t\t\t\t" + getControllerName(entityMember.getEntity(), metadata) + "." + SET_ENTITY_METHOD + "((" 
-							+ entityMember.getEntity().getClassName() + ")value, \"" + entityMember.getCounterName() + "\", " + entity.getObjectName() +");\n"
+					writer.write("\t\tcase \"" + entityField.getName().toLowerCase() + "s\":\n"
+							+ "\t\t\tif( value instanceof " + entityField.getEntity().getClassName() + " )\n"
+							+ "\t\t\t\t" + getControllerName(entityField.getEntity(), metadata) + "." + SET_ENTITY_METHOD + "((" 
+							+ entityField.getEntity().getClassName() + ")value, \"" + entityField.getCounterName() + "\", " + entity.getObjectName() +");\n"
 							+ "\t\t\telse\n"
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
@@ -198,26 +201,24 @@ public class JavaControllerCreator {
 			
 			// delete()
 			writer.write("\tpublic static void " + DELETE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() + " )\n\t{\n");
-			for(EntityMember entityMember : entity.getEntityMembers())
-				switch(entityMember.getType())
+			for(EntityField entityField : entity.getEntityFields())
+				switch(entityField.getType())
 				{
 				case MANYTOONE:
-					writer.write("\t\tif(" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityMember) + "() != null)\n"
-							+ "\t\t\t" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityMember) 
-							+ "()." + JavaModelCreator.getGetterName(entityMember.getCouterpart()) + "().remove( " + entity.getObjectName() +" );\n");
+					writer.write("\t\tif(" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityField) + "() != null)\n"
+							+ "\t\t\t" + entity.getObjectName() +"." + JavaModelCreator.getGetterName(entityField) 
+							+ "()." + JavaModelCreator.getGetterName(entityField.getCouterpart()) + "().remove( " + entity.getObjectName() +" );\n");
 					break;
 				case ONETOMANY:
-					writer.write( "\t\tfor( " + entityMember.getEntity().getClassName() + " " + entityMember.getName() + " : " + entity.getObjectName() +"." 
-							+ JavaModelCreator.getGetterName(entityMember) + "() )\n"
-							+ "\t\t\t" + JavaControllerCreator.getControllerName(entityMember.getEntity(), metadata) + "." + DELETE_METHOD + "( " + entityMember.getName() + " );\n");
+					writer.write( "\t\tfor( " + entityField.getEntity().getClassName() + " " + entityField.getName() + " : " + entity.getObjectName() +"." 
+							+ JavaModelCreator.getGetterName(entityField) + "() )\n"
+							+ "\t\t\t" + JavaControllerCreator.getControllerName(entityField.getEntity(), metadata) + "." + DELETE_METHOD + "( " + entityField.getName() + " );\n");
 					break;
 				case ONETOONE:
-					writer.write( "\t\t" + JavaControllerCreator.getControllerName(entityMember.getEntity(), metadata) + "." + DELETE_METHOD + "( " 
-							+ entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember) + "() );\n");
+					writer.write( "\t\t" + JavaControllerCreator.getControllerName(entityField.getEntity(), metadata) + "." + DELETE_METHOD + "( " 
+							+ entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityField) + "() );\n");
 					break;
 				case MANYTOMANY:
-					break;
-				case ENUM:
 					break;
 				}
 			writer.write( "\t}\n\n");

@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
-import bn.blaszczyk.roseapp.model.RelationType;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
@@ -26,14 +25,11 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(BASIC_PNL_BACKGROUND);
-		for(int i = 0; i < entityModel.getMemberCount(); i++)
-			if( FileInputPanel.isFileName(entityModel.getMemberValue(i).toString() ) )
-				addFile( entityModel.getMemberName(i), entityModel.getMemberValue(i).toString() );
+		for(int i = 0; i < entityModel.getFieldCount(); i++)
+			if( FileInputPanel.isFileName(entityModel.getFieldValue(i).toString() ) )
+				addFile( entityModel.getFieldName(i), entityModel.getFieldValue(i).toString() );
 			else
-				addValue( entityModel.getMemberName(i), entityModel.getMemberValue(i) );
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
-			if(entityModel.getRelationType(i) == RelationType.ENUM)
-				addValue(entityModel.getEntityName(i), entityModel.getEntityMember(i).toString());
+				addValue( entityModel.getFieldName(i), entityModel.getFieldValue(i) );
 	}
 
 	private void addValue(String property, Object value)

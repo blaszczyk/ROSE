@@ -1,6 +1,6 @@
 package bn.blaszczyk.rose.model;
 
-public enum MemberType {
+public enum PrimitiveType {
 	VARCHAR("varchar","String","\"\"","%s"),
 	CHAR("char","String","\"\"","%s"),
 	INT("int","Integer","0","%s"),
@@ -15,7 +15,7 @@ public enum MemberType {
 	private String defValue;
 	private String defFormat;
 	
-	private MemberType(String sqlname, String javaname, String defValue, String defFormat)
+	private PrimitiveType(String sqlname, String javaname, String defValue, String defFormat)
 	{
 		this.sqlname = sqlname;
 		this.javaname = javaname;

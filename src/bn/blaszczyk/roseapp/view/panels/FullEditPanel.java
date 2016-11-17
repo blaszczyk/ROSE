@@ -50,20 +50,18 @@ public class FullEditPanel extends AlignPanel {
 			switch( entityModel.getRelationType(i))
 			{
 			case ONETOONE:
-				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityMember(i))));
+				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityValue(i))));
 				break;
 			case MANYTOMANY:
 			case ONETOMANY:
 				List<EntityModel> entityModels = new ArrayList<>();
-				Set<?> objects =  (Set<?>) entityModel.getEntityMember(i);
+				Set<?> objects =  (Set<?>) entityModel.getEntityValue(i);
 				for(Object object : objects)
 					entityModels.add(entityModel.createModel((Entity)object));
 				addMemberTable( i );
 				break;
 			case MANYTOONE:
 				addSelectionBox( i );
-				break;
-			case ENUM:
 				break;
 			}	
 		}		
@@ -100,7 +98,7 @@ public class FullEditPanel extends AlignPanel {
 	private void addMemberTable( int index )
 	{
 		List<EntityModel> entityModels = new ArrayList<>();
-		Set<?> entities =  (Set<?>) entityModel.getEntityMember(index);
+		Set<?> entities =  (Set<?>) entityModel.getEntityValue(index);
 		for(Object entity : entities)
 			entityModels.add(entityModel.createModel((Entity)entity));
 
@@ -121,14 +119,11 @@ public class FullEditPanel extends AlignPanel {
 		for( EntityModel entityModel : modelController.getAllModels(entityModel.getEntityClass(index)))
 			entities[count++] = entityModel.getEntity();
 		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, 300, true);
-		if(entityModel.getEntityMember(index) != null)
-			selectBox.setSelectedItem(entityModel.getEntityMember(index));
-//		selectBox.setBounds( 2* H_SPACING, height, BASIC_WIDTH, LBL_HEIGHT);
+		if(entityModel.getEntityValue(index) != null)
+			selectBox.setSelectedItem(entityModel.getEntityValue(index));
 		selectBox.setFont(VALUE_FONT);
 		selectBox.setForeground(VALUE_FG);
-//		add(selectBox);
 		entityBoxes.put(index, selectBox);
-//		computeDimensions(30, 600);
 		
 		super.addPanel( entityModel.getEntityName(index), null, selectBox, BASIC_WIDTH, LBL_HEIGHT);
 	}
@@ -164,7 +159,7 @@ public class FullEditPanel extends AlignPanel {
 			if(panel.hasChanged())
 				return true;
 		for(Integer index : entityBoxes.keySet() )
-			if( entityBoxes.get(index).getSelectedItem().equals( entityModel.getEntityMember(index) ) )
+			if( entityBoxes.get(index).getSelectedItem().equals( entityModel.getEntityValue(index) ) )
 				return true;
 		return false;
 	}

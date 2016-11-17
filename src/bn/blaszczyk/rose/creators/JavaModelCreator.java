@@ -10,40 +10,30 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaModelCreator {
 
-	public static String getGetterName(Member member)
+	public static String getGetterName(Field field)
 	{
-		if(member.getType().equals(MemberType.BOOLEAN))
-			return "is" + member.getCapitalName();
-		return "get" + member.getCapitalName();
+		if(field instanceof PrimitiveField && ((PrimitiveField)field).getType().equals(PrimitiveType.BOOLEAN))
+			return "is" + field.getCapitalName();
+		return "get" + field.getCapitalName();
 	}
 	
-	public static String getSetterName(Member member)
+	public static String getSetterName(Field field)
 	{
-		return "set" + member.getCapitalName();
+		return "set" + field.getCapitalName();
 	}
 
-	public static String getGetterName(EntityMember entityMember)
+	public static String getGetterName(EntityField entityField)
 	{
-		if(entityMember.getType().isSecondMany())
-			return "get" + entityMember.getCapitalName() + "s";
-		return "get" + entityMember.getCapitalName();
+		if(entityField.getType().isSecondMany())
+			return "get" + entityField.getCapitalName() + "s";
+		return "get" + entityField.getCapitalName();
 	}
 	
-	public static String getSetterName(EnumMember enumMember)
+	public static String getSetterName(EntityField entityField)
 	{
-		return "set" + enumMember.getCapitalName();
-	}
-
-	public static String getGetterName(EnumMember enumMember)
-	{
-		return "get" + enumMember.getCapitalName();
-	}
-	
-	public static String getSetterName(EntityMember entityMember)
-	{
-		if(entityMember.getType().isSecondMany())
-			return "set" + entityMember.getCapitalName() + "s";
-		return "set" + entityMember.getCapitalName();
+		if(entityField.getType().isSecondMany())
+			return "set" + entityField.getCapitalName() + "s";
+		return "set" + entityField.getCapitalName();
 	}
 	
 	/*
@@ -78,24 +68,27 @@ public class JavaModelCreator {
 			writer.write("\n\tprivate int id = -1;\n");
 
 			// member variables
-			for(Member member : entity.getMembers())
-			{
-				// declaration
-				writer.write("\tprivate " + member.getType().getJavaname() + " "  );
-				if(member.getDefValue() != null && member.getDefValue() != "" )
-					writer.write(  member.getName() + " = " + String.format( member.getType().getDefFormat(), member.getDefValue() ) );
-				else
-					writer.write(  member.getName() + " = " + member.getType().getDefValue() );
-				writer.write( ";\n" );
-			}
-			
-			// enum variables
-			for(EnumMember enumMember : entity.getEnumMembers())
-				writer.write("\tprivate " + enumMember.getEnumType().getClassName() + " " + enumMember.getName() + " = " 
-				+ enumMember.getEnumType().getClassName() + "." + enumMember.getDefValue() + ";\n" );
-			
+			for(Field field : entity.getFields())
+				if( field instanceof PrimitiveField)
+				{
+					PrimitiveField primitiveField = (PrimitiveField) field;
+					// declaration
+					writer.write("\tprivate " + primitiveField.getType().getJavaname() + " "  );
+					if(primitiveField.getDefValue() != null && primitiveField.getDefValue() != "" )
+						writer.write(  primitiveField.getName() + " = " + String.format( primitiveField.getType().getDefFormat(), primitiveField.getDefValue() ) );
+					else
+						writer.write(  primitiveField.getName() + " = " + primitiveField.getType().getDefValue() );
+					writer.write( ";\n" );
+				}
+				else if( field instanceof EnumField)
+				{
+					EnumField enumField = (EnumField) field;
+					// enum variables
+					writer.write("\tprivate " + enumField.getEnumType().getSimpleClassName() + " " + enumField.getName() + " = " 
+							+ enumField.getEnumType().getSimpleClassName() + "." + enumField.getDefValue() + ";\n" );
+				}
 			// entitymember variables
-			for(EntityMember entitymember : entity.getEntityMembers())
+			for(EntityField entitymember : entity.getEntityFields())
 			{
 				if(entitymember.getType().isSecondMany())
 					writer.write("\n\tprivate java.util.Set<" + entitymember.getEntity().getSimpleClassName() + "> " + entitymember.getName() + "s = new java.util.TreeSet<>();");
@@ -106,24 +99,24 @@ public class JavaModelCreator {
 			// default constructor
 			writer.write("\n\n\tpublic " + entity.getSimpleClassName() + "()\n\t{\n\t}\n\n");
 			
-			// full constructor
-			if( entity.getMembers().size() > 1 )
-			{
-				writer.write("\tpublic " + entity.getSimpleClassName() + "( ");
-				boolean first = true;
-				for(Member member : entity.getMembers())
-				{
-					if(!first)
-						writer.write(", ");
-					else
-						first = false;
-					writer.write( member.getType().getJavaname() + " " + member.getName());
-				}
-				writer.write(" )\n\t{\n");
-				for(Member member : entity.getMembers())
-					writer.write("\t\tthis." + member.getName() + " = " + member.getName() + ";\n");
-				writer.write("\t}\n\n");
-			}
+//			// full constructor
+//			if( entity.getFields().size() > 1 )
+//			{
+//				writer.write("\tpublic " + entity.getSimpleClassName() + "( ");
+//				boolean first = true;
+//				for(PrimitiveField primitiveField : entity.getFields())
+//				{
+//					if(!first)
+//						writer.write(", ");
+//					else
+//						first = false;
+//					writer.write( primitiveField.getType().getJavaname() + " " + primitiveField.getName());
+//				}
+//				writer.write(" )\n\t{\n");
+//				for(PrimitiveField primitiveField : entity.getFields())
+//					writer.write("\t\tthis." + primitiveField.getName() + " = " + primitiveField.getName() + ";\n");
+//				writer.write("\t}\n\n");
+//			}
 
 			// for Id:			
 			if(metadata.isUsingAnnotations())
@@ -131,82 +124,84 @@ public class JavaModelCreator {
 			writer.write("\n\t@Override\n\tpublic Integer getId()\n\t{\n\t\treturn id;\n\t}\n" );
 			writer.write("\n\t@Override\n\tpublic void setId( Integer id )\n\t{\n\t\tthis.id = id;\n\t}\n\n");
 
-			// for each member:
-			for(Member member : entity.getMembers())
-			{
-				// annotations
-				if(metadata.isUsingAnnotations())
-					writer.write("\n\t@Column(name=\"" + member.getName() + "\")");
-				// getter
-				writer.write("\n\tpublic " + member.getType().getJavaname() + " " + getGetterName(member) 
-							+ "()\n\t{\n\t\treturn " + member.getName() + ";\n\t}\n" );
+			for(Field field : entity.getFields())
+				if( field instanceof PrimitiveField)
+				{
+					PrimitiveField primitiveField = (PrimitiveField) field;
+					// annotations
+					if(metadata.isUsingAnnotations())
+						writer.write("\n\t@Column(name=\"" + primitiveField.getName() + "\")");
+					// getter
+					writer.write("\n\tpublic " + primitiveField.getType().getJavaname() + " " + getGetterName(primitiveField) 
+						+ "()\n\t{\n\t\treturn " + primitiveField.getName() + ";\n\t}\n" );
 				
-				// setter
-				writer.write("\n\tpublic void " + getSetterName(member) + "( " + member.getType().getJavaname() + " " 
-							+ member.getName() + " )\n\t{\n\t\tthis." + member.getName() + " = " + member.getName() + ";\n\t}\n\n" );
-			}
-			
-
-			// for each enum:
-			for(EnumMember enumMember : entity.getEnumMembers())
-			{
-				// annotations
-				if(metadata.isUsingAnnotations())
-					writer.write("\n\t@Column(name=\"" + enumMember.getName() + "\")\n\t@Enumerated(EnumType.ORDINAL)");
-				// getter
-				writer.write("\n\tpublic " + enumMember.getEnumType().getClassName() + " " + getGetterName(enumMember) 
-							+ "()\n\t{\n\t\treturn " + enumMember.getName() + ";\n\t}\n" );
+					// setter
+					writer.write("\n\tpublic void " + getSetterName(primitiveField) + "( " + primitiveField.getType().getJavaname() + " " 
+							+ primitiveField.getName() + " )\n\t{\n\t\tthis." + primitiveField.getName() + " = " + primitiveField.getName() + ";\n\t}\n\n" );
+				}
+				else if( field instanceof EnumField )
+				{
+					EnumField enumField = (EnumField) field;
+					// annotations
+					if(metadata.isUsingAnnotations())
+						writer.write("\n\t@Column(name=\"" + enumField.getName() + "\")\n\t@Enumerated(EnumType.ORDINAL)");
+					// getter
+					writer.write("\n\tpublic " + enumField.getEnumType().getSimpleClassName() + " " + getGetterName(enumField) 
+							+ "()\n\t{\n\t\treturn " + enumField.getName() + ";\n\t}\n" );
 				
-				// setter
-				writer.write("\n\tpublic void " + getSetterName(enumMember) + "( " + enumMember.getEnumType().getClassName() + " " 
-							+ enumMember.getName() + " )\n\t{\n\t\tthis." + enumMember.getName() + " = " + enumMember.getName() + ";\n\t}\n\n" );
-			}
-
-			// for each entitymember:
-			for(EntityMember entityMember : entity.getEntityMembers())
+					// setter
+					writer.write("\n\tpublic void " + getSetterName(enumField) + "( " + enumField.getEnumType().getSimpleClassName() + " " 
+							+ enumField.getName() + " )\n\t{\n\t\tthis." + enumField.getName() + " = " + enumField.getName() + ";\n\t}\n\n" );
+				}
+			// for each entityField:
+			for(EntityField entityField : entity.getEntityFields())
 			{
 				//Annotations
 				if(metadata.isUsingAnnotations())
 				{
-					switch (entityMember.getType())
+					switch (entityField.getType())
 					{
 					case ONETOONE:
-						writer.write("\t@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );
+						writer.write("\t@OneToOne( fetch=FetchType.EAGER, cascade = CascadeType.ALL) \n\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );
 						break;
 					case ONETOMANY:
-						writer.write("\t@OneToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityMember.getCounterName() + "\")\n");
+						writer.write("\t@OneToMany( fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy=\"" + entityField.getCounterName() + "\" )\n");
 						break;
 					case MANYTOONE:
-						writer.write("\t@ManyToOne(fetch=FetchType.EAGER,  cascade = CascadeType.ALL) \n\t@JoinColumn(name=\"" + entityMember.getName() + "_id\")\n" );						
+						writer.write("\t@ManyToOne( fetch=FetchType.EAGER,  cascade = CascadeType.ALL) \n\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );						
 						break;
 					case MANYTOMANY:
-						break;
-					case ENUM:
+						if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
+							writer.write("\t@ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL )\n\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\",  "
+								+ "\n\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
+								+ "\n\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\n");
+						else
+							writer.write("\t@ManyToMany( fetch = FetchType.EAGER, mappedBy = \"" + entityField.getCounterName() + "s\" )\n");							
 						break;
 					}
 				}
 				// for Lists
-				if(entityMember.getType().isSecondMany())
+				if(entityField.getType().isSecondMany())
 				{
 					// getter
-					writer.write("\tpublic java.util.Set<" + entityMember.getEntity().getSimpleClassName() + "> " + getGetterName(entityMember)	+ "()\n\t{\n\t\treturn " + entityMember.getName() + "s;\n\t}\n" );
+					writer.write("\tpublic java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + getGetterName(entityField)	+ "()\n\t{\n\t\treturn " + entityField.getName() + "s;\n\t}\n" );
 				
 					// setter
-					writer.write("\n\tpublic void " + getSetterName(entityMember) 
-					+ "( java.util.Set<" + entityMember.getEntity().getSimpleClassName() + "> " + entityMember.getName() 
-					+ "s )\n\t{\n\t\tthis." + entityMember.getName() + "s = " + entityMember.getName() + "s;\n\t}\n\n" );
+					writer.write("\n\tpublic void " + getSetterName(entityField) 
+					+ "( java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + entityField.getName() 
+					+ "s )\n\t{\n\t\tthis." + entityField.getName() + "s = " + entityField.getName() + "s;\n\t}\n\n" );
 				}
 				// Singles
 				else
 				{
 					// getter
-					writer.write("\tpublic " + entityMember.getEntity().getSimpleClassName() + " " + getGetterName(entityMember) 
-								+ "()\n\t{\n\t\treturn " + entityMember.getName() + ";\n\t}\n" );
+					writer.write("\tpublic " + entityField.getEntity().getSimpleClassName() + " " + getGetterName(entityField) 
+								+ "()\n\t{\n\t\treturn " + entityField.getName() + ";\n\t}\n" );
 					
 					// setter
-					writer.write("\n\tpublic void " + getSetterName(entityMember) + "( " + entityMember.getEntity().getSimpleClassName() 
-							+ " " 	+ entityMember.getName() + " )\n\t{\n\t\tthis." + entityMember.getName() + " = " 
-							+ entityMember.getName() + ";\n");
+					writer.write("\n\tpublic void " + getSetterName(entityField) + "( " + entityField.getEntity().getSimpleClassName() 
+							+ " " 	+ entityField.getName() + " )\n\t{\n\t\tthis." + entityField.getName() + " = " 
+							+ entityField.getName() + ";\n");
 //					if(entityMember.getType().isFirstMany())
 //						writer.write("\t\t" + entityMember.getName() + "." + getGetterName(entityMember.getCouterpart()) + "().add(this);\n");
 					writer.write("\t}\n\n" );
@@ -220,12 +215,10 @@ public class JavaModelCreator {
 			
 			// toString
 			String toString = "\"" + entity.getToString() + "\"";
-			for(Member member : entity.getMembers() )
-				toString = toString.replaceAll("\\%" + member.getName(), "\" + " + member.getName() + " + \"");	
-			for(EnumMember enumMember : entity.getEnumMembers() )
-				toString = toString.replaceAll("\\%" + enumMember.getName(), "\" + " + enumMember.getName() + ".name() + \"");	
-			for(EntityMember entityMember : entity.getEntityMembers() )
-				toString = toString.replaceAll("\\%" + entityMember.getName(), "\" + " + entityMember.getName() + ".toString() + \"");			
+			for(Field field : entity.getFields() )
+				toString = toString.replaceAll("\\%" + field.getName(), "\" + " + field.getName() + " + \"");	
+			for(EntityField entityField : entity.getEntityFields() )
+				toString = toString.replaceAll("\\%" + entityField.getName(), "\" + " + entityField.getName() + ".toString() + \"");			
 			toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
 			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn " + toString + ";\n\t}\n\n");
 			

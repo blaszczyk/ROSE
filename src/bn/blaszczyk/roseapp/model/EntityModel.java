@@ -2,17 +2,17 @@ package bn.blaszczyk.roseapp.model;
 
 
 public interface EntityModel {
-
+	
 	public String getName();
 	public int getId();
 	public Entity getEntity();
 	
-	public int getMemberCount();
-	public String getMemberName( int index );
-	public Object getMemberValue( int index );
+	public int getFieldCount();
+	public String getFieldName( int index );
+	public Object getFieldValue( int index );
 	
 	public int getEntityCount();
-	public Object getEntityMember( int index );
+	public Object getEntityValue( int index );
 	public String getEntityName( int index );
 	public RelationType getRelationType( int index );
 	public Class<?> getEntityClass( int index );

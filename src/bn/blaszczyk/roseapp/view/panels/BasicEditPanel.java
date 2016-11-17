@@ -9,9 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.*;
-import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.model.EntityModel;
-import bn.blaszczyk.roseapp.model.RelationType;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.*;
 
@@ -29,21 +27,21 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 		this.entityModel = entityModel;
 		setLayout(null);
 		setBackground(BASIC_PNL_BACKGROUND);
-		for(int i = 0; i < entityModel.getMemberCount(); i++)
-			addInputPanel( i );
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
-			if(entityModel.getRelationType(i).equals(RelationType.ENUM))
+		for(int i = 0; i < entityModel.getFieldCount(); i++)
+			if(entityModel.getFieldValue(i) instanceof Enum)
 				addEnumPanel( i );
+			else
+				addInputPanel( i );
 	}
 
 	private void addInputPanel(int index)
 	{
 		InputPanel<?> panel = null;
-		String name = entityModel.getMemberName(index);
-		Object value = entityModel.getMemberValue(index);
+		String name = entityModel.getFieldName(index);
+		Object value = entityModel.getFieldValue(index);
 		if( value instanceof String )
-			if( FileInputPanel.isFileName(entityModel.getMemberValue(index).toString() ) )
-				panel = new FileInputPanel(entityModel.getMemberName(index), entityModel.getMemberValue(index).toString(), true);
+			if( FileInputPanel.isFileName(entityModel.getFieldValue(index).toString() ) )
+				panel = new FileInputPanel(entityModel.getFieldName(index), entityModel.getFieldValue(index).toString(), true);
 			else
 				panel = new StringInputPanel( name, (String) value, entityModel.getLength1(index) );
 		else if( value instanceof Boolean )
@@ -66,7 +64,7 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	}
 	private void addEnumPanel(int index)
 	{
-		InputPanel<?> panel = new EnumInputPanel(entityModel.getEntityName(index), (Enum<?>) entityModel.getEntityMember(index));
+		InputPanel<?> panel = new EnumInputPanel(entityModel.getFieldName(index), (Enum<?>) entityModel.getFieldValue(index));
 		panel.getPanel().setBounds( H_SPACING, height, PROPERTY_WIDTH + VALUE_WIDTH + H_SPACING, LBL_HEIGHT );
 		panels.add(panel);
 		add(panel.getPanel());
@@ -76,11 +74,8 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	public void save(FullModelController controller)
 	{
 		int i;
-		for(i = 0 ; i < entityModel.getMemberCount(); i++ )
-			controller.setMember(entityModel.getEntity(), entityModel.getMemberName(i), panels.get(i).getValue() );
-		for( int j = 0; j < entityModel.getEntityCount(); j++)
-			if(entityModel.getRelationType(j).equals(RelationType.ENUM))
-				controller.setEntityMember(entityModel.getEntity(), entityModel.getEntityName(j), (Entity) panels.get(i++).getValue());
+		for(i = 0 ; i < entityModel.getFieldCount(); i++ )
+			controller.setMember(entityModel.getEntity(), entityModel.getFieldName(i), panels.get(i).getValue() );
 	}
 	
 	public void setChangeListener(ChangeListener l)

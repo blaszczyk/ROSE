@@ -173,14 +173,12 @@ public class GUIController {
 			case MANYTOONE:
 				break;
 			case ONETOMANY:
-				Set<?> set = (Set<?>) entityModel.getEntityMember(i);
+				Set<?> set = (Set<?>) entityModel.getEntityValue(i);
 				for(Object o : set.toArray())
 					delete((Entity) o);
 				break;
 			case ONETOONE:
 //				delete((Entity) entityModel.getEntityMember(i));
-				break;
-			case ENUM:
 				break;
 			}
 		}		

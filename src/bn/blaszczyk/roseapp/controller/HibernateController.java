@@ -66,7 +66,7 @@ public class HibernateController implements FullModelController {
 				entityModelLists.get(entity.getClass()).remove(entityModel);
 				for(int i = 0; i < entityModel.getEntityCount(); i++)
 					if(entityModel.getRelationType(i).equals(RelationType.ONETOONE))
-						deleteModel((Entity) entityModel.getEntityMember(i));
+						deleteModel((Entity) entityModel.getEntityValue(i));
 			}
 		}
 	}
@@ -86,22 +86,21 @@ public class HibernateController implements FullModelController {
 	{
 		Entity copy = createNew(entity.getClass().getSimpleName()), subCopy;
 		EntityModel entityModel = createModel(entity);
-		for(int i = 0; i < entityModel.getMemberCount(); i++)
-			setMember(copy, entityModel.getMemberName(i), entityModel.getMemberValue(i));
+		for(int i = 0; i < entityModel.getFieldCount(); i++)
+			setMember(copy, entityModel.getFieldName(i), entityModel.getFieldValue(i));
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 			switch(entityModel.getRelationType(i))
 			{
 			case ONETOONE:
-				subCopy = createCopy( (Entity) entityModel.getEntityMember(i) );
+				subCopy = createCopy( (Entity) entityModel.getEntityValue(i) );
 				setEntityMember(copy, entityModel.getEntityName(i), subCopy );
 				break;
 			case ONETOMANY:
-				for( Object o :  ((Set<?>) entityModel.getEntityMember(i)).toArray())
+				for( Object o :  ((Set<?>) entityModel.getEntityValue(i)).toArray())
 					addEntityMember(copy, entityModel.getEntityName(i), createCopy((Entity) o));
 				break;
 			case MANYTOONE:
-			case ENUM:
-				setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityMember(i));
+				setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityValue(i));
 				break;
 			case MANYTOMANY:
 				break;
@@ -155,7 +154,7 @@ public class HibernateController implements FullModelController {
 				{
 					if(entityModel.getRelationType(i) == RelationType.ONETOONE || entityModel.getRelationType(i) == RelationType.MANYTOONE)
 					{
-						Entity oldEntity = (Entity) entityModel.getEntityMember(i);
+						Entity oldEntity = (Entity) entityModel.getEntityValue(i);
 						if(oldEntity == null)
 							continue;
 						for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )

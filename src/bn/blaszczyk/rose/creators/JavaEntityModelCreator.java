@@ -7,7 +7,6 @@ import java.util.List;
 
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
-import bn.blaszczyk.roseapp.model.RelationType;
 
 
 public class JavaEntityModelCreator {
@@ -60,81 +59,70 @@ public class JavaEntityModelCreator {
 			//public Entity getEntity();
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.Entity getEntity()\n\t{\n\t\treturn " + entity.getObjectName() + ";\n\t}\n\n");
 			
-			// public int getMemberCount();
-			writer.write("\t@Override\n\tpublic int getMemberCount()\n\t{\n\t\treturn " + entity.getMembers().size() + ";\n\t}\n\n");
+			// public int getFieldCount();
+			writer.write("\t@Override\n\tpublic int getFieldCount()\n\t{\n\t\treturn " + entity.getFields().size() + ";\n\t}\n\n");
 			
-			// public String getMemberName( int index );
-			writer.write("\t@Override\n\tpublic String getMemberName(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public String getFieldName( int index );
+			writer.write("\t@Override\n\tpublic String getFieldName(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + member.getCapitalName() +  "\";\n" );
+			for(Field field : entity.getFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + field.getCapitalName() +  "\";\n" );
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
 			
-			// public Object getMemberValue( int index );
-			writer.write("\t@Override\n\tpublic Object getMemberValue(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public Object getFieldValue( int index );
+			writer.write("\t@Override\n\tpublic Object getFieldValue(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(member) +  "();\n" );
+			for(Field field : entity.getFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(field) +  "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public int getEntityCount();
-			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + ( entity.getEntityMembers().size() + entity.getEnumMembers().size() ) + ";\n\t}\n\n");
+			writer.write("\t@Override\n\tpublic int getEntityCount()\n\t{\n\t\treturn " + entity.getEntityFields().size() + ";\n\t}\n\n");
 			
-			// public Object getEntityMember( int index );
-			writer.write("\t@Override\n\tpublic Object getEntityMember(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
+			// public Object getEntityValue( int index );
+			writer.write("\t@Override\n\tpublic Object getEntityValue(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityMember)+ "();\n" );
-			for(EnumMember enumMember : entity.getEnumMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(enumMember)+ "();\n" );
+			for(EntityField entityField : entity.getEntityFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entity.getObjectName() + "." + JavaModelCreator.getGetterName(entityField)+ "();\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 			// public String getEntityName( int index );
 			writer.write("\t@Override\n\tpublic String getEntityName(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityMember.getCapitalName() + ( entityMember.getType().isSecondMany() ? "s" : "" ) +  "\";\n" );
-			for(EnumMember enumMember : entity.getEnumMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + enumMember.getCapitalName() +  "\";\n" );
+			for(EntityField entityField : entity.getEntityFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn \"" + entityField.getCapitalName() + ( entityField.getType().isSecondMany() ? "s" : "" ) 
+						+  "\";\n" );
 			writer.write("\t\t}\n\t\treturn \"\";\n\t}\n\n");
 
 			// public RelationType getRelationType( int index );			
 			writer.write("\t@Override\n\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityMember.getType().name() + ";\n" );
+			for(EntityField entityField : entity.getEntityFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityField.getType().name() + ";\n" );
 //			for(EnumMember enumMember : entity.getEnumMembers())
 //				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + RelationType.ENUM.name() + ";\n" );
-			writer.write("\t\t}\n\t\treturn bn.blaszczyk.roseapp.model.RelationType." + RelationType.ENUM.name() + ";\n\t}\n\n");
+			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
 			// public Class<?> getEntityClass( int index );	
 			writer.write("\t@Override\n\tpublic Class<?> getEntityClass(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(EntityMember entityMember : entity.getEntityMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityMember.getEntity().getClassName() + ".class;\n" );
-			for(EnumMember enumMember : entity.getEnumMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + enumMember.getEnumType().getClassName() + ".class;\n" );
+			for(EntityField entityField : entity.getEntityFields())
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + entityField.getEntity().getClassName() + ".class;\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 			
 
 			//public String getTableCols();
 			String cols = entity.getTableCols();
 			count = 0;
-			for(Member member : entity.getMembers() )
+			for(Field field : entity.getFields() )
 			{
-				cols = cols.replaceAll("\\%" + member.getName(), "M" + count);	
+				cols = cols.replaceAll("\\%" + field.getName(), "M" + count);	
 				count++;
 			}
 			count = 0;
-			for(EnumMember enumMember : entity.getEnumMembers() )
+			for(EntityField entityField : entity.getEntityFields() )
 			{
-				cols = cols.replaceAll("\\%" + enumMember.getName(), "E" + ( entity.getEntityMembers().size() + count ) );
-				count++;
-			}
-			count = 0;
-			for(EntityMember entityMember : entity.getEntityMembers() )
-			{
-				cols = cols.replaceAll("\\%" + entityMember.getName(), "E" + count);			
+				cols = cols.replaceAll("\\%" + entityField.getName(), "E" + count);			
 				count++;
 			}
 			cols.replaceAll("\\s+", "");
@@ -143,15 +131,17 @@ public class JavaEntityModelCreator {
 			// public int getLength1( int index );			
 			writer.write("\t@Override\n\tpublic int getLength1(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + member.getLength1() + ";\n" );
+			for(Field field : entity.getFields())
+				if(field instanceof PrimitiveField)
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + ((PrimitiveField)field).getLength1() + ";\n" );
 			writer.write("\t\t}\n\t\treturn 0;\n\t}\n\n");
 			
 			// public int getLength2( int index );			
 			writer.write("\t@Override\n\tpublic int getLength2(int index)\n\t{\n\t\tswitch(index)\n\t\t{\n");
 			count = 0;
-			for(Member member : entity.getMembers())
-				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + member.getLength2() + ";\n" );
+			for(Field field : entity.getFields())
+				if(field instanceof PrimitiveField)
+				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn " + ((PrimitiveField)field).getLength2() + ";\n" );
 			writer.write("\t\t}\n\t\treturn 0;\n\t}\n\n");
 
 			// public EntityModel createModel( Entity entity );

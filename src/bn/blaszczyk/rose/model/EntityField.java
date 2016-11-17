@@ -2,7 +2,7 @@ package bn.blaszczyk.rose.model;
 
 import bn.blaszczyk.roseapp.model.RelationType;
 
-public class EntityMember {
+public class EntityField implements Field{
 	
 	private Entity entity;
 	private String name;
@@ -10,9 +10,9 @@ public class EntityMember {
 	private String capitalName;
 	private String counterCapitalName;
 	private RelationType type;
-	private EntityMember couterpart = null;
+	private EntityField couterpart = null;
 
-	public EntityMember(Entity entity, RelationType type, String name, String counterName)
+	public EntityField(Entity entity, RelationType type, String name, String counterName)
 	{
 		this.entity = entity;
 		this.type = type;
@@ -22,7 +22,7 @@ public class EntityMember {
 		this.counterCapitalName = this.counterName.substring(0, 1).toUpperCase() + this.counterName.substring(1);
 	}
 	
-	public EntityMember( Entity entity, EntityMember counterpart )
+	public EntityField( Entity entity, EntityField counterpart )
 	{
 		this(entity, counterpart.getType().getInverse(), counterpart.getCounterName(), counterpart.getName() );
 		setCouterpart(counterpart);
@@ -38,14 +38,22 @@ public class EntityMember {
 		return type;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 	
+	@Override
 	public String getCapitalName()
 	{
 		return capitalName;
+	}
+	
+	@Override
+	public String getSqlType()
+	{
+		return "int";
 	}
 	
 	
@@ -60,15 +68,16 @@ public class EntityMember {
 		return counterCapitalName;
 	}
 
-	public EntityMember getCouterpart()
+	public EntityField getCouterpart()
 	{
 		return couterpart;
 	}
 
-	public void setCouterpart(EntityMember couterpart)
+	public void setCouterpart(EntityField couterpart)
 	{
 		this.couterpart = couterpart;
 	}
+
 	
 	
 	

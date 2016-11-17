@@ -38,30 +38,32 @@ public class JavaParserCreator {
 			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, String value ) throws java.text.ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
-			for(Member member : entity.getMembers())
-			{
-				writer.write("\t\tcase \"" + member.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(member) + "( " );
-				switch(member.getType())
+			for(Field field : entity.getFields())
+				if( field instanceof PrimitiveField)
 				{
-				case VARCHAR:
-				case CHAR:
-					writer.write( "value" );
-					break;
-				case INT:
-					writer.write( "Integer.parseInt( value )" );
-					break;
-				case DATE:
-					writer.write( "java.text.DateFormat.getDateInstance().parse( value )" );
-					break;
-				case NUMERIC:
-					writer.write( "new java.math.BigDecimal( value )" );
-					break;
-				case BOOLEAN:
-					writer.write( "Boolean.parseBoolean( value )" ) ;
-				}
-				writer.write( " );\n\t\t\tbreak;\n" );
-			}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getSimpleClassName() + "\");\n" );
+					PrimitiveField primitiveField = (PrimitiveField) field;
+					writer.write("\t\tcase \"" + primitiveField.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
+					switch(primitiveField.getType())
+					{
+					case VARCHAR:
+					case CHAR:
+						writer.write( "value" );
+						break;
+					case INT:
+						writer.write( "Integer.parseInt( value )" );
+						break;
+					case DATE:
+						writer.write( "java.text.DateFormat.getDateInstance().parse( value )" );
+						break;
+					case NUMERIC:
+						writer.write( "new java.math.BigDecimal( value )" );
+						break;
+					case BOOLEAN:
+						writer.write( "Boolean.parseBoolean( value )" ) ;
+					}	
+					writer.write( " );\n\t\t\tbreak;\n" );
+				}		
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Primitive Field: \" + name + \" in " + entity.getSimpleClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 
 			

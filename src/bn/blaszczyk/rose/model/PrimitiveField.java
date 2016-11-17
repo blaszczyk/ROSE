@@ -2,25 +2,25 @@ package bn.blaszczyk.rose.model;
 
 import java.text.ParseException;
 
-public class Member {
+public class PrimitiveField implements Field{
 	private String name;
 	private String capitalName;
-	private String sqltype;
-	private MemberType type = null;
+	private String sqlType;
+	private PrimitiveType type = null;
 	private String defValue = null;
 	
 	private int length1 = 1;
 	private int length2 = 0;
 	
-	public Member( String sqltype, String name, String defvalue) throws ParseException
+	public PrimitiveField( String sqltype, String name, String defvalue) throws ParseException
 	{
 		this.name = name;
 		this.capitalName = name.substring(0,1).toUpperCase() + name.substring(1);
-		this.sqltype = sqltype;
+		this.sqlType = sqltype;
 		this.defValue = defvalue;
-		for(MemberType memberType : MemberType.values() )
-			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
-				this.type = memberType;
+		for(PrimitiveType primitiveType : PrimitiveType.values() )
+			if( sqltype.toLowerCase().startsWith( primitiveType.getSqlname().toLowerCase() ) )
+				this.type = primitiveType;
 		String[] split;
 		switch(type)
 		{
@@ -47,7 +47,7 @@ public class Member {
 			throw new ParseException("Unknown SQL type: " + sqltype, 0);
 	}
 
-	public Member( String sqltype, String name ) throws ParseException
+	public PrimitiveField( String sqltype, String name ) throws ParseException
 	{
 		this(sqltype,name,null);
 	}
@@ -64,22 +64,25 @@ public class Member {
 		this.defValue = defValue;
 	}
 
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 	
+	@Override
 	public String getCapitalName()
 	{
 		return capitalName;
 	}
 
-	public String getSqltype()
+	@Override
+	public String getSqlType()
 	{
-		return sqltype;
+		return sqlType;
 	}
 
-	public MemberType getType()
+	public PrimitiveType getType()
 	{
 		return type;
 	}

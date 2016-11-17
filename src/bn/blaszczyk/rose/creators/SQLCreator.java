@@ -7,11 +7,7 @@ import java.io.Writer;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.model.DBType;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EntityMember;
-import bn.blaszczyk.rose.model.EnumMember;
-import bn.blaszczyk.rose.model.Member;
+import bn.blaszczyk.rose.model.*;
 import bn.blaszczyk.roseapp.model.RelationType;
 
 public class SQLCreator {
@@ -41,13 +37,35 @@ public class SQLCreator {
 				writer.write("drop table " + entities.get(i).getSimpleClassName() + ";\n\n");
 			}
 			for(Entity entity : entities)
+			{
 				createTable(entity, metadata, dbType, writer);
+				for(EntityField entityField : entity.getEntityFields() )
+					createManyToManyTable(entityField, writer);
+			}
 			System.out.println( "File created: " + fullpath);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public static String getManyToManyTableName( EntityField member  )
+	{
+		String format = "%s_%s";
+		if( member.getName().compareTo(member.getCounterName()) < 0)
+			return String.format(format, member.getCapitalName(), member.getCounterCapitalName());
+		else
+			return String.format(format, member.getCounterCapitalName(), member.getCapitalName());
+			
+	}
+	
+	
+	private static void createManyToManyTable( EntityField member, Writer writer ) throws IOException
+	{
+		if( member.getType() == RelationType.MANYTOMANY && ( member.getName().compareTo(member.getCounterName()) < 0 ) )
+			writer.write("create table " + getManyToManyTableName(member) + "\n(\n\t" + member.getName() + "_id int,\n\t" + 
+						member.getCounterName() + "_id int\n);\n\n"   );
 	}
 	
 	private static void createTable(Entity entity, MetaData metadata, DBType dbType, Writer writer) throws IOException
@@ -63,33 +81,25 @@ public class SQLCreator {
 			writer.write( " auto_increment,\n");
 			break;
 		}
-		// member columns
-		for(Member member : entity.getMembers())
-		{
-			writer.write( "\t" + member.getName() + " " + member.getSqltype() + ",\n");
-		}
-		
-		// enum columns
-		for(EnumMember enumMember : entity.getEnumMembers())
-		{
-			writer.write( "\t" + enumMember.getName() + " int,\n");
-		}
+		// primitive and enum columns
+		for(Field field : entity.getFields())
+			writer.write( "\t" + field.getName() + " " + field.getSqlType() + ",\n");
 		
 		// relational columns
-		for(EntityMember entityMember : entity.getEntityMembers())
-			if(!entityMember.getType().isSecondMany())
-				writer.write( "\t" + entityMember.getName() + "_id int,\n" );
+		for(EntityField entityField : entity.getEntityFields())
+			if(!entityField.getType().isSecondMany())
+				writer.write( "\t" + entityField.getName() + "_id int,\n" );
 		
 		// primary key
 		writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
 		
 		//foreign keys
 		if(metadata.isUsingForeignKeys())
-			for(EntityMember entityMember : entity.getEntityMembers())
-				if(entityMember.getType() == RelationType.MANYTOONE)
-					writer.write( ",\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityMember.getEntity().getSimpleClassName().toLowerCase()
-								+ " foreign key ( " + entityMember.getName() + "_id ) references "
-								+ entityMember.getEntity().getSimpleClassName() + "( " + entityMember.getEntity().getObjectName() + "_id )");
+			for(EntityField entityField : entity.getEntityFields())
+				if(entityField.getType() == RelationType.MANYTOONE)
+					writer.write( ",\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityField.getEntity().getSimpleClassName().toLowerCase()
+								+ " foreign key ( " + entityField.getName() + "_id ) references "
+								+ entityField.getEntity().getSimpleClassName() + "( " + entityField.getEntity().getObjectName() + "_id )");
 		//fin
 		writer.write( "\n);\n\n" );
 	}

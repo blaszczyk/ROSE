@@ -91,37 +91,37 @@ public class RoseParser {
 			if( (subenum = getEnumType(command)) != null )
 			{
 				if( split.length == 1) 
-					entity.addEnumMember(new EnumMember(subenum, command));
+					entity.addField(new EnumField(subenum));
 				else 
 				{
 					split = line.split("\\s+",2);
 					if( split.length == 1)
-						entity.addEnumMember(new EnumMember(subenum, split[0]));
+						entity.addField(new EnumField(subenum, split[0]));
 					else
-						entity.addEnumMember(new EnumMember(subenum, split[0],split[1]));
+						entity.addField(new EnumField(subenum, split[0],split[1]));
 				}
 				continue;
 			}
 			else if(split.length == 1 )
 				continue;
-			if( isMemberType(command) )
+			if( isPrimitiveType(command) )
 			{
 				split = split[1].split("\\s+",2);
 				if(split.length == 2)
-					entity.addMember(new Member(command, split[0], split[1]));
+					entity.addField(new PrimitiveField(command, split[0], split[1]));
 				else
-					entity.addMember(new Member(command, split[0]));
+					entity.addField(new PrimitiveField(command, split[0]));
 			}
 			else if( isRelationType(command) )
 			{
 				split = split[1].split("\\s+", 3);
 				if( (subentity = getEntityType(split[0])) != null )
 					if(split.length == 3)
-						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1],split[2]));	
+						entity.addEntityField(new EntityField(subentity, getRelationType(command), split[1],split[2]), true);	
 					else if(split.length == 2)
-						entity.addEntityMember(new EntityMember(subentity, getRelationType(command), split[1],split[1]));					
+						entity.addEntityField(new EntityField(subentity, getRelationType(command), split[1],split[1]), true);					
 					else
-						entity.addEntityMember(new EntityMember(subentity, getRelationType(command),subentity.getObjectName(),entity.getObjectName()));			
+						entity.addEntityField(new EntityField(subentity, getRelationType(command),subentity.getObjectName(),entity.getObjectName()), true);			
 			}
 			else if( command.equalsIgnoreCase("tostring"))
 			{
@@ -138,10 +138,10 @@ public class RoseParser {
 		}
 		if(entity.getTableCols() == null)
 		{
-			if(entity.getMembers().size() > 0)
-				entity.setTableCols("%" + entity.getMembers().get(0).getName());
-			for(int i = 1; i < entity.getMembers().size(); i++)
-				entity.setTableCols(entity.getTableCols() +";%" + entity.getMembers().get(i).getName());
+			if(entity.getFields().size() > 0)
+				entity.setTableCols("%" + entity.getFields().get(0).getName());
+			for(int i = 1; i < entity.getFields().size(); i++)
+				entity.setTableCols(entity.getTableCols() +";%" + entity.getFields().get(i).getName());
 		}
 		entities.add(entity);
 	}
@@ -157,10 +157,10 @@ public class RoseParser {
 		enums.add(enumType);
 	}
 
-	private static boolean isMemberType(String sqltype)
+	private static boolean isPrimitiveType(String sqltype)
 	{
-		for(MemberType memberType : MemberType.values())
-			if( sqltype.toLowerCase().startsWith( memberType.getSqlname().toLowerCase() ) )
+		for(PrimitiveType primitiveType : PrimitiveType.values())
+			if( sqltype.toLowerCase().startsWith( primitiveType.getSqlname().toLowerCase() ) )
 				return true;
 		return false;
 	}

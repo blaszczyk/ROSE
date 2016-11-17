@@ -106,7 +106,7 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		switch (colContents.get(columnIndex).getColType())	
 		{
 		case MEMBER:
-			return first.getMemberName(colContents.get(columnIndex).getIndex());
+			return first.getFieldName(colContents.get(columnIndex).getIndex());
 		case ENTITY:
 			return first.getEntityName(colContents.get(columnIndex).getIndex());
 		default:
@@ -122,9 +122,9 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		case ICON:
 			return Icon.class;
 		case MEMBER:
-			return first.getMemberValue(colContents.get(columnIndex).getIndex()).getClass();
+			return first.getFieldValue(colContents.get(columnIndex).getIndex()).getClass();
 		case ENTITY:
-			return first.getEntityMember(colContents.get(columnIndex).getIndex()).getClass();
+			return first.getEntityValue(colContents.get(columnIndex).getIndex()).getClass();
 		default:
 			return null;
 		}
@@ -144,12 +144,12 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 		case ICON:
 			return colContents.get(columnIndex).getIcon();
 		case MEMBER:
-			Object o =  entityModels.get(rowIndex).getMemberValue(colContents.get(columnIndex).getIndex());
+			Object o =  entityModels.get(rowIndex).getFieldValue(colContents.get(columnIndex).getIndex());
 			if( o instanceof String && FileInputPanel.isFileName(o.toString()))
 				return o.toString().substring( o.toString().lastIndexOf("/")+1);
 			return o;
 		case ENTITY:
-			return entityModels.get(rowIndex).getEntityMember(colContents.get(columnIndex).getIndex());
+			return entityModels.get(rowIndex).getEntityValue(colContents.get(columnIndex).getIndex());
 		default:
 			return null;
 		}

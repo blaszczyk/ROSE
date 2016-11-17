@@ -31,7 +31,7 @@ public class FullViewPanel extends AlignPanel {
 		addBasicPanel(null, null, entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
-			if( entityModel.getEntityMember(i) == null )
+			if( entityModel.getEntityValue(i) == null )
 				continue;
 			switch( entityModel.getRelationType(i) )
 			{
@@ -40,14 +40,12 @@ public class FullViewPanel extends AlignPanel {
 				addMemberTable(i);
 				break;
 			case MANYTOONE:
-				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityMember(i) );
+				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityValue(i) );
 				addBasicPanel( entityModel.getEntityName(i), createViewButton(i), subEntityModel );
 				break;
 			case ONETOONE:
-				addFullPanel( null, null, entityModel.createModel( (Entity) entityModel.getEntityMember(i) ) );
+				addFullPanel( null, null, entityModel.createModel( (Entity) entityModel.getEntityValue(i) ) );
 				break;
-			case ENUM:
-				continue;
 			}
 		}
 		
@@ -67,7 +65,7 @@ public class FullViewPanel extends AlignPanel {
 			{	
 				e.printStackTrace();
 			}
-			button.addActionListener( e -> guiController.openEntityTab(entityModel.createModel( (Entity) entityModel.getEntityMember(index) ), false) );
+			button.addActionListener( e -> guiController.openEntityTab(entityModel.createModel( (Entity) entityModel.getEntityValue(index) ), false) );
 		}		
 		return button;
 	}
@@ -86,7 +84,7 @@ public class FullViewPanel extends AlignPanel {
 	private void addMemberTable( int index )
 	{
 		List<EntityModel> entityModels = new ArrayList<>();
-		Set<?> entities =  (Set<?>) entityModel.getEntityMember(index);
+		Set<?> entities =  (Set<?>) entityModel.getEntityValue(index);
 		for(Object entity : entities)
 			entityModels.add(entityModel.createModel((Entity)entity));
 		
