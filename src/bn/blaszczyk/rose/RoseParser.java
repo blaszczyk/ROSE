@@ -28,7 +28,7 @@ public class RoseParser {
 		{
 			split = scanner.nextLine().trim().split("\\s+");
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
-				MetaDataParser.parseMember(metadata, split[1], split[2]);
+				MetaDataParser.parseField(metadata, split[1], split[2]);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
 				parseEntity(split[2], scanner);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("enum"))
@@ -134,7 +134,7 @@ public class RoseParser {
 					entity.setTableCols(split[1]);
 			}
 			else 
-				System.out.println("Invalid Member: " + line);
+				System.out.println("Invalid Field: " + line);
 		}
 		if(entity.getTableCols() == null)
 		{

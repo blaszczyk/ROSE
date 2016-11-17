@@ -142,7 +142,7 @@ public class GUIController {
 	public void addNew(EntityModel entityModel, int index)
 	{
 		Entity entity = modelController.createNew( entityModel.getEntityClass(index).getSimpleName() );
-		modelController.addEntityMember(entityModel.getEntity(), entityModel.getEntityName(index), entity);
+		modelController.addEntityField(entityModel.getEntity(), entityModel.getEntityName(index), entity);
 		openEntityTab( modelController.createModel(entity), true);
 	}
 
@@ -178,7 +178,7 @@ public class GUIController {
 					delete((Entity) o);
 				break;
 			case ONETOONE:
-//				delete((Entity) entityModel.getEntityMember(i));
+//				delete((Entity) entityModel.getEntityValue(i));
 				break;
 			}
 		}		

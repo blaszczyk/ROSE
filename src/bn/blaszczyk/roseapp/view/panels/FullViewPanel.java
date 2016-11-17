@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.MemberTable;
-import bn.blaszczyk.roseapp.view.MemberTableModel;
+import bn.blaszczyk.roseapp.view.EntityTable;
+import bn.blaszczyk.roseapp.view.EntityTableModel;
 
 @SuppressWarnings("serial")
 public class FullViewPanel extends AlignPanel {
@@ -37,7 +37,7 @@ public class FullViewPanel extends AlignPanel {
 			{
 			case MANYTOMANY:
 			case ONETOMANY:
-				addMemberTable(i);
+				addEntityTable(i);
 				break;
 			case MANYTOONE:
 				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityValue(i) );
@@ -81,15 +81,15 @@ public class FullViewPanel extends AlignPanel {
 		super.addPanel( title, button, new BasicViewPanel(entityModel) );
 	}
 	
-	private void addMemberTable( int index )
+	private void addEntityTable( int index )
 	{
 		List<EntityModel> entityModels = new ArrayList<>();
 		Set<?> entities =  (Set<?>) entityModel.getEntityValue(index);
 		for(Object entity : entities)
 			entityModels.add(entityModel.createModel((Entity)entity));
 		
-		MemberTableModel tableModel = new MemberTableModel(entityModels,1);
-		MemberTable table = new MemberTable( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
+		EntityTableModel tableModel = new EntityTableModel(entityModels,1);
+		EntityTable table = new EntityTable( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
 		table.setButtonColumn(0, "view.png", e -> guiController.openEntityTab( e, false ));
 		JScrollPane scrollPane = new JScrollPane(table);
 		

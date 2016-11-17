@@ -11,7 +11,6 @@ public class Entity {
 	private String tableCols;
 	private List<Field> fields = new ArrayList<>();
 	private List<EntityField> entityFields = new ArrayList<>();
-//	private List<EnumField> enummembers = new ArrayList<>();
  
 	public Entity(String classname, String packagename)
 	{
@@ -68,11 +67,6 @@ public class Entity {
 		return entityFields;
 	}
 	
-//	public List<EnumField> getEnumMembers()
-//	{
-//		return enummembers;
-//	}
-	
 	public void addField(Field field)
 	{
 		fields.add(field);
@@ -88,10 +82,5 @@ public class Entity {
 			entityField.getEntity().addEntityField( counterpart, false );
 		}
 	}	
-	
-//	public void addEnumMember(EnumField enummember)
-//	{
-//		enummembers.add(enummember);
-//	}
-	
+
 }

@@ -8,8 +8,8 @@ import javax.swing.JScrollPane;
 import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.MemberTable;
-import bn.blaszczyk.roseapp.view.MemberTableModel;
+import bn.blaszczyk.roseapp.view.EntityTable;
+import bn.blaszczyk.roseapp.view.EntityTableModel;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 @SuppressWarnings("serial")
@@ -23,8 +23,8 @@ public class FullListPanel extends JPanel implements ThemeConstants, MyPanel {
 		setLayout(null);
 		List<EntityModel> entityModels = modelController.getAllModels(type);
 		entityModels.sort((e1,e2) -> Integer.compare(e1.getId(), e2.getId()));
-		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
-		MemberTable table = new MemberTable(tableModel, FULL_TABLE_WIDTH, PANEL_HEIGHT);
+		EntityTableModel tableModel = new EntityTableModel(entityModels,3);
+		EntityTable table = new EntityTable(tableModel, FULL_TABLE_WIDTH, PANEL_HEIGHT);
 		table.setButtonColumn(0, "view.png", e -> guiController.openEntityTab( e, false ));
 		table.setButtonColumn(1, "edit.png", e -> guiController.openEntityTab( e, true ));
 		table.setButtonColumn(2, "copy.png", e -> guiController.openEntityTab( modelController.createCopy( e ), true));

@@ -9,7 +9,7 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaParserCreator {
 	
-	public static final String PARSE_METHOD = "parseMember";
+	public static final String PARSE_METHOD = "parseField";
 	
 	public static String getParserName(Entity entity, MetaData metadata)
 	{
@@ -34,7 +34,7 @@ public class JavaParserCreator {
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n");
 			
-			// parseMember
+			// parseField
 			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, String value ) throws java.text.ParseException\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");

@@ -12,7 +12,7 @@ import bn.blaszczyk.roseapp.model.RelationType;
 public class JavaControllerCreator {
 	
 
-	public static final String SET_METHOD = "setMember";
+	public static final String SET_METHOD = "setField";
 	public static final String SET_ENTITY_METHOD = "setEntity";
 	public static final String ADD_ENTITY_METHOD = "addEntity";
 	public static final String DELETE_METHOD = "delete";
@@ -36,22 +36,22 @@ public class JavaControllerCreator {
 			
 			// implement methods
 			
-			//public void setMember( Entity entity, String name, Object value);
-			writer.write("\t@Override\n\tpublic void setMember( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value)\n\t{\n\t\t" );
+			//public void setField( Entity entity, String name, Object value);
+			writer.write("\t@Override\n\tpublic void setField( bn.blaszczyk.roseapp.model.Entity entity, String name, Object value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
-			//public void setEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void setEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
+			//public void setEntityField( Entity entity, String name, Entity value);
+			writer.write("\t@Override\n\tpublic void setEntityField( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ SET_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
 			writer.write("\n\t\t\treturn;\n\t}\n\n" );
 			
-			//public void addEntityMember( Entity entity, String name, Entity value);
-			writer.write("\t@Override\n\tpublic void addEntityMember( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
+			//public void addEntityField( Entity entity, String name, Entity value);
+			writer.write("\t@Override\n\tpublic void addEntityField( bn.blaszczyk.roseapp.model.Entity entity, String name, bn.blaszczyk.roseapp.model.Entity value)\n\t{\n\t\t" );
 			for(Entity entity : entities)
 				writer.write("if( entity instanceof " + entity.getClassName() +" )\n\t\t\t" + getControllerName(entity, metadata) + "." 
 								+ ADD_ENTITY_METHOD +   "( ( " + entity.getClassName() + " ) entity, name, value );\n\t\telse " );
@@ -112,7 +112,7 @@ public class JavaControllerCreator {
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n");
 			
-			// setMember
+			// setField
 			writer.write("\tpublic static void " + SET_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
 						+ ", String name, Object value )\n\t{\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
@@ -153,7 +153,7 @@ public class JavaControllerCreator {
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );					
 				}
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Member: \" + name + \" in " + entity.getClassName() + "\");\n" );
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Field: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 
 			// setEntity
@@ -178,7 +178,7 @@ public class JavaControllerCreator {
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
 				}		
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Single EntityField: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 			
 			// addEntity()
@@ -196,7 +196,7 @@ public class JavaControllerCreator {
 							+ "\t\t\t\tSystem.out.println(\"Wrong class for \" + name + \" in " + entity.getClassName() + "\" );\n"
 							+ "\t\t\tbreak;\n" );
 				}			
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple Entitymember: \" + name + \" in " + entity.getClassName() + "\");\n" );
+			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Multiple EntityField: \" + name + \" in " + entity.getClassName() + "\");\n" );
 			writer.write("\t\t}\n\t}\n\n");
 			
 			// delete()

@@ -75,7 +75,7 @@ public class BasicEditPanel extends JPanel implements MyPanel, ThemeConstants {
 	{
 		int i;
 		for(i = 0 ; i < entityModel.getFieldCount(); i++ )
-			controller.setMember(entityModel.getEntity(), entityModel.getFieldName(i), panels.get(i).getValue() );
+			controller.setField(entityModel.getEntity(), entityModel.getFieldName(i), panels.get(i).getValue() );
 	}
 	
 	public void setChangeListener(ChangeListener l)

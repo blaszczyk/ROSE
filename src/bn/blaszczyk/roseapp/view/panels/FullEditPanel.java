@@ -17,8 +17,8 @@ import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.MemberTable;
-import bn.blaszczyk.roseapp.view.MemberTableModel;
+import bn.blaszczyk.roseapp.view.EntityTable;
+import bn.blaszczyk.roseapp.view.EntityTableModel;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
 
 @SuppressWarnings("serial")
@@ -58,7 +58,7 @@ public class FullEditPanel extends AlignPanel {
 				Set<?> objects =  (Set<?>) entityModel.getEntityValue(i);
 				for(Object object : objects)
 					entityModels.add(entityModel.createModel((Entity)object));
-				addMemberTable( i );
+				addEntityTable( i );
 				break;
 			case MANYTOONE:
 				addSelectionBox( i );
@@ -95,15 +95,15 @@ public class FullEditPanel extends AlignPanel {
 		return basicPanel;
 	}
 	
-	private void addMemberTable( int index )
+	private void addEntityTable( int index )
 	{
 		List<EntityModel> entityModels = new ArrayList<>();
 		Set<?> entities =  (Set<?>) entityModel.getEntityValue(index);
 		for(Object entity : entities)
 			entityModels.add(entityModel.createModel((Entity)entity));
 
-		MemberTableModel tableModel = new MemberTableModel(entityModels,3);
-		MemberTable table = new MemberTable( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
+		EntityTableModel tableModel = new EntityTableModel(entityModels,3);
+		EntityTable table = new EntityTable( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
 		table.setButtonColumn(0, "edit.png", e -> guiController.openEntityTab( e, true ));
 		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy(e), true ) );
 		table.setButtonColumn(2, "delete.png", e -> guiController.delete(e.getEntity()) );
@@ -118,7 +118,7 @@ public class FullEditPanel extends AlignPanel {
 		int count = 0;
 		for( EntityModel entityModel : modelController.getAllModels(entityModel.getEntityClass(index)))
 			entities[count++] = entityModel.getEntity();
-		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, 300, true);
+		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, BASIC_WIDTH, true);
 		if(entityModel.getEntityValue(index) != null)
 			selectBox.setSelectedItem(entityModel.getEntityValue(index));
 		selectBox.setFont(VALUE_FONT);
@@ -134,7 +134,7 @@ public class FullEditPanel extends AlignPanel {
 		for(BasicEditPanel panel : basicPanels)
 			panel.save(modelController);
 		for(Integer index : entityBoxes.keySet() )
-			modelController.setEntityMember(entityModel.getEntity(), entityModel.getEntityName(index), ( (Entity)entityBoxes.get(index).getSelectedItem() ) );
+			modelController.setEntityField(entityModel.getEntity(), entityModel.getEntityName(index), ( (Entity)entityBoxes.get(index).getSelectedItem() ) );
 	}
 
 	@Override

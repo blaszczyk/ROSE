@@ -50,22 +50,22 @@ public class SQLCreator {
 		}
 	}
 	
-	public static String getManyToManyTableName( EntityField member  )
+	public static String getManyToManyTableName( EntityField field  )
 	{
 		String format = "%s_%s";
-		if( member.getName().compareTo(member.getCounterName()) < 0)
-			return String.format(format, member.getCapitalName(), member.getCounterCapitalName());
+		if( field.getName().compareTo(field.getCounterName()) < 0)
+			return String.format(format, field.getCapitalName(), field.getCounterCapitalName());
 		else
-			return String.format(format, member.getCounterCapitalName(), member.getCapitalName());
+			return String.format(format, field.getCounterCapitalName(), field.getCapitalName());
 			
 	}
 	
 	
-	private static void createManyToManyTable( EntityField member, Writer writer ) throws IOException
+	private static void createManyToManyTable( EntityField field, Writer writer ) throws IOException
 	{
-		if( member.getType() == RelationType.MANYTOMANY && ( member.getName().compareTo(member.getCounterName()) < 0 ) )
-			writer.write("create table " + getManyToManyTableName(member) + "\n(\n\t" + member.getName() + "_id int,\n\t" + 
-						member.getCounterName() + "_id int\n);\n\n"   );
+		if( field.getType() == RelationType.MANYTOMANY && ( field.getName().compareTo(field.getCounterName()) < 0 ) )
+			writer.write("create table " + getManyToManyTableName(field) + "\n(\n\t" + field.getName() + "_id int,\n\t" + 
+						field.getCounterName() + "_id int\n);\n\n"   );
 	}
 	
 	private static void createTable(Entity entity, MetaData metadata, DBType dbType, Writer writer) throws IOException

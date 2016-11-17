@@ -11,7 +11,7 @@ import javax.swing.table.TableModel;
 import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
-public class MemberTableModel implements TableModel, ThemeConstants {
+public class EntityTableModel implements TableModel, ThemeConstants {
 	
 	private enum ColType {
 		ICON,
@@ -59,7 +59,7 @@ public class MemberTableModel implements TableModel, ThemeConstants {
 	private final List<ColContent> colContents = new ArrayList<>();
 	
 	
-	public MemberTableModel(List<EntityModel> entityModels, int buttonCount)
+	public EntityTableModel(List<EntityModel> entityModels, int buttonCount)
 	{
 		this.entityModels = entityModels;
 		this.empty = entityModels.isEmpty();

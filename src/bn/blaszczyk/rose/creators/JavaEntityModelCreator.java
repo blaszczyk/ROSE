@@ -99,8 +99,6 @@ public class JavaEntityModelCreator {
 			count = 0;
 			for(EntityField entityField : entity.getEntityFields())
 				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityField.getType().name() + ";\n" );
-//			for(EnumMember enumMember : entity.getEnumMembers())
-//				writer.write("\t\tcase " + count++ + ":\n\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + RelationType.ENUM.name() + ";\n" );
 			writer.write("\t\t}\n\t\treturn null;\n\t}\n\n");
 
 			// public Class<?> getEntityClass( int index );	

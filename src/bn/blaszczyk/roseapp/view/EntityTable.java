@@ -15,7 +15,7 @@ import bn.blaszczyk.roseapp.model.*;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
-public class MemberTable extends JTable implements MyPanel, ThemeConstants {
+public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 
 	
 	public interface EntityAction
@@ -78,13 +78,13 @@ public class MemberTable extends JTable implements MyPanel, ThemeConstants {
 	};
 	
 	private EntityAction[] buttonActions;
-	private MemberTableModel tableModel;
+	private EntityTableModel tableModel;
 	
 	private int width = FULL_TABLE_WIDTH;
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public MemberTable(MemberTableModel tableModel, int maxWidth, int height )
+	public EntityTable(EntityTableModel tableModel, int maxWidth, int height )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;

@@ -21,27 +21,27 @@ public class HibernateController implements FullModelController {
 	}
 	
 	@Override
-	public void setMember(Entity entity, String name, Object value)
+	public void setField(Entity entity, String name, Object value)
 	{
 		changedEntitys.add(entity);
-		controller.setMember(entity, name, value);
+		controller.setField(entity, name, value);
 	}
 
 	@Override
-	public void setEntityMember(Entity entity, String name, Entity value)
+	public void setEntityField(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
 		if(value !=  null && !(value instanceof Enum))
 			changedEntitys.add(value);
-		controller.setEntityMember(entity, name, value);
+		controller.setEntityField(entity, name, value);
 	}
 	
 	@Override
-	public void addEntityMember(Entity entity, String name, Entity value)
+	public void addEntityField(Entity entity, String name, Entity value)
 	{
 		changedEntitys.add(entity);
 		changedEntitys.add(value);
-		controller.addEntityMember(entity, name, value);
+		controller.addEntityField(entity, name, value);
 	}
 	
 	@Override
@@ -87,20 +87,20 @@ public class HibernateController implements FullModelController {
 		Entity copy = createNew(entity.getClass().getSimpleName()), subCopy;
 		EntityModel entityModel = createModel(entity);
 		for(int i = 0; i < entityModel.getFieldCount(); i++)
-			setMember(copy, entityModel.getFieldName(i), entityModel.getFieldValue(i));
+			setField(copy, entityModel.getFieldName(i), entityModel.getFieldValue(i));
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 			switch(entityModel.getRelationType(i))
 			{
 			case ONETOONE:
 				subCopy = createCopy( (Entity) entityModel.getEntityValue(i) );
-				setEntityMember(copy, entityModel.getEntityName(i), subCopy );
+				setEntityField(copy, entityModel.getEntityName(i), subCopy );
 				break;
 			case ONETOMANY:
 				for( Object o :  ((Set<?>) entityModel.getEntityValue(i)).toArray())
-					addEntityMember(copy, entityModel.getEntityName(i), createCopy((Entity) o));
+					addEntityField(copy, entityModel.getEntityName(i), createCopy((Entity) o));
 				break;
 			case MANYTOONE:
-				setEntityMember(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityValue(i));
+				setEntityField(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityValue(i));
 				break;
 			case MANYTOMANY:
 				break;
@@ -159,7 +159,7 @@ public class HibernateController implements FullModelController {
 							continue;
 						for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
 							if(newEntity.getId() == oldEntity.getId())
-								setEntityMember(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
+								setEntityField(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
 					}
 				}
 			}

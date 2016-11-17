@@ -67,7 +67,7 @@ public class JavaModelCreator {
 			// id
 			writer.write("\n\tprivate int id = -1;\n");
 
-			// member variables
+			// primitive and enum fields
 			for(Field field : entity.getFields())
 				if( field instanceof PrimitiveField)
 				{
@@ -87,13 +87,13 @@ public class JavaModelCreator {
 					writer.write("\tprivate " + enumField.getEnumType().getSimpleClassName() + " " + enumField.getName() + " = " 
 							+ enumField.getEnumType().getSimpleClassName() + "." + enumField.getDefValue() + ";\n" );
 				}
-			// entitymember variables
-			for(EntityField entitymember : entity.getEntityFields())
+			// entity fields
+			for(EntityField entityfield : entity.getEntityFields())
 			{
-				if(entitymember.getType().isSecondMany())
-					writer.write("\n\tprivate java.util.Set<" + entitymember.getEntity().getSimpleClassName() + "> " + entitymember.getName() + "s = new java.util.TreeSet<>();");
+				if(entityfield.getType().isSecondMany())
+					writer.write("\n\tprivate java.util.Set<" + entityfield.getEntity().getSimpleClassName() + "> " + entityfield.getName() + "s = new java.util.TreeSet<>();");
 				else
-					writer.write("\n\tprivate " + entitymember.getEntity().getSimpleClassName() + " " + entitymember.getName() + ";");
+					writer.write("\n\tprivate " + entityfield.getEntity().getSimpleClassName() + " " + entityfield.getName() + ";");
 			}
 	
 			// default constructor
@@ -202,8 +202,6 @@ public class JavaModelCreator {
 					writer.write("\n\tpublic void " + getSetterName(entityField) + "( " + entityField.getEntity().getSimpleClassName() 
 							+ " " 	+ entityField.getName() + " )\n\t{\n\t\tthis." + entityField.getName() + " = " 
 							+ entityField.getName() + ";\n");
-//					if(entityMember.getType().isFirstMany())
-//						writer.write("\t\t" + entityMember.getName() + "." + getGetterName(entityMember.getCouterpart()) + "().add(this);\n");
 					writer.write("\t}\n\n" );
 				}
 			}

@@ -8,7 +8,7 @@ package bn.blaszczyk.rose;
 
 public class MetaDataParser
 {
-	public static void parseMember( bn.blaszczyk.rose.MetaData metaData, String name, String value ) throws java.text.ParseException
+	public static void parseField( bn.blaszczyk.rose.MetaData metaData, String name, String value ) throws java.text.ParseException
 	{
 		switch( name.toLowerCase() )
 		{
@@ -76,7 +76,7 @@ public class MetaDataParser
 			metaData.setEntitymodelfactoryclass( value );
 			break;
 		default:
-			System.out.println( "Unknown Member: " + name + " in MetaData");
+			System.out.println( "Unknown Field: " + name + " in MetaData");
 		}
 	}
 
