@@ -9,14 +9,14 @@ public class Rose {
 	
 	public static void main(String[] args)
 	{
-		String roseFile = "rose/maphyx.rose";
-		try
-		{
-			RoseParser.parse(roseFile);
-		}
-		catch (FileNotFoundException | ParseException  e)
-		{
-			e.printStackTrace();
-		}
+		for(String arg : args )
+			try
+			{
+				RoseParser.parse(arg);
+			}
+			catch (FileNotFoundException | ParseException  e)
+			{
+				e.printStackTrace();
+			}
 	}
 }

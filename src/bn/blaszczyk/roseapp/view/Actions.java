@@ -19,15 +19,15 @@ public class Actions implements ChangeListener{
 	
 	private MainFrame mainFrame;
 	
-	private Action actnStart;
-	private Action actnClose;
-	private Action actnCloseAll;
-	private Action actnEdit;
-	private Action actnSave;
-	private Action actnSaveAll;
-	private Action actnDelete;
-	private Action actnNew;
-	private Action actnCopy;
+	private final Action actnStart;
+	private final Action actnClose;
+	private final Action actnCloseAll;
+	private final Action actnEdit;
+	private final Action actnSave;
+	private final Action actnSaveAll;
+	private final Action actnDelete;
+	private final Action actnNew;
+	private final Action actnCopy;
 	
 	public Actions( MainFrame mainFrame, GUIController guiController)
 	{	

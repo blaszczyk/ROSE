@@ -1,0 +1,1 @@
+java -jar rose.jar %1

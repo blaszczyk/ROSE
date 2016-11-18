@@ -80,14 +80,12 @@ public class RoseParser {
 	private static void parseEntity(String sqlname, Scanner scanner ) throws ParseException
 	{
 		Entity entity = new Entity(sqlname,metadata.getModelpackage());
-		Entity subentity;
-		EnumType subenum;
 		String line, command;
-		String[] split;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
-			split = line.split("\\s+",2);
+			String[] split = line.split("\\s+",2);
 			command = split[0];
+			EnumType subenum;
 			if( (subenum = getEnumType(command)) != null )
 			{
 				if( split.length == 1) 
@@ -115,6 +113,7 @@ public class RoseParser {
 			else if( isRelationType(command) )
 			{
 				split = split[1].split("\\s+", 3);
+				Entity subentity;
 				if( (subentity = getEntityType(split[0])) != null )
 					if(split.length == 3)
 						entity.addEntityField(new EntityField(subentity, getRelationType(command), split[1],split[2]), true);	

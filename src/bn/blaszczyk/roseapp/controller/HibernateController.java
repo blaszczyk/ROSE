@@ -51,7 +51,7 @@ public class HibernateController implements FullModelController {
 		sesson.beginTransaction();
 		sesson.delete(entity);
 		sesson.getTransaction().commit();
-		sesson.close();			
+		sesson.close();		
 		deleteModel(entity);
 		controller.delete(entity);
 	}
