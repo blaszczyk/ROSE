@@ -8,9 +8,9 @@ import javax.swing.JScrollPane;
 import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.EntityTable;
-import bn.blaszczyk.roseapp.view.EntityTableModel;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
+import bn.blaszczyk.roseapp.view.tools.EntityTable;
+import bn.blaszczyk.roseapp.view.tools.EntityTableModel;
 
 @SuppressWarnings("serial")
 public class FullListPanel extends JPanel implements ThemeConstants, MyPanel {

@@ -15,6 +15,9 @@ public class IntegerInputPanel extends AbstractInputPanel<Integer> {
 	@Override
 	public Integer getValue()
 	{
+		String text = textField.getText();
+		if(text == null || text == "")
+			return 0;
 		return Integer.parseInt(textField.getText());
 	}
 	

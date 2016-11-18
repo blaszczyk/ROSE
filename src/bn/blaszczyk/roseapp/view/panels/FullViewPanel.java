@@ -13,8 +13,8 @@ import javax.swing.JScrollPane;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.EntityTable;
-import bn.blaszczyk.roseapp.view.EntityTableModel;
+import bn.blaszczyk.roseapp.view.tools.EntityTable;
+import bn.blaszczyk.roseapp.view.tools.EntityTableModel;
 
 @SuppressWarnings("serial")
 public class FullViewPanel extends AlignPanel {
@@ -27,7 +27,7 @@ public class FullViewPanel extends AlignPanel {
 		super( guiController);
 		this.entityModel = entityModel;
 		if(showTitle)
-			addTitle( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
+			setTitle( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
 		addBasicPanel(null, null, entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
@@ -37,17 +37,20 @@ public class FullViewPanel extends AlignPanel {
 			{
 			case MANYTOMANY:
 			case ONETOMANY:
-				addEntityTable(i);
+				if(!((Set<?>)entityModel.getEntityValue(i)).isEmpty())
+					addEntityTable(i);
 				break;
 			case MANYTOONE:
-				EntityModel subEntityModel = entityModel.createModel( (Entity) entityModel.getEntityValue(i) );
-				addBasicPanel( entityModel.getEntityName(i), createViewButton(i), subEntityModel );
+				if(entityModel.getEntityValue(i)!= null)
+					addBasicPanel( entityModel.getEntityName(i), createViewButton(i), entityModel.createModel( (Entity) entityModel.getEntityValue(i) ) );
 				break;
 			case ONETOONE:
-				addFullPanel( null, null, entityModel.createModel( (Entity) entityModel.getEntityValue(i) ) );
+				if(entityModel.getEntityValue(i)!= null)
+					addFullPanel( null, null, entityModel.createModel( (Entity) entityModel.getEntityValue(i) ) );
 				break;
 			}
 		}
+		realign();
 		
 	}
 

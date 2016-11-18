@@ -65,6 +65,7 @@ public interface ThemeConstants {
 	public static final int CELL_SPACING = 0;
 	
 	public static final int BUTTON_WIDTH = 24;
+	public static final int BUTTON_HEIGHT = 35;
 
 	public static final DateFormat  DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy");
 	public static final NumberFormat INT_FORMAT = NumberFormat.getIntegerInstance();
@@ -99,5 +100,14 @@ public interface ThemeConstants {
 	public static final Font START_BTN_FONT = new Font("Arial",Font.BOLD,48);
 	public static final int START_V_SPACING = 50;
 	public static final int START_H_SPACING = 700;
+
+	
+	// SelectDialog
+	
+	public static final int SEL_DIAL_WIDTH = 700;
+	public static final int SEL_DIAL_HEIGTH = 250;
+	
+	public static final int SEL_DIAL_BOX_WIDTH = 650;
+	public static final int SEL_DIAL_BOX_HEIGHT = LBL_HEIGHT;
 	
 }

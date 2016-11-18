@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.tools;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
 public class EntityTableModel implements TableModel, ThemeConstants {
@@ -117,6 +118,9 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
+//		Object o = first.getEntityValue(colContents.get(columnIndex).getIndex());
+//		System.err.println(String.valueOf(o));
+
 		switch (colContents.get(columnIndex).getColType())
 		{
 		case ICON:
@@ -124,7 +128,7 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 		case MEMBER:
 			return first.getFieldValue(colContents.get(columnIndex).getIndex()).getClass();
 		case ENTITY:
-			return first.getEntityValue(colContents.get(columnIndex).getIndex()).getClass();
+			return first.getEntityClass(colContents.get(columnIndex).getIndex());
 		default:
 			return null;
 		}

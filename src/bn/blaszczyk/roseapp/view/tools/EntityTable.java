@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.view;
+package bn.blaszczyk.roseapp.view.tools;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
@@ -48,8 +49,10 @@ public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 				text = INT_FORMAT.format(value);
 			else if(value instanceof BigDecimal)
 				text = DOUBLE_FORMAT.format(value);
-			else 
-				text = value.toString();
+			else  if( value == null)
+				text = "";
+			else
+				text = String.valueOf( value );
 			
 			JLabel c = new JLabel( text );
 			c.setOpaque(true);

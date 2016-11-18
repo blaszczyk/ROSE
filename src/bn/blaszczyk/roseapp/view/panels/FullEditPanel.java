@@ -17,9 +17,9 @@ import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.view.EntityTable;
-import bn.blaszczyk.roseapp.view.EntityTableModel;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
+import bn.blaszczyk.roseapp.view.tools.EntityTable;
+import bn.blaszczyk.roseapp.view.tools.EntityTableModel;
 
 @SuppressWarnings("serial")
 public class FullEditPanel extends AlignPanel {
@@ -43,7 +43,7 @@ public class FullEditPanel extends AlignPanel {
 		this.modelController = modelController;
 		this.entityModel = entityModel;
 		if(showTitle)
-			addTitle( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
+			setTitle( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
 		basicPanel = addBasicPanel(entityModel);
 		for(int i = 0; i < entityModel.getEntityCount(); i++)
 		{
@@ -65,6 +65,7 @@ public class FullEditPanel extends AlignPanel {
 				break;
 			}	
 		}		
+		realign();
 	}
 	
 

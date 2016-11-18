@@ -216,7 +216,7 @@ public class JavaModelCreator {
 			for(Field field : entity.getFields() )
 				toString = toString.replaceAll("\\%" + field.getName(), "\" + " + field.getName() + " + \"");	
 			for(EntityField entityField : entity.getEntityFields() )
-				toString = toString.replaceAll("\\%" + entityField.getName(), "\" + " + entityField.getName() + ".toString() + \"");			
+				toString = toString.replaceAll("\\%" + entityField.getName(), "\" + String.valueOf(" + entityField.getName() + ") + \"");			
 			toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
 			writer.write("\t@Override\n\tpublic String toString()\n\t{\n\t\treturn " + toString + ";\n\t}\n\n");
 			
