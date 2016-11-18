@@ -1,1 +1,0 @@
-java -jar rose.jar test.rose

@@ -72,7 +72,7 @@ public abstract class AlignPanel extends JPanel implements MyPanel, ThemeConstan
 	protected void addPanel( String title, JButton button,  JComponent component, int width, int height )
 	{
 		subPanels.add(new SubPanel(component, width, height, button, title));	
-	}
+	}//
 	
 	private void drawSubPanel(SubPanel panel)
 	{
