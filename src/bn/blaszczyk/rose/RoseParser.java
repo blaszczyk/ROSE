@@ -50,29 +50,13 @@ public class RoseParser {
 			break;
 		case "javamodels":
 			for(EnumType enumType : enums)
-				JavaModelCreator.create(enumType, metadata);
-			for(Entity entity : entities)
-				JavaModelCreator.create(entity, metadata);
-			break;
-		case "javarwmodels":
-			for(EnumType enumType : enums)
 				JavaEnumCreator.create(enumType, metadata);
 			for(Entity entity : entities)
-				JavaRWModelCreator.create(entity, metadata);
+				JavaModelCreator.create(entity, metadata);
 			break;
 		case "javaparser":
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
-			break;
-		case "javaentitymodels":
-			for(Entity entity : entities)
-				JavaEntityModelCreator.createModel(entity, metadata);
-			JavaEntityModelCreator.createFactory(entities, metadata);
-			break;
-		case "javacontroller":
-			for(Entity entity : entities)
-				JavaControllerCreator.create(entity, metadata);
-			JavaControllerCreator.create(entities, metadata);
 			break;
 		case "javamain":
 			JavaMainCreator.create(entities, metadata);

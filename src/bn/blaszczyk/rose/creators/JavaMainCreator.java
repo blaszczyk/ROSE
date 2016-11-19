@@ -10,7 +10,7 @@ import bn.blaszczyk.rose.model.Entity;
 
 public class JavaMainCreator {
 	
-	private static final String CONTROLLER_PACKAGE = "bn.blaszczyk.roseapp.controller.";
+	private static final String CONTROLLER_PACKAGE = "bn.blaszczyk.roseapp.controller";
 	
 	public static void create(List<Entity> entities, MetaData metadata)
 	{
@@ -27,13 +27,16 @@ public class JavaMainCreator {
 			// package declaration
 			writer.write("package " + metadata.getMainpackage() + ";\n\n");
 			
+			// imports
+			writer.write("import " + CONTROLLER_PACKAGE + ".*;\n"
+					+ "import " + metadata.getModelpackage() + ".*;\n");
+			
 			// class declaration
 			writer.write("\npublic class " + classname + "\n{\n\n");
 			
 			// main
 			writer.write("\tpublic static void main(String[] args)\n\t{\n"
-					+ "\t\t" + CONTROLLER_PACKAGE + "BasicModelController basicModelController = new " + metadata.getControllerpackage() + "." + metadata.getControllerclass() + "();\n"
-					+ "\t\t" + CONTROLLER_PACKAGE + "FullModelController fullModelController = new " + CONTROLLER_PACKAGE + "HibernateController(basicModelController);\n");
+					+ "\t\t" + "FullModelController fullModelController = new " + "HibernateController();\n");
 			boolean first = true;
 			writer.write("\t\tfullModelController.loadEntities(new Class<?>[]{");
 			for(Entity entity : entities)
@@ -42,10 +45,10 @@ public class JavaMainCreator {
 					first = false;
 				else
 					writer.write(", ");
-				writer.write( entity.getClassName() + ".class");
+				writer.write( entity.getSimpleClassName() + ".class");
 			}
 			writer.write("});\n");
-			writer.write("\t\t" + CONTROLLER_PACKAGE + "GUIController guiController = new " + CONTROLLER_PACKAGE + "GUIController(fullModelController);\n");
+			writer.write("\t\t" + "GUIController guiController = new " + "GUIController(fullModelController);\n");
 			writer.write( "\t\tguiController.createMainFrame( new Class<?>[]{");
 			first = true;
 			for(Entity entity : entities)
@@ -54,7 +57,7 @@ public class JavaMainCreator {
 					first = false;
 				else
 					writer.write(", ");
-				writer.write( entity.getClassName() + ".class");
+				writer.write( entity.getSimpleClassName() + ".class");
 			}
 			writer.write("}, \"" + metadata.getMainname() + "\" );\n");
 			writer.write("\t}\n");
