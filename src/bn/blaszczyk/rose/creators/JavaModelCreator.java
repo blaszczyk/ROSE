@@ -118,7 +118,7 @@ public class JavaModelCreator {
 		for(EntityField entityfield : entity.getEntityFields())
 		{
 			if(entityfield.getType().isSecondMany())
-				writer.write("\tprivate java.util.Set<" + entityfield.getEntity().getSimpleClassName() + "> " + entityfield.getName() + "s;\n");
+				writer.write("\tprivate java.util.Set<" + entityfield.getEntity().getSimpleClassName() + "> " + entityfield.getName() + "s = new java.util.TreeSet<>();\n");
 			else
 				writer.write("\tprivate " + entityfield.getEntity().getSimpleClassName() + " " + entityfield.getName() + ";\n");
 		}
