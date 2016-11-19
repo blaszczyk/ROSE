@@ -28,7 +28,8 @@ public class JavaEnumCreator {
 			writer.write("package " + metadata.getModelpackage() + ";\n\n");
 			
 			// class declaration
-			writer.write("\npublic enum " + enumType.getSimpleClassName() + "\n{");
+			writer.write("\npublic enum " + enumType.getSimpleClassName() + "\n"
+					+ "{");
 			
 			// options variables
 			boolean first = true;
@@ -41,7 +42,8 @@ public class JavaEnumCreator {
 				writer.write("\n\t" + option  );
 			}
 			// fin
-			writer.write(";\n}\n");
+			writer.write(";\n"
+					+ "}\n");
 			System.out.println( "File created: " + fullpath);
 		}
 		catch (IOException e)

@@ -32,17 +32,21 @@ public class JavaParserCreator {
 			writer.write("package " + metadata.getParserpackage() + ";\n\n");
 			
 			// class declaration
-			writer.write("\npublic class " + classname + "\n{\n");
+			writer.write("public class " + classname + "\n"
+					+ "{\n");
 			
 			// parseField
 			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
-						+ ", String name, String value ) throws java.text.ParseException\n\t{\n" );
-			writer.write("\t\tswitch( name.toLowerCase() )\n\t\t{\n");
+						+ ", String name, String value ) throws java.text.ParseException\n"
+						+ "\t{\n" );
+			writer.write("\t\tswitch( name.toLowerCase() )\n"
+					+ "\t\t{\n");
 			for(Field field : entity.getFields())
 				if( field instanceof PrimitiveField)
 				{
 					PrimitiveField primitiveField = (PrimitiveField) field;
-					writer.write("\t\tcase \"" + primitiveField.getName().toLowerCase() + "\":\n\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
+					writer.write("\t\tcase \"" + primitiveField.getName().toLowerCase() + "\":\n"
+							+ "\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
 					switch(primitiveField.getType())
 					{
 					case VARCHAR:
@@ -63,12 +67,11 @@ public class JavaParserCreator {
 					}	
 					writer.write( " );\n\t\t\tbreak;\n" );
 				}		
-			writer.write("\t\tdefault:\n\t\t\tSystem.out.println( \"Unknown Primitive Field: \" + name + \" in " + entity.getSimpleClassName() + "\");\n" );
-			writer.write("\t\t}\n\t}\n\n");
-
-			
-			
-			writer.write("}\n");
+			writer.write("\t\tdefault:\n"
+					+ "\t\t\tSystem.out.println( \"Unknown Primitive Field: \" + name + \" in " + entity.getSimpleClassName() + "\");\n"
+					+ "\t\t}\n"
+					+ "\t}\n"
+					+ "}\n");
 			System.out.println( "File created: " + fullpath);
 		}
 		catch (IOException e)
