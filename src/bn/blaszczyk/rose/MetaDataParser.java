@@ -57,26 +57,8 @@ public class MetaDataParser
 		case "parserformat":
 			metaData.setParserformat( value );
 			break;
-		case "controllerpackage":
-			metaData.setControllerpackage( value );
-			break;
-		case "controllerformat":
-			metaData.setControllerformat( value );
-			break;
-		case "controllerclass":
-			metaData.setControllerclass( value );
-			break;
-		case "entitymodelpackage":
-			metaData.setEntitymodelpackage( value );
-			break;
-		case "entitymodelformat":
-			metaData.setEntitymodelformat( value );
-			break;
-		case "entitymodelfactoryclass":
-			metaData.setEntitymodelfactoryclass( value );
-			break;
 		default:
-			System.out.println( "Unknown Field: " + name + " in MetaData");
+			System.out.println( "Unknown Primitive Field: " + name + " in MetaData");
 		}
 	}
 

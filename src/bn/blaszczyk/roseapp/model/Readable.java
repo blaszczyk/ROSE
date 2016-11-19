@@ -1,11 +1,9 @@
 package bn.blaszczyk.roseapp.model;
 
 
-public interface EntityModel {
+public interface Readable extends Entity{
 	
-	public String getName();
-	public int getId();
-	public Entity getEntity();
+	public String getEntityName();
 	
 	public int getFieldCount();
 	public String getFieldName( int index );
@@ -21,8 +19,5 @@ public interface EntityModel {
 
 	public int getLength1( int index );	
 	public int getLength2( int index );	
-	
-	// to create instances in Factory
-	public EntityModel createModel( Entity entity );
 
 }

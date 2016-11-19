@@ -8,11 +8,11 @@ import javax.swing.Icon;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
-public class EntityTableModel implements TableModel, ThemeConstants {
+public class EntityTableModel <T extends Readable> implements TableModel, ThemeConstants {
 	
 	private enum ColType {
 		ICON,
@@ -53,22 +53,22 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 		}
 	}
 	
-	private final List<EntityModel> entityModels;
+	private final List<T> entites;
 	private boolean empty;
-	private EntityModel first;
+	private Readable first;
 	private final int buttonCount;
 	private final List<ColContent> colContents = new ArrayList<>();
 	
 	
-	public EntityTableModel(List<EntityModel> entityModels, int buttonCount)
+	public EntityTableModel(List<T> entities, int buttonCount)
 	{
-		this.entityModels = entityModels;
-		this.empty = entityModels.isEmpty();
+		this.entites = entities;
+		this.empty = entities.isEmpty();
 		for( int i = 0; i < buttonCount; i++)
 			colContents.add(new ColContent() );
 		if(!empty)
 		{
-			first = entityModels.get(0);
+			first = entities.get(0);
 			for( String col : first.getTableCols().replaceAll(" ", "").split(";") )
 				if(col.substring(0, 1).equalsIgnoreCase("m") )
 					colContents.add(new ColContent(ColType.MEMBER, Integer.parseInt(col.substring(1))));
@@ -79,9 +79,9 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 		this.buttonCount = buttonCount > 0 ? buttonCount : 0;
 	}
 
-	public EntityModel getEntityModel(int row)
+	public T getEntity(int row)
 	{
-		return entityModels.get(row);
+		return entites.get(row);
 	}
 	
 	public void setButtonIcon(int columnIndex, Icon icon)
@@ -92,7 +92,7 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 	@Override
 	public int getRowCount()
 	{
-		return entityModels.size();
+		return entites.size();
 	}
 	
 	@Override
@@ -148,12 +148,12 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 		case ICON:
 			return colContents.get(columnIndex).getIcon();
 		case MEMBER:
-			Object o =  entityModels.get(rowIndex).getFieldValue(colContents.get(columnIndex).getIndex());
+			Object o =  entites.get(rowIndex).getFieldValue(colContents.get(columnIndex).getIndex());
 			if( o instanceof String && FileInputPanel.isFileName(o.toString()))
 				return o.toString().substring( o.toString().lastIndexOf("/")+1);
 			return o;
 		case ENTITY:
-			return entityModels.get(rowIndex).getEntityValue(colContents.get(columnIndex).getIndex());
+			return entites.get(rowIndex).getEntityValue(colContents.get(columnIndex).getIndex());
 		default:
 			return null;
 		}

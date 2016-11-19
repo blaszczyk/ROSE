@@ -10,7 +10,6 @@ lib/
 #
 # Test Files
 #
-rose/
 *.rose
 !metadata.rose
 
@@ -22,6 +21,7 @@ rose/
 src/foo/
 src/caro/
 src/galabu/
+src/test
 sql/
 
 #

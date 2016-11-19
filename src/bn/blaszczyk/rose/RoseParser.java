@@ -26,7 +26,7 @@ public class RoseParser {
 		String[] split;
 		while(scanner.hasNextLine())
 		{
-			split = scanner.nextLine().trim().split("\\s+");
+			split = scanner.nextLine().trim().split("\\s+",3);
 			if(split.length > 2 && split[0].equalsIgnoreCase("set") )
 				MetaDataParser.parseField(metadata, split[1], split[2]);
 			else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
@@ -50,23 +50,13 @@ public class RoseParser {
 			break;
 		case "javamodels":
 			for(EnumType enumType : enums)
-				JavaModelCreator.create(enumType, metadata);
+				JavaEnumCreator.create(enumType, metadata);
 			for(Entity entity : entities)
 				JavaModelCreator.create(entity, metadata);
 			break;
 		case "javaparser":
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
-			break;
-		case "javaentitymodels":
-			for(Entity entity : entities)
-				JavaEntityModelCreator.createModel(entity, metadata);
-			JavaEntityModelCreator.createFactory(entities, metadata);
-			break;
-		case "javacontroller":
-			for(Entity entity : entities)
-				JavaControllerCreator.create(entity, metadata);
-			JavaControllerCreator.create(entities, metadata);
 			break;
 		case "javamain":
 			JavaMainCreator.create(entities, metadata);
@@ -77,14 +67,21 @@ public class RoseParser {
 		}
 	}
 
-	private static void parseEntity(String sqlname, Scanner scanner ) throws ParseException
+	private static void parseEntity(String args, Scanner scanner ) throws ParseException
 	{
-		Entity entity = new Entity(sqlname,metadata.getModelpackage());
-		String line, command;
+		String[] split = args.split(":");
+		ImplInterface implInterface = ImplInterface.Entity;
+		if(split.length > 1)
+			if(split[1].toLowerCase().contains("w"))
+				implInterface = ImplInterface.Writable;
+			else if(split[1].toLowerCase().contains("r"))
+				implInterface = ImplInterface.Readable;
+		Entity entity = new Entity(split[0].trim(),metadata.getModelpackage(), implInterface);
+		String line;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
-			String[] split = line.split("\\s+",2);
-			command = split[0];
+			split = line.split("\\s+",2);
+			String command = split[0];
 			EnumType subenum;
 			if( (subenum = getEnumType(command)) != null )
 			{

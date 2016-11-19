@@ -11,7 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.GUIController;
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.Writable;
 import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
@@ -129,7 +129,7 @@ public class Actions implements ChangeListener{
 				actnDelete.setEnabled(false);
 				actnEdit.setEnabled(false);
 			}
-			else if( o instanceof EntityModel )
+			else if( o instanceof Writable )
 			{
 				actnNew.setEnabled(true);
 				actnCopy.setEnabled(true);
