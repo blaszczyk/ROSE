@@ -36,31 +36,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 	}
 
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String mainpackage, String mainname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerformat, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
-	{
-		this.srcpath = srcpath;
-		this.sqlpath = sqlpath;
-		this.usingForeignKeys = usingForeignKeys;
-		this.dbtype = dbtype;
-		this.dbuser = dbuser;
-		this.dbpassword = dbpassword;
-		this.dbserver = dbserver;
-		this.dbport = dbport;
-		this.dbname = dbname;
-		this.mainpackage = mainpackage;
-		this.mainname = mainname;
-		this.modelpackage = modelpackage;
-		this.usingAnnotations = usingAnnotations;
-		this.parserpackage = parserpackage;
-		this.parserformat = parserformat;
-		this.controllerpackage = controllerpackage;
-		this.controllerformat = controllerformat;
-		this.controllerclass = controllerclass;
-		this.entitymodelpackage = entitymodelpackage;
-		this.entitymodelformat = entitymodelformat;
-		this.entitymodelfactoryclass = entitymodelfactoryclass;
-	}
-
 
 	@Override
 	public Integer getId()

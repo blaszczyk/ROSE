@@ -76,7 +76,7 @@ public class MetaDataParser
 			metaData.setEntitymodelfactoryclass( value );
 			break;
 		default:
-			System.out.println( "Unknown Field: " + name + " in MetaData");
+			System.out.println( "Unknown Primitive Field: " + name + " in MetaData");
 		}
 	}
 
