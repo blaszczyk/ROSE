@@ -3,12 +3,12 @@ rosesourcecode = { rosecommand , "\n" }
 rosecommand =  metadata
 			| enumdef
 			| entitydef
-			| createoperation
 			| "link"
+			| createoperation
 
 			
 			
-metadata = "set " , stringmetadata | boolmetadata
+metadata = "set " , ( stringmetadata | boolmetadata )
 
 stringmetadata = stringmetadataproperty , stringvalue
 
@@ -27,12 +27,12 @@ createoperation = "create " , createoption
 createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
 
 
-enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum\n"
+enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum"
 
 
-entitydef = "begin entity " , identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity\n"
+entitydef = "begin entity " , identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity"
 
-interfacetype = "R" | "r" | "W" | "w"
+interfacetype = "r" | "w"
 
 fielddef = primitivefielddef 
 		| enumfielddef 
@@ -43,7 +43,7 @@ primitivefielddef = primitivetype ,  identifier , { defvalue }
 
 primitivetype = "varchar(" , integer , ") " 
 			| "char(" , integer , ") "
-			| "numeric(" , integer "," , integer , ") "
+			| "numeric(" , integer , "," , integer , ") "
 			| "int " 
 			| "date " 
 			| "boolean "
@@ -60,8 +60,8 @@ tostring = "tostring " , { stringvalue | "%" , identifier }
 
 integer = an integer
 
-stringvalue = a String
+stringvalue = a string without newline
 
-identifier = a String without whitespaces followed by a whitespace
+identifier = a string, starting with a letter, no inner whitespace, whitespace at the end
 
-defvalue = corresponding default value
+defvalue = corresponding default value, e.g. 123 or "string"
