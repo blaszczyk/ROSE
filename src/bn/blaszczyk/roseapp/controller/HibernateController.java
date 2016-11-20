@@ -5,8 +5,8 @@ import java.util.*;
 import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
 
-import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.Writable;
 
 public class HibernateController implements FullModelController {
 
@@ -48,9 +48,9 @@ public class HibernateController implements FullModelController {
 		sesson.getTransaction().commit();
 		sesson.close();		
 		entityLists.get(entity.getClass()).remove(entity);
-		for(int i = 0; i < entity.getEntityCount(); i++)
-			if(entity.getRelationType(i).equals(RelationType.ONETOONE) && entity.getEntityValue(i) instanceof Writable)
-				delete((Writable) entity.getEntityValue(i));
+//		for(int i = 0; i < entity.getEntityCount(); i++)
+//			if(entity.getRelationType(i).equals(RelationType.ONETOONE) && entity.getEntityValue(i) instanceof Writable)
+//				delete((Writable) entity.getEntityValue(i));
 	}
 	
 
@@ -62,6 +62,7 @@ public class HibernateController implements FullModelController {
 		{
 			entity = type.newInstance();
 			changedEntitys.add(entity);
+			entityLists.get(type).add(entity);
 			return entity;
 		}
 		catch (Exception e)
@@ -75,15 +76,15 @@ public class HibernateController implements FullModelController {
 	@Override
 	public Writable createCopy(Writable entity)
 	{
-		Writable copy = createNew((Class<Writable>) entity.getClass()), subCopy;
+		Writable copy = createNew((Class<Writable>) entity.getClass());
 		for(int i = 0; i < copy.getFieldCount(); i++)
 			copy.setField( i, copy.getFieldValue(i));
 		for(int i = 0; i < copy.getEntityCount(); i++)
 			switch(copy.getRelationType(i))
 			{
 			case ONETOONE:
-				subCopy = createCopy( (Writable) copy.getEntityValue(i) );
-				copy.setEntity( i, subCopy );
+//				Writable subCopy = createCopy( (Writable) copy.getEntityValue(i) );
+//				copy.setEntity( i, subCopy );
 				break;
 			case ONETOMANY:
 				for( Object o :  ((Set<?>) copy.getEntityValue(i)).toArray())
@@ -103,7 +104,7 @@ public class HibernateController implements FullModelController {
 	{
 		Session session = sessionFactory.openSession();
 		Transaction transaction = session.beginTransaction();
-		for(Entity entity : changedEntitys)
+		for(Writable entity : changedEntitys)
 		{
 			if(entity.getId() < 0)
 			{
@@ -139,9 +140,9 @@ public class HibernateController implements FullModelController {
 			{
 				for(int i = 0; i < entity.getEntityCount(); i++)
 				{
-					if(entity.getRelationType(i) == RelationType.ONETOONE || entity.getRelationType(i) == RelationType.MANYTOONE)
+					if(!entity.getRelationType(i).isSecondMany())
 					{
-						Entity oldEntity = (Entity) entity.getEntityValue(i);
+						Readable oldEntity = (Readable) entity.getEntityValue(i);
 						if(oldEntity == null)
 							continue;
 						int nIndex = entityLists.get(oldEntity.getClass()).indexOf(oldEntity);
@@ -165,6 +166,8 @@ public class HibernateController implements FullModelController {
 	@Override
 	public List<Readable> getAllEntites(Class<?> type)
 	{
+		if(!entityLists.containsKey(type))
+			entityLists.put(type, new ArrayList<>());
 		return entityLists.get(type);
 	}
 		

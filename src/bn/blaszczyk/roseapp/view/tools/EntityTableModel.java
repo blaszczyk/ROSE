@@ -7,9 +7,9 @@ import javax.swing.Icon;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.config.ViewConfig;
-import bn.blaszczyk.roseapp.model.Readable;
-import bn.blaszczyk.roseapp.model.Writable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 public class EntityTableModel implements TableModel, ThemeConstants {

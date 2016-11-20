@@ -9,7 +9,7 @@ import java.util.Date;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 

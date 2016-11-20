@@ -2,8 +2,8 @@ package bn.blaszczyk.roseapp.controller;
 
 import java.util.List;
 
-import bn.blaszczyk.roseapp.model.Readable;
-import bn.blaszczyk.roseapp.model.Writable;
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.Writable;
 
 public interface FullModelController {
 

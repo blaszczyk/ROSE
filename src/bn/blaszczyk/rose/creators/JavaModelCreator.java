@@ -64,7 +64,7 @@ public class JavaModelCreator {
 				writeWritableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
 			case Readable:
 				writeReadableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
-			case Entity:
+			case Identifyable:
 			}
 			
 			writer.write("}\n");
@@ -85,7 +85,7 @@ public class JavaModelCreator {
 	
 	private static void writeClassDeclaration( Entity entity, Writer writer) throws IOException
 	{
-		writer.write("public class " + entity.getSimpleClassName() + " implements bn.blaszczyk.roseapp.model." 
+		writer.write("public class " + entity.getSimpleClassName() + " implements bn.blaszczyk.rose.model." 
 					+ entity.getImplInterface() + ", Comparable<" + entity.getSimpleClassName() + ">\n");
 	}
 	
@@ -215,20 +215,22 @@ public class JavaModelCreator {
 		switch (entityField.getType())
 		{
 		case ONETOONE:
-			writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL) \n"
+			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
+				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );
+			else
+				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");	
 			break;
 		case ONETOMANY:
-			writer.write("\t@OneToMany( fetch=FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL, "
-					+ "mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
+			writer.write("\t@OneToMany( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
 			break;
 		case MANYTOONE:
-			writer.write("\t@ManyToOne( fetch=FetchType." + FETCH_TYPE + ",  cascade = CascadeType.ALL) \n"
+			writer.write("\t@ManyToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );						
 			break;
 		case MANYTOMANY:
 			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
-				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL )\n"
+				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + " )\n"
 					+ "\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\", "
 					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
 					+ "\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\n");

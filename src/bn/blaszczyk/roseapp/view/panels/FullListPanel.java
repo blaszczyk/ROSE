@@ -3,9 +3,9 @@ package bn.blaszczyk.roseapp.view.panels;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.controller.GUIController;
-import bn.blaszczyk.roseapp.model.*;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.tools.EntityTableBuilder;
 

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
 import bn.blaszczyk.roseapp.view.tools.ColumnContent;
 
 public class ViewConfig {
@@ -53,7 +53,6 @@ public class ViewConfig {
 	
 	private static String tagEntityName(final Class<?> type, final String ccString)
 	{
-		System.err.printf("tagging %20s using %s\n",ccString, type.getSimpleName());
 		String[] split = ccString.split("\\.|\\,", 2 );
 		try
 		{

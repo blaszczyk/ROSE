@@ -9,9 +9,9 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.RelationType;
 import bn.blaszczyk.roseapp.controller.GUIController;
-import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.tools.EntityTableBuilder;
 
 @SuppressWarnings("serial")
@@ -19,7 +19,6 @@ public class FullViewPanel extends AlignPanel {
 	
 	private Readable entity;
 
-	
 	public FullViewPanel( Readable entity, GUIController guiController, boolean showTitle )
 	{
 		super( guiController);
@@ -49,7 +48,6 @@ public class FullViewPanel extends AlignPanel {
 			}
 		}
 		realign();
-		
 	}
 
 	private JButton createViewButton( int index )

@@ -1,10 +1,9 @@
 package bn.blaszczyk.roseapp.controller;
 
 import java.awt.Component;
-import java.util.Set;
 
-import bn.blaszczyk.roseapp.model.Writable;
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.view.*;
 import bn.blaszczyk.roseapp.view.panels.*;
 
@@ -18,10 +17,15 @@ public class GUIController {
 	{
 		this.modelController = modelController;
 	}
-	
+
 	public void editCurrent()
 	{
 		openEntityTab( ((Readable) ((MyPanel)mainFrame.getTabbedPane().getSelectedComponent()).getShownObject()), true );
+	}
+	
+	public void viewCurrent()
+	{
+		openEntityTab( ((Readable) ((MyPanel)mainFrame.getTabbedPane().getSelectedComponent()).getShownObject()), false );
 	}
 	
 	public void createMainFrame(Class<?>[] types, String title)
@@ -170,9 +174,9 @@ public class GUIController {
 			case MANYTOONE:
 				break;
 			case ONETOMANY:
-				Set<?> set = (Set<?>) entity.getEntityValue(i);
-				for(Object o : set.toArray())
-					delete((Writable) o);
+//				Set<?> set = (Set<?>) entity.getEntityValue(i);
+//				for(Object o : set.toArray())
+//					delete((Writable) o);
 				break;
 			case ONETOONE:
 //				delete((Writable) entity.getEntityValue(i));

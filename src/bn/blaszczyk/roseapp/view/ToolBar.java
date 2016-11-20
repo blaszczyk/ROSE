@@ -20,6 +20,7 @@ public class ToolBar extends JPanel implements ThemeConstants {
 		addButton("Start", "start.png", actions.getActnStart());
 		addButton("New", "new.png", actions.getActnNew());
 		addButton("Edit", "edit.png", actions.getActnEdit() );
+		addButton("View", "view.png", actions.getActnView() );
 		addButton("Save", "save.png", actions.getActnSave());
 		addButton("Save All", "saveall.png", actions.getActnSaveAll());
 		addButton("Copy", "copy.png", actions.getActnCopy());

@@ -1,7 +1,5 @@
 package bn.blaszczyk.rose.model;
 
-import bn.blaszczyk.roseapp.model.RelationType;
-
 public class EntityField implements Field{
 	
 	private Entity entity;

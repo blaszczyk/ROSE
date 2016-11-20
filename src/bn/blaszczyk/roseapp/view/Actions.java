@@ -1,49 +1,54 @@
 package bn.blaszczyk.roseapp.view;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.controller.GUIController;
-import bn.blaszczyk.roseapp.model.Writable;
+import bn.blaszczyk.roseapp.view.panels.FullEditPanel;
 import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 public class Actions implements ChangeListener{
 	
-	private MainFrame mainFrame;
+	private final MainFrame mainFrame;
 	
 	private final Action actnStart;
 	private final Action actnClose;
 	private final Action actnCloseAll;
 	private final Action actnEdit;
+	private final Action actnView;
 	private final Action actnSave;
 	private final Action actnSaveAll;
 	private final Action actnDelete;
 	private final Action actnNew;
 	private final Action actnCopy;
 	
+	private final Map<Action, EnabledChecker> checkers = new HashMap<>();
+	
 	public Actions( MainFrame mainFrame, GUIController guiController)
 	{	
 		this.mainFrame = mainFrame;
-		actnStart = createAction( e -> guiController.openStartTab() );
-		actnClose = createAction( e -> guiController.closeCurrent() );
-		actnCloseAll = createAction( e -> guiController.closeAll() );
-		actnEdit = createAction( e -> guiController.editCurrent() );
-		actnSave = createAction( e -> guiController.saveCurrent() );
-		actnSaveAll = createAction( e -> guiController.saveAll() );
-		actnCopy = createAction( e -> guiController.copyCurrent() );
-		actnDelete = createAction( e -> guiController.deleteCurrent() );
-		actnNew = createAction( e -> guiController.openNew(  ) );
+		actnStart = createAction( e -> guiController.openStartTab(), p -> true );
+		actnClose = createAction( e -> guiController.closeCurrent(), p -> true );
+		actnCloseAll = createAction( e -> guiController.closeAll(), p -> true );
+		actnEdit = createAction( e -> guiController.editCurrent(), p -> p instanceof FullViewPanel );
+		actnView = createAction( e -> guiController.viewCurrent(), p -> p instanceof FullEditPanel );
+		actnSave = createAction( e -> guiController.saveCurrent(), p -> p instanceof FullEditPanel && p.hasChanged() );
+		actnSaveAll = createAction( e -> guiController.saveAll(), p -> mainFrame.hasChanged() );
+		actnCopy = createAction( e -> guiController.copyCurrent(), p -> false );
+		actnDelete = createAction( e -> guiController.deleteCurrent(), p -> false );
+		actnNew = createAction( e -> guiController.openNew( ), p -> p.getShownObject() instanceof Writable || p.getShownObject() instanceof Class<?> );
 	}
 
-	private Action createAction(ActionListener l)
+	private Action createAction(ActionListener l, EnabledChecker c)
 	{
 		@SuppressWarnings("serial")
 		Action action = new AbstractAction() {
@@ -53,6 +58,7 @@ public class Actions implements ChangeListener{
 				l.actionPerformed(e);
 			}
 		};
+		checkers.put(action, c);
 		return action;
 	}
 
@@ -69,6 +75,11 @@ public class Actions implements ChangeListener{
 	public Action getActnEdit()
 	{
 		return actnEdit;
+	}
+
+	public Action getActnView()
+	{
+		return actnView;
 	}
 
 	public Action getActnSave()
@@ -104,48 +115,19 @@ public class Actions implements ChangeListener{
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
-		JTabbedPane tabbedPane = mainFrame.getTabbedPane();
-		
-		actnSaveAll.setEnabled(false);
-		for(Component c : tabbedPane.getComponents())
-			if( c instanceof MyPanel)
-			{
-				MyPanel panel = (MyPanel) c;
-				if(panel.hasChanged())
-					actnSaveAll.setEnabled(true);
-			}
-		
-		Component c = tabbedPane.getSelectedComponent();
-		actnClose.setEnabled( c instanceof MyPanel );
-		if( c instanceof MyPanel)
+		if( mainFrame.getTabbedPane().getSelectedComponent() instanceof MyPanel)
 		{
-			MyPanel panel = (MyPanel) c;
-			Object o = panel.getShownObject();
-			if( o instanceof Class<?>)
-			{
-				actnNew.setEnabled(true);
-				actnSave.setEnabled(false);
-				actnCopy.setEnabled(false);
-				actnDelete.setEnabled(false);
-				actnEdit.setEnabled(false);
-			}
-			else if( o instanceof Writable )
-			{
-				actnNew.setEnabled(true);
-				actnCopy.setEnabled(true);
-				actnDelete.setEnabled(true);
-				actnEdit.setEnabled(panel instanceof FullViewPanel );
-				actnSave.setEnabled(panel.hasChanged());
-			}
+			MyPanel panel = (MyPanel) mainFrame.getTabbedPane().getSelectedComponent();
+			for( Action a : checkers.keySet())
+				a.setEnabled( checkers.get(a).checkEnabled( panel ) );
 		}
 		else
-		{
-			actnNew.setEnabled(false);
-			actnSave.setEnabled(false);
-			actnCopy.setEnabled(false);
-			actnDelete.setEnabled(false);
-			actnEdit.setEnabled(false);
-		}
+			for( Action a : checkers.keySet())
+				a.setEnabled( a == actnStart );
 	}
 	
+	private interface EnabledChecker
+	{
+		public boolean checkEnabled(MyPanel panel);
+	}
 }

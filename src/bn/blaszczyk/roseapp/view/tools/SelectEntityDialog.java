@@ -4,8 +4,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.roseapp.controller.FullModelController;
-import bn.blaszczyk.roseapp.model.Entity;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
 

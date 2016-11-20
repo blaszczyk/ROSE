@@ -1,7 +1,6 @@
-package bn.blaszczyk.roseapp.model;
+package bn.blaszczyk.rose.model;
 
-
-public interface Readable extends Entity{
+public interface Readable extends Identifyable{
 	
 	public String getEntityName();
 	

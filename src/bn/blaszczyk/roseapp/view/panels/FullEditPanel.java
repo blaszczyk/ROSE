@@ -15,9 +15,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import bn.blaszczyk.rose.model.Readable;
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.controller.*;
-import bn.blaszczyk.roseapp.model.*;
-import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
 import bn.blaszczyk.roseapp.view.tools.EntityTableBuilder;
 
@@ -27,7 +27,7 @@ public class FullEditPanel extends AlignPanel {
 
 	private BasicEditPanel basicPanel;
 	private List<FullEditPanel> fullPanels = new ArrayList<>();
-	private Map<Integer,MyComboBox<Entity>> entityBoxes = new HashMap<>();
+	private Map<Integer,MyComboBox<Readable>> entityBoxes = new HashMap<>();
 	
 	private FullModelController modelController;
 	private final Writable entity;
@@ -116,9 +116,9 @@ public class FullEditPanel extends AlignPanel {
 	
 	private void addSelectionBox( int index )
 	{
-		Entity[] entities = new Entity[modelController.getAllEntites(entity.getEntityClass(index)).size()];
+		Readable[] entities = new Readable[modelController.getAllEntites(entity.getEntityClass(index)).size()];
 		modelController.getAllEntites(entity.getEntityClass(index)).toArray(entities);
-		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, BASIC_WIDTH, true);
+		MyComboBox<Readable> selectBox = new MyComboBox<>(entities, BASIC_WIDTH, true);
 		if(entity.getEntityValue(index) != null)
 			selectBox.setSelectedItem(entity.getEntityValue(index));
 		selectBox.setFont(VALUE_FONT);

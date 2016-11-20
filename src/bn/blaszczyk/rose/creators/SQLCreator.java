@@ -8,7 +8,6 @@ import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.*;
-import bn.blaszczyk.roseapp.model.RelationType;
 
 public class SQLCreator {
 	
@@ -91,9 +90,9 @@ public class SQLCreator {
 		
 		// relational columns
 		for(EntityField entityField : entity.getEntityFields())
-			if(!entityField.getType().isSecondMany())
-				writer.write( "\t" + entityField.getName() + "_id int,\n" );
-		
+			if(entityField.getType() == RelationType.MANYTOONE 
+				 || ( entityField.getType() == RelationType.ONETOONE  &&  entityField.getName().compareTo(entityField.getCounterName()) < 0 ))
+				writer.write( "\t" + entityField.getName() + "_id int,\n" );		
 		// primary key
 		writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
 		

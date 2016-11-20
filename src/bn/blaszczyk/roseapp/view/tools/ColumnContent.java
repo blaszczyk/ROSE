@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.swing.Icon;
 
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
 
 public class ColumnContent {
 	
@@ -20,10 +20,8 @@ public class ColumnContent {
 	
 	public ColumnContent(String pathAsString) throws ParseException
 	{
-		System.err.println("pas: >" + pathAsString + "<");
 		String[] split = pathAsString.split(DELIMITER);
 		String leafAsString = split[split.length - 1];
-		System.err.println("las: >" + leafAsString + "<" );
 		subEntityPath = new SubEntityPath( leafAsString.substring(0, 1).equalsIgnoreCase("e") , Integer.parseInt(leafAsString.substring(1)));
 		for(int i = split.length - 2; i >= 0; i--)
 			subEntityPath = new SubEntityPath(subEntityPath, Integer.parseInt(split[i].substring(1)));

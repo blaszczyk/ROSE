@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.rose.model.Readable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 

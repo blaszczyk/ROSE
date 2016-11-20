@@ -73,7 +73,7 @@ public class Entity {
 	public void addEntityField(EntityField entityField, boolean cascade)
 	{
 		entityFields.add(entityField);
-		if( cascade && entityField.getType().isFirstMany() )
+		if( cascade )
 		{
 			EntityField counterpart = new EntityField(this, entityField);
 			entityField.setCouterpart(counterpart);

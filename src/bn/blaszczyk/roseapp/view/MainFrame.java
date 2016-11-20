@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 
 import bn.blaszczyk.roseapp.controller.*;
+import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame implements ThemeConstants {
@@ -72,6 +73,15 @@ public class MainFrame extends JFrame implements ThemeConstants {
 	public Actions getActions()
 	{
 		return actions;
+	}
+
+	public boolean hasChanged()
+	{
+		for( Component c : tabbedPane.getComponents())
+			if( c instanceof MyPanel )
+				if( ((MyPanel)c).hasChanged() )
+					return true;
+		return false;
 	}
 	
 	

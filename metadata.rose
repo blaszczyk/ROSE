@@ -1,6 +1,6 @@
 set usingannotations false
 set modelpackage bn.blaszczyk.rose
-set parserpackage bn.blaszczyk.rose
+set parserpackage bn.blaszczyk.rose.parser
 set parserformat %sParser
 set srcpath src/
 

@@ -4,10 +4,8 @@
  */
 package bn.blaszczyk.rose;
 
-
-public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<MetaData>
+public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparable<MetaData>
 {
-
 	private int id = -1;
 	private String srcpath = "src/";
 	private String sqlpath = "sql/";
@@ -25,11 +23,9 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	private String parserpackage = null;
 	private String parserformat = "%sParser";
 
-
 	public MetaData()
 	{
 	}
-
 
 	@Override
 	public Integer getId()
@@ -43,7 +39,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.id = id;
 	}
 
-
 	public String getSrcpath()
 	{
 		return srcpath;
@@ -53,7 +48,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.srcpath = srcpath;
 	}
-
 
 	public String getSqlpath()
 	{
@@ -65,7 +59,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.sqlpath = sqlpath;
 	}
 
-
 	public String getDbtype()
 	{
 		return dbtype;
@@ -75,7 +68,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.dbtype = dbtype;
 	}
-
 
 	public String getDbuser()
 	{
@@ -87,7 +79,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.dbuser = dbuser;
 	}
 
-
 	public String getDbpassword()
 	{
 		return dbpassword;
@@ -97,7 +88,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.dbpassword = dbpassword;
 	}
-
 
 	public String getDbserver()
 	{
@@ -109,7 +99,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.dbserver = dbserver;
 	}
 
-
 	public String getDbport()
 	{
 		return dbport;
@@ -119,7 +108,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.dbport = dbport;
 	}
-
 
 	public String getDbname()
 	{
@@ -131,7 +119,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.dbname = dbname;
 	}
 
-
 	public Boolean isUsingForeignKeys()
 	{
 		return usingForeignKeys;
@@ -141,7 +128,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.usingForeignKeys = usingForeignKeys;
 	}
-
 
 	public String getMainpackage()
 	{
@@ -153,7 +139,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.mainpackage = mainpackage;
 	}
 
-
 	public String getMainname()
 	{
 		return mainname;
@@ -163,7 +148,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.mainname = mainname;
 	}
-
 
 	public String getModelpackage()
 	{
@@ -175,7 +159,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.modelpackage = modelpackage;
 	}
 
-
 	public Boolean isUsingAnnotations()
 	{
 		return usingAnnotations;
@@ -186,7 +169,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 		this.usingAnnotations = usingAnnotations;
 	}
 
-
 	public String getParserpackage()
 	{
 		return parserpackage;
@@ -196,7 +178,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	{
 		this.parserpackage = parserpackage;
 	}
-
 
 	public String getParserformat()
 	{

@@ -8,8 +8,8 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeListener;
 
+import bn.blaszczyk.rose.model.Writable;
 import bn.blaszczyk.roseapp.controller.*;
-import bn.blaszczyk.roseapp.model.Writable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.*;
 

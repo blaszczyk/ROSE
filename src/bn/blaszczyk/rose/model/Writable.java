@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.model;
+package bn.blaszczyk.rose.model;
 
 public interface Writable extends Readable {
 	
