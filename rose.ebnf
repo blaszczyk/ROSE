@@ -1,33 +1,36 @@
 rosesourcecode = { rosecommand , "\n" }
 
-rosecommand = "set " , metadata
-			| "begin enum " , enumdef
-			| "begin entity " , entitydef
-			| "create " , createoptions
+rosecommand =  metadata
+			| enumdef
+			| entitydef
+			| createoperation
 			| "link"
 
 			
 			
-metadata = stringmetadata | boolmetadata
+metadata = "set " , stringmetadata | boolmetadata
 
 stringmetadata = stringmetadataproperty , stringvalue
 
 stringmetadataproperty = "srcpath " | "sqlpath " | "dbtype " | "dbuser " | "dbpassword " | "dbserver " | "dbport " | "dbname " 
 						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat "
 	
-boolmetadata = boolmetadataproperts , boolvalue
+boolmetadata = boolmetadataproperty , boolvalue
 
-boolmetadataproperts = "usingAnnotations " | "usingForeignKeys "
+boolmetadataproperty = "usingAnnotations " | "usingForeignKeys "
 
 boolvalue = "true" | "false"
 
 
-createoptions = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
+createoperation = "create " , createoption
 
-enumdef = identifier , "\n" , { identifier , "\n"} , "end enum\n"
+createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
 
 
-entitydef = identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity\n"
+enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum\n"
+
+
+entitydef = "begin entity " , identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity\n"
 
 interfacetype = "R" | "r" | "W" | "w"
 
