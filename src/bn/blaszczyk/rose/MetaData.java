@@ -11,13 +11,13 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	private int id = -1;
 	private String srcpath = "src/";
 	private String sqlpath = "sql/";
-	private Boolean usingForeignKeys = false;
 	private String dbtype = "mysql";
 	private String dbuser = "root";
 	private String dbpassword = "";
 	private String dbserver = "localhost";
 	private String dbport = "3306";
 	private String dbname = "MyDB";
+	private Boolean usingForeignKeys = false;
 	private String mainpackage = null;
 	private String mainname = "Main";
 	private String modelpackage = null;
@@ -34,31 +34,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 
 	public MetaData()
 	{
-	}
-
-	public MetaData( String srcpath, String sqlpath, Boolean usingForeignKeys, String dbtype, String dbuser, String dbpassword, String dbserver, String dbport, String dbname, String mainpackage, String mainname, String modelpackage, Boolean usingAnnotations, String parserpackage, String parserformat, String controllerpackage, String controllerformat, String controllerclass, String entitymodelpackage, String entitymodelformat, String entitymodelfactoryclass )
-	{
-		this.srcpath = srcpath;
-		this.sqlpath = sqlpath;
-		this.usingForeignKeys = usingForeignKeys;
-		this.dbtype = dbtype;
-		this.dbuser = dbuser;
-		this.dbpassword = dbpassword;
-		this.dbserver = dbserver;
-		this.dbport = dbport;
-		this.dbname = dbname;
-		this.mainpackage = mainpackage;
-		this.mainname = mainname;
-		this.modelpackage = modelpackage;
-		this.usingAnnotations = usingAnnotations;
-		this.parserpackage = parserpackage;
-		this.parserformat = parserformat;
-		this.controllerpackage = controllerpackage;
-		this.controllerformat = controllerformat;
-		this.controllerclass = controllerclass;
-		this.entitymodelpackage = entitymodelpackage;
-		this.entitymodelformat = entitymodelformat;
-		this.entitymodelfactoryclass = entitymodelfactoryclass;
 	}
 
 
@@ -94,17 +69,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	public void setSqlpath( String sqlpath )
 	{
 		this.sqlpath = sqlpath;
-	}
-
-
-	public Boolean isUsingForeignKeys()
-	{
-		return usingForeignKeys;
-	}
-
-	public void setUsingForeignKeys( Boolean usingForeignKeys )
-	{
-		this.usingForeignKeys = usingForeignKeys;
 	}
 
 
@@ -171,6 +135,17 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	public void setDbname( String dbname )
 	{
 		this.dbname = dbname;
+	}
+
+
+	public Boolean isUsingForeignKeys()
+	{
+		return usingForeignKeys;
+	}
+
+	public void setUsingForeignKeys( Boolean usingForeignKeys )
+	{
+		this.usingForeignKeys = usingForeignKeys;
 	}
 
 

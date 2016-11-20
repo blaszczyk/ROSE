@@ -7,6 +7,9 @@
 *.ear
 lib/
 
+src_output/
+sql_output/
+
 #
 # Test Files
 #
@@ -83,3 +86,4 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+/bin1/
