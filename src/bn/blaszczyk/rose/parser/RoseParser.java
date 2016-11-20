@@ -18,24 +18,35 @@ public class RoseParser {
 	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
 	
-	
 	public void parse(String filename)
 	{
 		try(Scanner scanner = new Scanner(new FileInputStream(filename)))
 		{
+			boolean requiresLink = false;
 			while(scanner.hasNextLine())
 			{
 				String[] split = scanner.nextLine().trim().split("\\s+",3);
 				if(split.length > 2 && split[0].equalsIgnoreCase("set") )
+				{
 					MetaDataParser.parseField(metadata, split[1], split[2]);
+				}
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
+				{
 					entities.add(entityParser.parseEntity(split[2], scanner));
+					requiresLink = true;
+				}
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("enum"))
+				{
 					enums.add(enumParser.parseEnum(split[2], scanner));
+					requiresLink = true;
+				}
 				else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
+				{
+					if(requiresLink)
+						linkEntities();
+					requiresLink = false;
 					createFile(split[1]);
-				else if(split[0].trim().startsWith("link"))
-					linkEntities();
+				}
 			}
 		}
 		catch (FileNotFoundException | ParseException e)
