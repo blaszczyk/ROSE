@@ -10,24 +10,24 @@ rosecommand = "set " , metadata
 			
 metadata = stringmetadata | boolmetadata
 
-stringmetadata = stringmetadataproperty , string
+stringmetadata = stringmetadataproperty , stringvalue
 
-stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
-						| "mainpackage" | "mainname" | "modelpackage" | "parserpackage" | "parserformat"
+stringmetadataproperty = "srcpath " | "sqlpath " | "dbtype " | "dbuser " | "dbpassword " | "dbserver " | "dbport " | "dbname " 
+						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat "
 	
 boolmetadata = boolmetadataproperts , boolvalue
 
-boolmetadataproperts = "usingAnnotations" | "usingForeignKeys"
+boolmetadataproperts = "usingAnnotations " | "usingForeignKeys "
 
 boolvalue = "true" | "false"
 
 
 createoptions = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
 
-enumdef = identifier , "\n" , { identifier + "\n"} , "end enum\n"
+enumdef = identifier , "\n" , { identifier , "\n"} , "end enum\n"
 
 
-entitydef = identifier , [ ":" , interfacetype ] , "\n" , { fielddef + "\n" } , "end entity\n"
+entitydef = identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity\n"
 
 interfacetype = "R" | "r" | "W" | "w"
 
@@ -45,20 +45,20 @@ primitivetype = "varchar(" , integer , ") "
 			| "date " 
 			| "boolean "
 
-enumfielddef = "enum" , identifier , { identifier , { defvalue } }
+enumfielddef = "enum " , identifier , { identifier , { defvalue } }
 
 entityfielddef = relationtype , identifier , { identifier , { identifier } }
 
-relationtype = "onetoone" | "onetomany" | "manytoone" | "manytomany"
+relationtype = "onetoone " | "onetomany " | "manytoone " | "manytomany "
 
-tostring = "tostring" , { string | "%" , identifier }
+tostring = "tostring " , { stringvalue | "%" , identifier }
 
 
 
-integer = an Integer
+integer = an integer
 
-string = a String in \"...\", or null
+stringvalue = a String
 
-identifier = a String without whitespaces
+identifier = a String without whitespaces followed by a whitespace
 
-defvalue = corresponding default Value
+defvalue = corresponding default value
