@@ -10,10 +10,10 @@ public class EnumField implements Field{
 
 	public EnumField(String enumName, String name, String defValue)
 	{
-		this.name = name;
 		this.enumName = enumName;
 		this.defValue = defValue;
-		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
+		this.name = name.substring(0, 1).toLowerCase() + name.substring(1);
+		this.capitalName = name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 		
 	public EnumField(String enumName, String name)
@@ -23,7 +23,7 @@ public class EnumField implements Field{
 	
 	public EnumField( String enumName )
 	{
-		this(enumName, enumName.substring(0, 1).toLowerCase() + enumName.substring(1) );
+		this(enumName, enumName );
 	}
 
 	public EnumType getEnumType()

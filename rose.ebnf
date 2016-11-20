@@ -1,13 +1,13 @@
 rosesourcecode = { rosecommand , "\n" }
 
-rosecommand =  metadata
+rosecommand =  setmetadata
 			| enumdef
 			| entitydef
 			| createoperation
 
 			
 			
-metadata = "set " , ( stringmetadata | boolmetadata )
+setmetadata = "set " , ( stringmetadata | boolmetadata )
 
 stringmetadata = stringmetadataproperty , stringvalue
 
@@ -18,8 +18,6 @@ boolmetadata = boolmetadataproperty , boolvalue
 
 boolmetadataproperty = "usingAnnotations " | "usingForeignKeys "
 
-boolvalue = "true" | "false"
-
 
 createoperation = "create " , createoption
 
@@ -29,27 +27,27 @@ createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javama
 enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum"
 
 
-entitydef = "begin entity " , identifier , [ ":" , interfacetype ] , "\n" , { fielddef , "\n" } , "end entity"
+entitydef = "begin entity " , identifier , [ ":" , interface ] , "\n" , { fielddecl , "\n" } , "end entity"
 
-interfacetype = "r" | "w"
+interface = "r" | "w"
 
-fielddef = primitivefielddef 
-		| enumfielddef 
-		| entityfielddef 
+fielddecl = primitivefielddecl 
+		| enumfielddecl 
+		| entityfielddecl 
 		| tostring
 
-primitivefielddef = primitivetype ,  identifier , { defvalue }
+primitivefielddecl = primitivetype ,  identifier , [ defvalue ]
 
-primitivetype = "varchar(" , integer , ") " 
-			| "char(" , integer , ") "
-			| "numeric(" , integer , "," , integer , ") "
+primitivetype = "varchar(" , integervalue , ") " 
+			| "char(" , integervalue , ") "
+			| "numeric(" , integervalue , "," , integervalue , ") "
 			| "int " 
 			| "date " 
 			| "boolean "
 
-enumfielddef = "enum " , identifier , { identifier , { defvalue } }
+enumfielddecl = "enum " , identifier , [ identifier , [ defvalue ] ]
 
-entityfielddef = relationtype , identifier , { identifier , { identifier } }
+entityfielddecl = relationtype , identifier , [ identifier , [ identifier ] ]
 
 relationtype = "onetoone " | "onetomany " | "manytoone " | "manytomany "
 
@@ -57,7 +55,9 @@ tostring = "tostring " , { stringvalue | "%" , identifier }
 
 
 
-integer = an integer
+boolvalue = "true" | "false"
+
+integervalue = an integer
 
 stringvalue = a string without newline
 

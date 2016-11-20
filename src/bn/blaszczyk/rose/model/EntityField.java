@@ -18,7 +18,7 @@ public class EntityField implements Field{
 	{
 		this.entityName = entityName;
 		this.type = type;
-		this.name = name;
+		this.name = name.substring(0, 1).toLowerCase() + name.substring(1);
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 		setCounterName(counterName);
 	}

@@ -22,8 +22,6 @@ sql_output/
 
 *.xml
 src/foo/
-src/caro/
-src/galabu/
 src/test
 sql/
 
