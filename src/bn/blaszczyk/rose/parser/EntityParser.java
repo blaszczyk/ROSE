@@ -4,24 +4,15 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EntityField;
-import bn.blaszczyk.rose.model.EnumField;
-import bn.blaszczyk.rose.model.EnumType;
-import bn.blaszczyk.rose.model.ImplInterface;
-import bn.blaszczyk.rose.model.PrimitiveField;
-import bn.blaszczyk.rose.model.PrimitiveType;
-import bn.blaszczyk.rose.model.RelationType;
+import bn.blaszczyk.rose.model.*;
 
 public class EntityParser {
 	
 	private final MetaData metadata;
-	private final RoseParser roseParser;
 	
-	public EntityParser(MetaData metadata, RoseParser roseParser)
+	public EntityParser(MetaData metadata)
 	{
 		this.metadata = metadata;
-		this.roseParser = roseParser;
 	}
 	
 
@@ -39,24 +30,20 @@ public class EntityParser {
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
 			split = line.split("\\s+",2);
+			if(split.length == 1 )
+				continue;
 			String command = split[0];
-			EnumType subenum;
-			if( (subenum = roseParser.getEnumType(command)) != null )
+			if( "enum".equalsIgnoreCase(command) )
 			{
+				split = split[1].split("\\s+");
 				if( split.length == 1) 
-					entity.addField(new EnumField(subenum));
-				else 
-				{
-					split = line.split("\\s+",2);
-					if( split.length == 1)
-						entity.addField(new EnumField(subenum, split[0]));
-					else
-						entity.addField(new EnumField(subenum, split[0],split[1]));
-				}
+					entity.addField(new EnumField(split[0]));
+				else if( split.length == 2)
+					entity.addField(new EnumField(split[0], split[1]));
+				else
+					entity.addField(new EnumField(split[0], split[1],split[2]));
 				continue;
 			}
-			else if(split.length == 1 )
-				continue;
 			if( isPrimitiveType(command) )
 			{
 				split = split[1].split("\\s+",2);
@@ -68,14 +55,12 @@ public class EntityParser {
 			else if( isRelationType(command) )
 			{
 				split = split[1].split("\\s+", 3);
-				Entity subentity;
-				if( (subentity = roseParser.getEntityType(split[0])) != null )
 					if(split.length == 3)
-						entity.addEntityField(new EntityField(subentity, getRelationType(command), split[1],split[2]), true);	
+						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1],split[2]) );	
 					else if(split.length == 2)
-						entity.addEntityField(new EntityField(subentity, getRelationType(command), split[1],split[1]), true);					
+						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1], null) );					
 					else
-						entity.addEntityField(new EntityField(subentity, getRelationType(command),subentity.getObjectName(),entity.getObjectName()), true);			
+						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[0], null) );			
 			}
 			else if( command.equalsIgnoreCase("tostring"))
 			{

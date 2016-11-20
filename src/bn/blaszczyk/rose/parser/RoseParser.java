@@ -3,9 +3,7 @@ package bn.blaszczyk.rose.parser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.creators.*;
@@ -17,7 +15,7 @@ public class RoseParser {
 	private final List<EnumType> enums = new ArrayList<>();
 	private final MetaData metadata = new MetaData();
 
-	private final EntityParser entityParser = new EntityParser(metadata,this);
+	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
 	
 	
@@ -25,10 +23,9 @@ public class RoseParser {
 	{
 		try(Scanner scanner = new Scanner(new FileInputStream(filename)))
 		{
-			String[] split;
 			while(scanner.hasNextLine())
 			{
-				split = scanner.nextLine().trim().split("\\s+",3);
+				String[] split = scanner.nextLine().trim().split("\\s+",3);
 				if(split.length > 2 && split[0].equalsIgnoreCase("set") )
 					MetaDataParser.parseField(metadata, split[1], split[2]);
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
@@ -36,14 +33,15 @@ public class RoseParser {
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("enum"))
 					enums.add(enumParser.parseEnum(split[2], scanner));
 				else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
-					createFile(split[1]);				
+					createFile(split[1]);
+				else if(split[0].trim().startsWith("link"))
+					linkEntities();
 			}
 		}
 		catch (FileNotFoundException | ParseException e)
 		{
 			e.printStackTrace();
-		}
-		
+		}		
 	}
 	
 	private void createFile( String filetype )
@@ -74,21 +72,44 @@ public class RoseParser {
 				
 		}
 	}
+	
+	private void linkEntities() throws ParseException
+	{
+		Map<EntityField,Entity> originalFields = new HashMap<>();
+		for(Entity entity : entities)
+		{
+			for(Field field : entity.getFields())
+				if(field instanceof EnumField)
+				{
+					EnumField eField = ((EnumField)field);
+					eField.setEnumType(getEnumType(eField.getEnumName()));
+				}
+			for(EntityField entityField : entity.getEntityFields())
+				originalFields.put(entityField,entity);
+		}
+		for(EntityField entityField : originalFields.keySet())
+		{
+			entityField.setEntity(getEntityType(entityField.getEntityName()));
+			EntityField counterpart = new EntityField(originalFields.get(entityField), entityField);
+			entityField.setCouterpart(counterpart);
+			entityField.getEntity().addEntityField(counterpart);
+		}		
+	}
 
-	public Entity getEntityType(String classname )
+	private Entity getEntityType(String name) throws ParseException
 	{
 		for(Entity entity : entities)
-			if( entity.getSimpleClassName().equalsIgnoreCase( classname ) )
+			if( entity.getSimpleClassName().equalsIgnoreCase( name ) )
 				return entity;
-		return null;
+		throw new ParseException("Unknown Entity Type: \"" + name + "\"", 0);
 	}
 	
-	public EnumType getEnumType(String classname)
+	private EnumType getEnumType(String name) throws ParseException
 	{
 		for(EnumType enumType : enums)
-			if( enumType.getSimpleClassName().equalsIgnoreCase( classname ) )
+			if( enumType.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumType;
-		return null;
+		throw new ParseException("Unknown Enum Type: \"" + name + "\"", 0);
 	}
 
 }

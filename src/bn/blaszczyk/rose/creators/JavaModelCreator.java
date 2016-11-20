@@ -402,14 +402,14 @@ public class JavaModelCreator {
 		if(usingAnnotations)
 			writeTransistenceAnnotation(writer);
 		writer.write("\t@Override\n"
-				+ "\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n"
+				+ "\tpublic bn.blaszczyk.rose.model.RelationType getRelationType(int index)\n"
 				+ "\t{\n"
 				+ "\t\tswitch(index)\n"
 				+ "\t\t{\n");
 		count = 0;
 		for(EntityField entityField : entity.getEntityFields())
 			writer.write("\t\tcase " + count++ + ":\n"
-					+ "\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityField.getType().name() + ";\n" );
+					+ "\t\t\treturn bn.blaszczyk.rose.model.RelationType." + entityField.getType().name() + ";\n" );
 		writer.write("\t\t}\n"
 				+ "\t\treturn null;\n"
 				+ "\t}\n\n");
@@ -518,7 +518,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void setEntity( int index, bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void setEntity( int index, bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tswitch( index )\n"
 					+ "\t\t{\n");
@@ -547,7 +547,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void addEntity( int index,  bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void addEntity( int index,  bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tif( value == null)\n"
 					+ "\t\t\treturn;\n"
@@ -581,7 +581,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void removeEntity( int index,  bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void removeEntity( int index,  bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tif( value == null )\n"
 					+ "\t\t\treturn;\n"

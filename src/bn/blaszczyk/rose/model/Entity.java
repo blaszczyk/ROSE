@@ -70,15 +70,9 @@ public class Entity {
 		fields.add(field);
 	}
 
-	public void addEntityField(EntityField entityField, boolean cascade)
+	public void addEntityField(EntityField entityField)
 	{
 		entityFields.add(entityField);
-		if( cascade )
-		{
-			EntityField counterpart = new EntityField(this, entityField);
-			entityField.setCouterpart(counterpart);
-			entityField.getEntity().addEntityField( counterpart, false );
-		}
 	}	
 
 }
