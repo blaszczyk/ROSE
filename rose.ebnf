@@ -55,8 +55,10 @@ tostring = "tostring" , { string | "%" , identifier }
 
 
 
-integer = eine ganze zahl
+integer = an Integer
 
-string = Ein String in \" \", oder null
+string = a String in \"...\", or null
 
-identifier = Zusammenhängenger String ohne whitespaces
+identifier = a String without whitespaces
+
+defvalue = corresponding default Value
