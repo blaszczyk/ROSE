@@ -124,20 +124,8 @@ public class RoseParser {
 				if(split.length == 2)
 					entity.setToString(split[1]);
 			}
-			else if( command.equalsIgnoreCase("tablecols"))
-			{
-				if(split.length == 2)
-					entity.setTableCols(split[1]);
-			}
 			else 
 				System.out.println("Invalid Field: " + line);
-		}
-		if(entity.getTableCols() == null)
-		{
-			if(entity.getFields().size() > 0)
-				entity.setTableCols("%" + entity.getFields().get(0).getName());
-			for(int i = 1; i < entity.getFields().size(); i++)
-				entity.setTableCols(entity.getTableCols() +";%" + entity.getFields().get(i).getName());
 		}
 		entities.add(entity);
 	}

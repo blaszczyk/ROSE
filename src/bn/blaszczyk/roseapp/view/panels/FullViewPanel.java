@@ -1,8 +1,6 @@
 package bn.blaszczyk.roseapp.view.panels;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -14,8 +12,7 @@ import javax.swing.JScrollPane;
 import bn.blaszczyk.roseapp.controller.GUIController;
 import bn.blaszczyk.roseapp.model.*;
 import bn.blaszczyk.roseapp.model.Readable;
-import bn.blaszczyk.roseapp.view.tools.EntityTable;
-import bn.blaszczyk.roseapp.view.tools.EntityTableModel;
+import bn.blaszczyk.roseapp.view.tools.EntityTableBuilder;
 
 @SuppressWarnings("serial")
 public class FullViewPanel extends AlignPanel {
@@ -88,14 +85,15 @@ public class FullViewPanel extends AlignPanel {
 	@SuppressWarnings("unchecked")
 	private void addEntityTable( int index )
 	{
-		List<Readable> entities = new ArrayList<>();
-		entities.addAll( (Set<? extends Readable>) entity.getEntityValue(index) );
-		EntityTableModel<Readable> tableModel = new EntityTableModel<>(entities,1);
-		EntityTable<Readable> table = new EntityTable<>( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
-		table.setButtonColumn(0, "view.png", e -> guiController.openEntityTab( e, false ));
-		JScrollPane scrollPane = new JScrollPane(table);
-		
+		JScrollPane scrollPane = new EntityTableBuilder()
+				.width(BASIC_WIDTH)
+				.heigth(SUBTABLE_HEIGTH)
+				.entities((Set<? extends Readable>) entity.getEntityValue(index))
+				.addButtonColumn("view.png", e -> guiController.openEntityTab( e, false ))
+				.buildInScrollPane();
+
 		super.addPanel( entity.getEntityName(index), createViewButton(index), scrollPane, BASIC_WIDTH, SUBTABLE_HEIGTH);
+
 	}
 
 	@Override

@@ -17,16 +17,16 @@ import javax.swing.event.ChangeListener;
 
 import bn.blaszczyk.roseapp.controller.*;
 import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
-import bn.blaszczyk.roseapp.view.tools.EntityTable;
-import bn.blaszczyk.roseapp.view.tools.EntityTableModel;
+import bn.blaszczyk.roseapp.view.tools.EntityTableBuilder;
 
 @SuppressWarnings("serial")
 public class FullEditPanel extends AlignPanel {
 
 
 	private BasicEditPanel basicPanel;
-	private List<BasicEditPanel> basicPanels = new ArrayList<>();
+	private List<FullEditPanel> fullPanels = new ArrayList<>();
 	private Map<Integer,MyComboBox<Entity>> entityBoxes = new HashMap<>();
 	
 	private FullModelController modelController;
@@ -51,7 +51,7 @@ public class FullEditPanel extends AlignPanel {
 			{
 			case ONETOONE:
 				if(	entity.getEntityValue(i) instanceof Writable )
-					basicPanels.add( addBasicPanel( (Writable) entity.getEntityValue(i) ) );
+					fullPanels.add( addFullPanel( (Writable) entity.getEntityValue(i) ) );
 				break;
 			case MANYTOMANY:
 			case ONETOMANY:
@@ -82,30 +82,34 @@ public class FullEditPanel extends AlignPanel {
 			}
 			button.addActionListener( e -> guiController.addNew( entity, index ) );
 		}
-		
 		return button;
 	}
-	
+
 	private BasicEditPanel addBasicPanel( Writable entity )
 	{	
 		BasicEditPanel basicPanel = new BasicEditPanel(entity) ;
 		addPanel(null, null, basicPanel);
 		return basicPanel;
 	}
+
+	private FullEditPanel addFullPanel( Writable entity )
+	{	
+		FullEditPanel fullPanel = new FullEditPanel(entity, modelController, guiController, false) ;
+		addPanel(null, null, fullPanel);
+		return fullPanel;
+	}
 	
 	@SuppressWarnings("unchecked")
 	private void addEntityTable( int index )
 	{
-		List<Writable> entities = new ArrayList<>();
-		entities.addAll((Set<? extends Writable>) entity.getEntityValue(index));
-
-		EntityTableModel<Writable> tableModel = new EntityTableModel<>(entities,3);
-		EntityTable<Writable> table = new EntityTable<>( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
-		table.setButtonColumn(0, "edit.png", e -> guiController.openEntityTab( e, true ));
-		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy((Writable) e), true ) );
-		table.setButtonColumn(2, "delete.png", e -> guiController.delete((Writable) e) );
-		JScrollPane scrollPane = new JScrollPane(table);
-		
+		JScrollPane scrollPane = new EntityTableBuilder()
+				.width(BASIC_WIDTH)
+				.heigth(SUBTABLE_HEIGTH)
+				.entities((Set<? extends Readable>)entity.getEntityValue(index))
+				.addButtonColumn("edit.png", e -> guiController.openEntityTab( e, true ))
+				.addButtonColumn("copy.png", e -> guiController.openEntityTab( modelController.createCopy((Writable) e), true ))
+				.addButtonColumn("delete.png", e -> guiController.delete((Writable) e))
+				.buildInScrollPane();
 		super.addPanel( entity.getEntityName(index), createAddButton(index), scrollPane, BASIC_WIDTH, SUBTABLE_HEIGTH);
 	}
 	
@@ -126,7 +130,7 @@ public class FullEditPanel extends AlignPanel {
 	public void save(FullModelController modelController)
 	{
 		basicPanel.save(modelController);
-		for(BasicEditPanel panel : basicPanels)
+		for(FullEditPanel panel : fullPanels)
 			panel.save(modelController);
 		for(Integer index : entityBoxes.keySet() )
 			modelController.setEntityField(entity, index, ( (Writable)entityBoxes.get(index).getSelectedItem() ) );
@@ -150,7 +154,7 @@ public class FullEditPanel extends AlignPanel {
 	{
 		if(basicPanel.hasChanged())
 			return true;
-		for(BasicEditPanel panel : basicPanels)
+		for(FullEditPanel panel : fullPanels)
 			if(panel.hasChanged())
 				return true;
 		for(Integer index : entityBoxes.keySet() )
@@ -162,7 +166,7 @@ public class FullEditPanel extends AlignPanel {
 	public void setChangeListener(ChangeListener l)
 	{
 		basicPanel.setChangeListener(l);
-		for(BasicEditPanel panel : basicPanels)
+		for(FullEditPanel panel : fullPanels)
 			panel.setChangeListener(l);
 		for(Integer index : entityBoxes.keySet() )
 			entityBoxes.get(index).addItemListener(e -> l.stateChanged(new ChangeEvent(entityBoxes.get(index))));

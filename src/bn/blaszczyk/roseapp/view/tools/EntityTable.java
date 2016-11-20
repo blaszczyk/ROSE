@@ -3,11 +3,9 @@ package bn.blaszczyk.roseapp.view.tools;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -16,7 +14,7 @@ import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
-public class EntityTable<T extends Readable> extends JTable implements MyPanel, ThemeConstants {
+public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 
 	
 	public interface EntityAction
@@ -35,11 +33,9 @@ public class EntityTable<T extends Readable> extends JTable implements MyPanel, 
 			String text = "";
 			if(value instanceof Icon)
 			{
-				JButton button = new JButton((Icon)value);
-				button.setBorderPainted(false);
-				button.addActionListener(e -> buttonActions[column].performAction(tableModel.getEntity(row)  ));
-				button.setBackground( row % 2 == 0 ? EVEN_BG : ODD_BG);
-				return button;
+				JLabel icon = new JLabel((Icon)value);
+				icon.setBackground( row % 2 == 0 ? EVEN_BG : ODD_BG);
+				return icon;
 			}
 			else if(value instanceof Date)
 				text = DATE_FORMAT.format(value);
@@ -81,13 +77,13 @@ public class EntityTable<T extends Readable> extends JTable implements MyPanel, 
 	};
 	
 	private EntityAction[] buttonActions;
-	private EntityTableModel<T> tableModel;
+	private EntityTableModel tableModel;
 	
 	private int width = FULL_TABLE_WIDTH;
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public EntityTable(EntityTableModel<T> tableModel, int maxWidth, int height )
+	public EntityTable(EntityTableModel tableModel, int maxWidth, int height )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
@@ -123,19 +119,12 @@ public class EntityTable<T extends Readable> extends JTable implements MyPanel, 
 	}
 	
 	
-	public void setButtonColumn( int columnIndex, String iconFile,  EntityAction action)
+	public void setButtonColumn( int columnIndex, Icon icon,  EntityAction action)
 	{
 		if(columnIndex < 0 || columnIndex >= buttonActions.length)
 			return;
 		buttonActions[columnIndex] = action;
-		try
-		{
-			tableModel.setButtonIcon(columnIndex, new ImageIcon(ImageIO.read(getClass().getClassLoader().getResourceAsStream("bn/blaszczyk/roseapp/resources/" + iconFile))) );
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		tableModel.setButtonIcon(columnIndex, icon);
 	}
 
 	@Override

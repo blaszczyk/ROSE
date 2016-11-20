@@ -16,7 +16,7 @@ public interface FullModelController {
 	public void delete( Writable entity );
 	public Writable createCopy( Writable e );
 	
-	public  List<Readable> getAllEntites(Class<?> type);
+	public List<Readable> getAllEntites(Class<?> type);
 	public void loadEntities(Class<?>[] types);
 	
 	public void commit();

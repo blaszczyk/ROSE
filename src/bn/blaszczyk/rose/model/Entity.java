@@ -9,7 +9,6 @@ public class Entity {
 	private String javaname;
 	private String packagename;
 	private String toString;
-	private String tableCols;
 	private ImplInterface implInterface;
 	private List<Field> fields = new ArrayList<>();
 	private List<EntityField> entityFields = new ArrayList<>();
@@ -55,16 +54,6 @@ public class Entity {
 	{
 		return implInterface;
 	}
-
-	public String getTableCols()
-	{
-		return tableCols;
-	}
-
-	public void setTableCols(String tableCols)
-	{
-		this.tableCols = tableCols;
-	}	
 	
 	public List<Field> getFields()
 	{

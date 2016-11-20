@@ -428,29 +428,6 @@ public class JavaModelCreator {
 				+ "\t\treturn null;\n"
 				+ "\t}\n\n");
 		
-		//public String getTableCols();
-		if(usingAnnotations)
-			writeTransistenceAnnotation(writer);
-		String cols = entity.getTableCols();
-		count = 0;
-		for(Field field : entity.getFields() )
-		{
-			cols = cols.replaceAll("\\%" + field.getName(), "M" + count);	
-			count++;
-		}
-		count = 0;
-		for(EntityField entityField : entity.getEntityFields() )
-		{
-			cols = cols.replaceAll("\\%" + entityField.getName(), "E" + count);			
-			count++;
-		}
-		cols.replaceAll("\\s+", "");
-		writer.write("\t@Override\n"
-				+ "\tpublic String getTableCols()\n"
-				+ "\t{\n"
-				+ "\t\treturn \"" + cols +  "\";\n"
-				+ "\t}\n\n");
-		
 		// public int getLength1( int index );			
 		if(usingAnnotations)
 			writeTransistenceAnnotation(writer);
