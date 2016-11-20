@@ -1,0 +1,62 @@
+rosesourcecode = { rosecommand , "\n" }
+
+rosecommand = "set " , metadata
+			| "begin enum " , enumdef
+			| "begin entity " , entitydef
+			| "create " , createoptions
+			| "link"
+
+			
+			
+metadata = stringmetadata | boolmetadata
+
+stringmetadata = stringmetadataproperty , string
+
+stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
+						| "mainpackage" | "mainname" | "modelpackage" | "parserpackage" | "parserformat"
+	
+boolmetadata = boolmetadataproperts , boolvalue
+
+boolmetadataproperts = "usingAnnotations" | "usingForeignKeys"
+
+boolvalue = "true" | "false"
+
+
+createoptions = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
+
+enumdef = identifier , "\n" , { identifier + "\n"} , "end enum\n"
+
+
+entitydef = identifier , [ ":" , interfacetype ] , "\n" , { fielddef + "\n" } , "end entity\n"
+
+interfacetype = "R" | "r" | "W" | "w"
+
+fielddef = primitivefielddef 
+		| enumfielddef 
+		| entityfielddef 
+		| tostring
+
+primitivefielddef = primitivetype ,  identifier , { defvalue }
+
+primitivetype = "varchar(" , integer , ") " 
+			| "char(" , integer , ") "
+			| "numeric(" , integer "," , integer , ") "
+			| "int " 
+			| "date " 
+			| "boolean "
+
+enumfielddef = "enum" , identifier , { identifier , { defvalue } }
+
+entityfielddef = relationtype , identifier , { identifier , { identifier } }
+
+relationtype = "onetoone" | "onetomany" | "manytoone" | "manytomany"
+
+tostring = "tostring" , { string | "%" , identifier }
+
+
+
+integer = eine ganze zahl
+
+string = Ein String in \" \", oder null
+
+identifier = Zusammenhängenger String ohne whitespaces
