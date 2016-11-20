@@ -3,14 +3,10 @@ package bn.blaszczyk.roseapp.controller;
 import java.awt.Component;
 import java.util.Set;
 
-import bn.blaszczyk.roseapp.model.Entity;
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.Writable;
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.*;
-import bn.blaszczyk.roseapp.view.panels.FullEditPanel;
-import bn.blaszczyk.roseapp.view.panels.FullListPanel;
-import bn.blaszczyk.roseapp.view.panels.FullViewPanel;
-import bn.blaszczyk.roseapp.view.panels.MyPanel;
-import bn.blaszczyk.roseapp.view.panels.StartPanel;
+import bn.blaszczyk.roseapp.view.panels.*;
 
 public class GUIController {
 
@@ -25,7 +21,7 @@ public class GUIController {
 	
 	public void editCurrent()
 	{
-		openEntityTab( ((EntityModel) ((MyPanel)mainFrame.getTabbedPane().getSelectedComponent()).getShownObject()), true );
+		openEntityTab( ((Readable) ((MyPanel)mainFrame.getTabbedPane().getSelectedComponent()).getShownObject()), true );
 	}
 	
 	public void createMainFrame(Class<?>[] types, String title)
@@ -64,31 +60,31 @@ public class GUIController {
 		mainFrame.addTab( new FullListPanel(modelController, this, type), title , "applist.png" );
 	}
 	
-	public void openEntityTab(EntityModel entityModel, boolean edit )
+	public void openEntityTab(Readable entity, boolean edit )
 	{
 		String iconFile = edit ? "edit.png" : "view.png";
-		String title = entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName();
+		String title = entity.getId() > 0 ? entity.getEntityName() + " " + entity.getId() : "new " + entity.getEntityName();
 		for(int i = 0; i < mainFrame.getTabbedPane().getTabCount(); i++)
 		{
 			Component c = mainFrame.getTabbedPane().getComponentAt(i);
-			if( c instanceof MyPanel && ((MyPanel)c).getShownObject().equals(entityModel) )
+			if( c instanceof MyPanel && ((MyPanel)c).getShownObject().equals(entity) )
 			{
 				if( edit ^ c instanceof FullViewPanel )
 					mainFrame.getTabbedPane().setSelectedIndex(i);
 				else
 				{
 					if(edit)
-						mainFrame.replaceTab(i, new FullEditPanel(entityModel, modelController, this, true, mainFrame.getActions()) , title, iconFile );
+						mainFrame.replaceTab(i, new FullEditPanel((Writable) entity, modelController, this, true, mainFrame.getActions()) , title, iconFile );
 					else
-						mainFrame.replaceTab(i, new FullViewPanel(entityModel, this, true) , title, iconFile );
+						mainFrame.replaceTab(i, new FullViewPanel(entity, this, true) , title, iconFile );
 				}
 				return;
 			}
 		}
 		if(edit)
-			mainFrame.addTab( new FullEditPanel(entityModel, modelController, this, true, mainFrame.getActions()) , title, iconFile );
+			mainFrame.addTab( new FullEditPanel((Writable) entity, modelController, this, true, mainFrame.getActions()) , title, iconFile );
 		else
-			mainFrame.addTab( new FullViewPanel(entityModel, this, true) , title, iconFile );
+			mainFrame.addTab( new FullViewPanel(entity, this, true) , title, iconFile );
 	}
 	
 	public void saveCurrent()
@@ -99,7 +95,7 @@ public class GUIController {
 			FullEditPanel panel = (FullEditPanel) c;
 			panel.save(modelController);
 			modelController.commit();
-			openEntityTab((EntityModel) panel.getShownObject(),false);
+			openEntityTab((Readable) panel.getShownObject(),false);
 		}
 	}
 	
@@ -112,17 +108,18 @@ public class GUIController {
 	public void deleteCurrent()
 	{
 		Component c = mainFrame.getTabbedPane().getSelectedComponent();
-		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-			delete( ((EntityModel) ((MyPanel)c).getShownObject()).getEntity() );
+		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof Writable )
+			delete( ((Writable) ((MyPanel)c).getShownObject()) );
 	}
 	
 	public void copyCurrent()
 	{
 		Component c = mainFrame.getTabbedPane().getSelectedComponent();
-		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-			openEntityTab( modelController.createCopy( (EntityModel) ((MyPanel)c).getShownObject() ), true );
+		if( c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof Writable )
+			openEntityTab( modelController.createCopy( (Writable) ((MyPanel)c).getShownObject() ), true );
 	}
 
+	@SuppressWarnings("unchecked")
 	public void openNew()
 	{
 		Component c = mainFrame.getTabbedPane().getSelectedComponent();
@@ -132,18 +129,19 @@ public class GUIController {
 		Class<?> type;
 		if( o instanceof Class<?>)
 			type = (Class<?>) o;
-		else if( o instanceof EntityModel )
-			type = ((EntityModel)o).getEntity().getClass();
+		else if( o instanceof Writable )
+			type = o.getClass();
 		else
 			return;
-		openEntityTab( modelController.createModel( modelController.createNew( type.getSimpleName() ) ), true );
+		openEntityTab( modelController.createNew( (Class<Writable>) type ), true );
 	}
 
-	public void addNew(EntityModel entityModel, int index)
+	public void addNew(Writable aEntity, int index)
 	{
-		Entity entity = modelController.createNew( entityModel.getEntityClass(index).getSimpleName() );
-		modelController.addEntityField(entityModel.getEntity(), entityModel.getEntityName(index), entity);
-		openEntityTab( modelController.createModel(entity), true);
+		@SuppressWarnings("unchecked")
+		Writable entity = modelController.createNew( (Class<Writable>) aEntity.getEntityClass(index) );
+		modelController.addEntityField(aEntity, index, entity);
+		openEntityTab( entity, true);
 	}
 
 	public void saveAll()
@@ -155,36 +153,35 @@ public class GUIController {
 				FullEditPanel panel = (FullEditPanel) c;
 				if(panel.hasChanged())
 					panel.save(modelController);
-				openEntityTab((EntityModel) panel.getShownObject(),false);
+				openEntityTab((Readable) panel.getShownObject(),false);
 			}
 		modelController.commit();
 		mainFrame.getTabbedPane().setSelectedIndex(current);
 	}
 
-	public void delete(Entity entity)
+	public void delete(Writable entity)
 	{
-		EntityModel entityModel = modelController.createModel(entity);
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
+		for(int i = 0; i < entity.getEntityCount(); i++)
 		{
-			switch(entityModel.getRelationType(i))
+			switch(entity.getRelationType(i))
 			{
 			case MANYTOMANY:
 				break;
 			case MANYTOONE:
 				break;
 			case ONETOMANY:
-				Set<?> set = (Set<?>) entityModel.getEntityValue(i);
+				Set<?> set = (Set<?>) entity.getEntityValue(i);
 				for(Object o : set.toArray())
-					delete((Entity) o);
+					delete((Writable) o);
 				break;
 			case ONETOONE:
-//				delete((Entity) entityModel.getEntityValue(i));
+//				delete((Writable) entity.getEntityValue(i));
 				break;
 			}
 		}		
 		for(Component c : mainFrame.getTabbedPane().getComponents() )
-			if(c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof EntityModel )
-				if( ((EntityModel) ((MyPanel)c).getShownObject()).getEntity().equals(entity))
+			if(c instanceof MyPanel && ((MyPanel)c).getShownObject() instanceof Readable )
+				if( ((Readable) ((MyPanel)c).getShownObject()).equals(entity))
 					mainFrame.getTabbedPane().remove(c);
 		modelController.delete(entity);
 	}

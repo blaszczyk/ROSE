@@ -30,34 +30,31 @@ public class FullEditPanel extends AlignPanel {
 	private Map<Integer,MyComboBox<Entity>> entityBoxes = new HashMap<>();
 	
 	private FullModelController modelController;
-	private final EntityModel entityModel;
+	private final Writable entity;
 
-	public FullEditPanel( EntityModel entityModel, FullModelController modelController, GUIController guiController, boolean showTitle, ChangeListener listener )
+	public FullEditPanel( Writable entity, FullModelController modelController, GUIController guiController, boolean showTitle, ChangeListener listener )
 	{
-		this(entityModel, modelController, guiController, showTitle);
+		this(entity, modelController, guiController, showTitle);
 		setChangeListener(listener);		
 	}
-	public FullEditPanel( EntityModel entityModel, FullModelController modelController, GUIController guiController, boolean showTitle )
+	public FullEditPanel( Writable entity, FullModelController modelController, GUIController guiController, boolean showTitle )
 	{
 		super(guiController);
 		this.modelController = modelController;
-		this.entityModel = entityModel;
+		this.entity = entity;
 		if(showTitle)
-			setTitle( entityModel.getId() > 0 ? entityModel.getName() + " " + entityModel.getId() : "new " + entityModel.getName() );
-		basicPanel = addBasicPanel(entityModel);
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
+			setTitle( entity.getId() > 0 ? entity.getEntityName() + " " + entity.getId() : "new " + entity.getEntityName() );
+		basicPanel = addBasicPanel(entity);
+		for(int i = 0; i < entity.getEntityCount(); i++)
 		{
-			switch( entityModel.getRelationType(i))
+			switch( entity.getRelationType(i))
 			{
 			case ONETOONE:
-				basicPanels.add( addBasicPanel( entityModel.createModel( (Entity) entityModel.getEntityValue(i))));
+				if(	entity.getEntityValue(i) instanceof Writable )
+					basicPanels.add( addBasicPanel( (Writable) entity.getEntityValue(i) ) );
 				break;
 			case MANYTOMANY:
 			case ONETOMANY:
-				List<EntityModel> entityModels = new ArrayList<>();
-				Set<?> objects =  (Set<?>) entityModel.getEntityValue(i);
-				for(Object object : objects)
-					entityModels.add(entityModel.createModel((Entity)object));
 				addEntityTable( i );
 				break;
 			case MANYTOONE:
@@ -72,7 +69,7 @@ public class FullEditPanel extends AlignPanel {
 	private JButton createAddButton( int index )
 	{	
 		JButton button = null;
-		if(entityModel.getRelationType(index).isSecondMany())
+		if(entity.getRelationType(index).isSecondMany())
 		{
 			button = new JButton("Add");
 			try
@@ -83,50 +80,47 @@ public class FullEditPanel extends AlignPanel {
 			{
 				e.printStackTrace();
 			}
-			button.addActionListener( e -> guiController.addNew( entityModel, index ) );
+			button.addActionListener( e -> guiController.addNew( entity, index ) );
 		}
 		
 		return button;
 	}
 	
-	private BasicEditPanel addBasicPanel( EntityModel entityModel )
+	private BasicEditPanel addBasicPanel( Writable entity )
 	{	
-		BasicEditPanel basicPanel = new BasicEditPanel(entityModel) ;
+		BasicEditPanel basicPanel = new BasicEditPanel(entity) ;
 		addPanel(null, null, basicPanel);
 		return basicPanel;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void addEntityTable( int index )
 	{
-		List<EntityModel> entityModels = new ArrayList<>();
-		Set<?> entities =  (Set<?>) entityModel.getEntityValue(index);
-		for(Object entity : entities)
-			entityModels.add(entityModel.createModel((Entity)entity));
+		List<Writable> entities = new ArrayList<>();
+		entities.addAll((Set<? extends Writable>) entity.getEntityValue(index));
 
-		EntityTableModel tableModel = new EntityTableModel(entityModels,3);
-		EntityTable table = new EntityTable( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
+		EntityTableModel<Writable> tableModel = new EntityTableModel<>(entities,3);
+		EntityTable<Writable> table = new EntityTable<>( tableModel, BASIC_WIDTH, SUBTABLE_HEIGTH );
 		table.setButtonColumn(0, "edit.png", e -> guiController.openEntityTab( e, true ));
-		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy(e), true ) );
-		table.setButtonColumn(2, "delete.png", e -> guiController.delete(e.getEntity()) );
+		table.setButtonColumn(1, "copy.png", e -> guiController.openEntityTab( modelController.createCopy((Writable) e), true ) );
+		table.setButtonColumn(2, "delete.png", e -> guiController.delete((Writable) e) );
 		JScrollPane scrollPane = new JScrollPane(table);
 		
-		super.addPanel( entityModel.getEntityName(index), createAddButton(index), scrollPane, BASIC_WIDTH, SUBTABLE_HEIGTH);
+		super.addPanel( entity.getEntityName(index), createAddButton(index), scrollPane, BASIC_WIDTH, SUBTABLE_HEIGTH);
 	}
 	
 	private void addSelectionBox( int index )
 	{
-		Entity[] entities = new Entity[modelController.getAllModels(entityModel.getEntityClass(index)).size()];
-		int count = 0;
-		for( EntityModel entityModel : modelController.getAllModels(entityModel.getEntityClass(index)))
-			entities[count++] = entityModel.getEntity();
+		Entity[] entities = new Entity[modelController.getAllEntites(entity.getEntityClass(index)).size()];
+		modelController.getAllEntites(entity.getEntityClass(index)).toArray(entities);
 		MyComboBox<Entity> selectBox = new MyComboBox<>(entities, BASIC_WIDTH, true);
-		if(entityModel.getEntityValue(index) != null)
-			selectBox.setSelectedItem(entityModel.getEntityValue(index));
+		if(entity.getEntityValue(index) != null)
+			selectBox.setSelectedItem(entity.getEntityValue(index));
 		selectBox.setFont(VALUE_FONT);
 		selectBox.setForeground(VALUE_FG);
 		entityBoxes.put(index, selectBox);
 		
-		super.addPanel( entityModel.getEntityName(index), null, selectBox, BASIC_WIDTH, LBL_HEIGHT);
+		super.addPanel( entity.getEntityName(index), null, selectBox, BASIC_WIDTH, LBL_HEIGHT);
 	}
 	
 	public void save(FullModelController modelController)
@@ -135,7 +129,7 @@ public class FullEditPanel extends AlignPanel {
 		for(BasicEditPanel panel : basicPanels)
 			panel.save(modelController);
 		for(Integer index : entityBoxes.keySet() )
-			modelController.setEntityField(entityModel.getEntity(), entityModel.getEntityName(index), ( (Entity)entityBoxes.get(index).getSelectedItem() ) );
+			modelController.setEntityField(entity, index, ( (Writable)entityBoxes.get(index).getSelectedItem() ) );
 	}
 
 	@Override
@@ -147,7 +141,7 @@ public class FullEditPanel extends AlignPanel {
 	@Override
 	public Object getShownObject()
 	{
-		return entityModel;
+		return entity;
 	}
 	
 
@@ -160,7 +154,7 @@ public class FullEditPanel extends AlignPanel {
 			if(panel.hasChanged())
 				return true;
 		for(Integer index : entityBoxes.keySet() )
-			if( entityBoxes.get(index).getSelectedItem().equals( entityModel.getEntityValue(index) ) )
+			if( entityBoxes.get(index).getSelectedItem().equals( entity.getEntityValue(index) ) )
 				return true;
 		return false;
 	}

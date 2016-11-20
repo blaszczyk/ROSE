@@ -6,112 +6,96 @@ import org.hibernate.*;
 import org.hibernate.cfg.AnnotationConfiguration;
 
 import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.model.Readable;
 
 public class HibernateController implements FullModelController {
 
 	private static SessionFactory sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();
-	private BasicModelController controller;
 
-	private Map<Class<?>,List<EntityModel>> entityModelLists = new HashMap<>();
-	private Set<Entity> changedEntitys = new HashSet<>();
-	
-	public HibernateController(BasicModelController controller)
-	{
-		this.controller = controller;
-	}
+	private Map<Class<?>,List<Readable>> entityLists = new HashMap<>();
+	private Set<Writable> changedEntitys = new HashSet<>();
 	
 	@Override
-	public void setField(Entity entity, String name, Object value)
+	public void setField(Writable entity, int index, Object value)
 	{
 		changedEntitys.add(entity);
-		controller.setField(entity, name, value);
+		entity.setField(index, value);
 	}
 
 	@Override
-	public void setEntityField(Entity entity, String name, Entity value)
+	public void setEntityField(Writable entity, int index, Writable value)
 	{
 		changedEntitys.add(entity);
 		if(value !=  null && !(value instanceof Enum))
 			changedEntitys.add(value);
-		controller.setEntityField(entity, name, value);
+		entity.setEntity( index, value);
 	}
 	
 	@Override
-	public void addEntityField(Entity entity, String name, Entity value)
+	public void addEntityField(Writable entity, int index, Writable value)
 	{
 		changedEntitys.add(entity);
 		changedEntitys.add(value);
-		controller.addEntityField(entity, name, value);
+		entity.addEntity( index, value);
 	}
 	
 	@Override
-	public void delete(Entity entity)
+	public void delete(Writable entity)
 	{
 		Session sesson = sessionFactory.openSession();
 		sesson.beginTransaction();
 		sesson.delete(entity);
 		sesson.getTransaction().commit();
-		sesson.close();			
-		deleteModel(entity);
-		controller.delete(entity);
-	}
-	
-	private void deleteModel(Entity entity)
-	{
-		for( Object o : entityModelLists.get(entity.getClass()).toArray() )
-		{
-			EntityModel entityModel = (EntityModel) o;
-			if(entityModel.getEntity().equals(entity))
-			{
-				entityModelLists.get(entity.getClass()).remove(entityModel);
-				for(int i = 0; i < entityModel.getEntityCount(); i++)
-					if(entityModel.getRelationType(i).equals(RelationType.ONETOONE))
-						deleteModel((Entity) entityModel.getEntityValue(i));
-			}
-		}
+		sesson.close();		
+		entityLists.get(entity.getClass()).remove(entity);
+		for(int i = 0; i < entity.getEntityCount(); i++)
+			if(entity.getRelationType(i).equals(RelationType.ONETOONE) && entity.getEntityValue(i) instanceof Writable)
+				delete((Writable) entity.getEntityValue(i));
 	}
 	
 
 	@Override
-	public Entity createNew(String className)
+	public Writable createNew(Class<Writable> type)
 	{
-		Entity newEntity = controller.createNew(className);
-		entityModelLists.get(newEntity.getClass()).add(controller.createModel(newEntity));
-		changedEntitys.add(newEntity);
-		return newEntity;
+		Writable entity;
+		try
+		{
+			entity = type.newInstance();
+			changedEntitys.add(entity);
+			return entity;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Entity createCopy(Entity entity)
+	public Writable createCopy(Writable entity)
 	{
-		Entity copy = createNew(entity.getClass().getSimpleName()), subCopy;
-		EntityModel entityModel = createModel(entity);
-		for(int i = 0; i < entityModel.getFieldCount(); i++)
-			setField(copy, entityModel.getFieldName(i), entityModel.getFieldValue(i));
-		for(int i = 0; i < entityModel.getEntityCount(); i++)
-			switch(entityModel.getRelationType(i))
+		Writable copy = createNew((Class<Writable>) entity.getClass()), subCopy;
+		for(int i = 0; i < copy.getFieldCount(); i++)
+			copy.setField( i, copy.getFieldValue(i));
+		for(int i = 0; i < copy.getEntityCount(); i++)
+			switch(copy.getRelationType(i))
 			{
 			case ONETOONE:
-				subCopy = createCopy( (Entity) entityModel.getEntityValue(i) );
-				setEntityField(copy, entityModel.getEntityName(i), subCopy );
+				subCopy = createCopy( (Writable) copy.getEntityValue(i) );
+				copy.setEntity( i, subCopy );
 				break;
 			case ONETOMANY:
-				for( Object o :  ((Set<?>) entityModel.getEntityValue(i)).toArray())
-					addEntityField(copy, entityModel.getEntityName(i), createCopy((Entity) o));
+				for( Object o :  ((Set<?>) copy.getEntityValue(i)).toArray())
+					copy.addEntity( i, createCopy((Writable) o));
 				break;
 			case MANYTOONE:
-				setEntityField(copy, entityModel.getEntityName(i), (Entity) entityModel.getEntityValue(i));
+				copy.setEntity(i, (Writable) copy.getEntityValue(i));
 				break;
 			case MANYTOMANY:
 				break;
 			}
 		return copy;
-	}
-
-	@Override
-	public EntityModel createModel( Entity entity )
-	{
-		return controller.createModel(entity);
 	}
 	
 	@Override
@@ -140,42 +124,49 @@ public class HibernateController implements FullModelController {
 		Session session = sessionFactory.openSession();
 		for(Class<?> type : types)
 		{
-			List<EntityModel> entityModels = new ArrayList<>();
-			entityModelLists.put(type, entityModels);
+			List<Readable> entities = new ArrayList<>();
+			entityLists.put(type, entities);
 			List<?> list = session.createCriteria(type).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 			for(Object o : list)
-				entityModels.add(createModel((Entity)o));
+				entities.add((Readable) o);
 		}
 		session.close();
 		for(Class<?> type : types)
-			for(EntityModel entityModel : entityModelLists.get(type))
+		{
+			List<Readable> entities = entityLists.get(type);			
+			if( !entities.isEmpty() && entities.get(0) instanceof Writable)
+			for(Readable entity : entities)
 			{
-				for(int i = 0; i < entityModel.getEntityCount(); i++)
+				for(int i = 0; i < entity.getEntityCount(); i++)
 				{
-					if(entityModel.getRelationType(i) == RelationType.ONETOONE || entityModel.getRelationType(i) == RelationType.MANYTOONE)
+					if(entity.getRelationType(i) == RelationType.ONETOONE || entity.getRelationType(i) == RelationType.MANYTOONE)
 					{
-						Entity oldEntity = (Entity) entityModel.getEntityValue(i);
+						Entity oldEntity = (Entity) entity.getEntityValue(i);
 						if(oldEntity == null)
 							continue;
-						for( EntityModel newEntity : entityModelLists.get(oldEntity.getClass()) )
-							if(newEntity.getId() == oldEntity.getId())
-								setEntityField(entityModel.getEntity(), entityModel.getEntityName(i), newEntity.getEntity());
+						int nIndex = entityLists.get(oldEntity.getClass()).indexOf(oldEntity);
+						if(nIndex >= 0)
+							((Writable)entity).setEntity(i, (Writable) entityLists.get(oldEntity.getClass()).get(nIndex) );
 					}
 				}
 			}
+		}
 		changedEntitys.clear();
-	}
-	
-	@Override
-	public List<EntityModel> getAllModels(Class<?> type)
-	{
-		return entityModelLists.get(type);
 	}
 
 	@Override
-	public EntityModel createCopy(EntityModel entityModel)
+	public void removeEntityField(Writable entity, int index, Writable value)
 	{
-		return createModel( createCopy(entityModel.getEntity()));
+		changedEntitys.add(entity);
+		changedEntitys.add(value);
+		entity.removeEntity( index, value);
 	}
+
+	@Override
+	public List<Readable> getAllEntites(Class<?> type)
+	{
+		return entityLists.get(type);
+	}
+		
 
 }

@@ -6,7 +6,6 @@ import javax.swing.JFrame;
 
 import bn.blaszczyk.roseapp.controller.FullModelController;
 import bn.blaszczyk.roseapp.model.Entity;
-import bn.blaszczyk.roseapp.model.EntityModel;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.MyComboBox;
 
@@ -26,10 +25,8 @@ public class SelectEntityDialog extends JDialog implements ThemeConstants {
 		setBackground(FULL_PNL_BACKGROUND);
 		setSize( SEL_DIAL_WIDTH, SEL_DIAL_HEIGTH );
 
-		Entity[] entities = new Entity[modelController.getAllModels(type).size()];
-		int count = 0;
-		for( EntityModel entityModel : modelController.getAllModels(type))
-			entities[count++] = entityModel.getEntity();
+		Entity[] entities = new Entity[modelController.getAllEntites(type).size()];
+		modelController.getAllEntites(type).toArray(entities);
 		selectBox = new MyComboBox<>(entities, BASIC_WIDTH, true);
 		selectBox.setFont(VALUE_FONT);
 		selectBox.setForeground(VALUE_FG);

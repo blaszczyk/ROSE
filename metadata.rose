@@ -27,14 +27,6 @@ begin entity MetaData
 	varchar(50) parserpackage null
 	varchar(50) parserformat "%sParser"
 	
-	varchar(50) controllerpackage null
-	varchar(50) controllerformat "%sController"
-	varchar(50) controllerclass "BasicController"
-	
-	varchar(50) entitymodelpackage null
-	varchar(50) entitymodelformat "%sEntityModel"
-	varchar(50) entitymodelfactoryclass "EntityModelFactory"
-	
 end entity
 
 create javamodels

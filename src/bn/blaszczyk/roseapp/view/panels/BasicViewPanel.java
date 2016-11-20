@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import bn.blaszczyk.roseapp.model.EntityModel;
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.inputpanels.FileInputPanel;
 
@@ -18,18 +18,18 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 	private int width = 3 * H_SPACING + PROPERTY_WIDTH + VALUE_WIDTH;
 	private int height = V_SPACING;
 
-	private EntityModel entityModel;
+	private Readable entity;
 	
-	public BasicViewPanel( EntityModel entityModel )
+	public BasicViewPanel( Readable entity )
 	{
-		this.entityModel = entityModel;
+		this.entity = entity;
 		setLayout(null);
 		setBackground(BASIC_PNL_BACKGROUND);
-		for(int i = 0; i < entityModel.getFieldCount(); i++)
-			if( FileInputPanel.isFileName(entityModel.getFieldValue(i).toString() ) )
-				addFile( entityModel.getFieldName(i), entityModel.getFieldValue(i).toString() );
+		for(int i = 0; i < entity.getFieldCount(); i++)
+			if( FileInputPanel.isFileName(entity.getFieldValue(i).toString() ) )
+				addFile( entity.getFieldName(i), entity.getFieldValue(i).toString() );
 			else
-				addValue( entityModel.getFieldName(i), entityModel.getFieldValue(i) );
+				addValue( entity.getFieldName(i), entity.getFieldValue(i) );
 	}
 
 	private void addValue(String property, Object value)
@@ -86,7 +86,7 @@ public class BasicViewPanel extends JPanel implements MyPanel, ThemeConstants {
 	@Override
 	public Object getShownObject()
 	{
-		return entityModel.getEntity();
+		return entity;
 	}
 
 	@Override

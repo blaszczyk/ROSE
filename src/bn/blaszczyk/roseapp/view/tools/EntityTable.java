@@ -11,17 +11,17 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import bn.blaszczyk.roseapp.model.*;
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 import bn.blaszczyk.roseapp.view.panels.MyPanel;
 
 @SuppressWarnings("serial")
-public class EntityTable extends JTable implements MyPanel, ThemeConstants {
+public class EntityTable<T extends Readable> extends JTable implements MyPanel, ThemeConstants {
 
 	
 	public interface EntityAction
 	{
-		public void performAction(EntityModel entityModel);
+		public void performAction(Readable entity);
 	}
 
 	
@@ -37,7 +37,7 @@ public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 			{
 				JButton button = new JButton((Icon)value);
 				button.setBorderPainted(false);
-				button.addActionListener(e -> buttonActions[column].performAction(tableModel.getEntityModel(row)  ));
+				button.addActionListener(e -> buttonActions[column].performAction(tableModel.getEntity(row)  ));
 				button.setBackground( row % 2 == 0 ? EVEN_BG : ODD_BG);
 				return button;
 			}
@@ -81,13 +81,13 @@ public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 	};
 	
 	private EntityAction[] buttonActions;
-	private EntityTableModel tableModel;
+	private EntityTableModel<T> tableModel;
 	
 	private int width = FULL_TABLE_WIDTH;
 	private int height = TABLE_HEIGHT;
 	private final TableRowSorter<TableModel> sorter = new TableRowSorter<>();
 	
-	public EntityTable(EntityTableModel tableModel, int maxWidth, int height )
+	public EntityTable(EntityTableModel<T> tableModel, int maxWidth, int height )
 	{
 		super(tableModel);
 		this.tableModel = tableModel;
@@ -111,7 +111,7 @@ public class EntityTable extends JTable implements MyPanel, ThemeConstants {
 					int row = sorter.convertRowIndexToModel( rowAtPoint(e.getPoint()) );
 					int col = columnAtPoint(e.getPoint());
 					if(col < tableModel.getButtonCount() )
-						buttonActions[col].performAction(tableModel.getEntityModel(row));						
+						buttonActions[col].performAction(tableModel.getEntity(row));						
 				}
 			}			
 		});
