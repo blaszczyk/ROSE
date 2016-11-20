@@ -18,9 +18,6 @@ public class MetaDataParser
 		case "sqlpath":
 			metaData.setSqlpath( value );
 			break;
-		case "usingforeignkeys":
-			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
-			break;
 		case "dbtype":
 			metaData.setDbtype( value );
 			break;
@@ -38,6 +35,9 @@ public class MetaDataParser
 			break;
 		case "dbname":
 			metaData.setDbname( value );
+			break;
+		case "usingforeignkeys":
+			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
 			break;
 		case "mainpackage":
 			metaData.setMainpackage( value );

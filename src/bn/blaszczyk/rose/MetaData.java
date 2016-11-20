@@ -11,13 +11,13 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	private int id = -1;
 	private String srcpath = "src/";
 	private String sqlpath = "sql/";
-	private Boolean usingForeignKeys = false;
 	private String dbtype = "mysql";
 	private String dbuser = "root";
 	private String dbpassword = "";
 	private String dbserver = "localhost";
 	private String dbport = "3306";
 	private String dbname = "MyDB";
+	private Boolean usingForeignKeys = false;
 	private String mainpackage = null;
 	private String mainname = "Main";
 	private String modelpackage = null;
@@ -63,17 +63,6 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	public void setSqlpath( String sqlpath )
 	{
 		this.sqlpath = sqlpath;
-	}
-
-
-	public Boolean isUsingForeignKeys()
-	{
-		return usingForeignKeys;
-	}
-
-	public void setUsingForeignKeys( Boolean usingForeignKeys )
-	{
-		this.usingForeignKeys = usingForeignKeys;
 	}
 
 
@@ -140,6 +129,17 @@ public class MetaData implements bn.blaszczyk.roseapp.model.Entity, Comparable<M
 	public void setDbname( String dbname )
 	{
 		this.dbname = dbname;
+	}
+
+
+	public Boolean isUsingForeignKeys()
+	{
+		return usingForeignKeys;
+	}
+
+	public void setUsingForeignKeys( Boolean usingForeignKeys )
+	{
+		this.usingForeignKeys = usingForeignKeys;
 	}
 
 

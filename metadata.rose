@@ -9,13 +9,14 @@ begin entity MetaData
 	varchar(50) srcpath "src/"
 	varchar(50) sqlpath "sql/"
 	
-	boolean usingForeignKeys false
 	varchar(50) dbtype "mysql"
 	varchar(50) dbuser "root"
 	varchar(50) dbpassword ""
 	varchar(50) dbserver "localhost"
 	char(5) dbport "3306"
 	varchar(50) dbname "MyDB"
+	
+	boolean usingForeignKeys false
 	
 	varchar(50) mainpackage null
 	varchar(50) mainname "Main"
