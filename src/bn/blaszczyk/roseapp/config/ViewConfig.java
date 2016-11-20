@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bn.blaszczyk.roseapp.model.Readable;
 import bn.blaszczyk.roseapp.view.tools.ColumnContent;
 
 public class ViewConfig {
@@ -22,14 +23,14 @@ public class ViewConfig {
 	}
 	
 	/*
-	 * Format is "f1;f2;f3;e1;e2;e1.f1;e1,f2"
+	 * Format is "field0;field1;entity0;entity1.field2;entity1.entity0.field4"
 	 */
 	public static void putColumnContentsAsString(Class<?> type, String wString) throws ParseException
-	{
+	{	
 		String[] split = wString.split(DELIMITER);
 		List<ColumnContent> columnContents = new ArrayList<>();
 		for(String ccString : split)
-			columnContents.add(new ColumnContent(ccString.trim()));
+			columnContents.add(new ColumnContent(tagEntityName(type, ccString).trim()));
 		COLUMN_CONTENT_MAP.put(type, columnContents);
 	}
 
@@ -48,5 +49,33 @@ public class ViewConfig {
 		for(int i = 0; i < split.length; i++)
 			widths[i] = Integer.parseInt(split[i].trim());
 		COLUMN_WIDTH_MAP.put(type, widths);
+	}
+	
+	private static String tagEntityName(final Class<?> type, final String ccString)
+	{
+		System.err.printf("tagging %20s using %s\n",ccString, type.getSimpleName());
+		String[] split = ccString.split("\\.|\\,", 2 );
+		try
+		{
+			Readable entity =  (Readable) type.newInstance();
+			for(int i = 0; i < entity.getFieldCount(); i++)
+				if(split[0].trim().equalsIgnoreCase( entity.getFieldName(i) ))
+					return new StringBuilder().append("f").append(i).toString();
+			for(int i = 0; i < entity.getEntityCount(); i++)
+				if(split[0].trim().equalsIgnoreCase( entity.getEntityName(i) ))
+				{
+					StringBuilder builder = new StringBuilder();
+					builder.append("e").append(i);
+					if(split.length == 2)
+						builder.append(",").append( tagEntityName(entity.getEntityClass(i), split[1]) );
+					return builder.toString();
+				}
+			return ccString;
+		}
+		catch (Exception e)
+		{
+			System.err.println("Unknown EntityFieldName in " + ccString);
+			return ccString;
+		}		
 	}
 }

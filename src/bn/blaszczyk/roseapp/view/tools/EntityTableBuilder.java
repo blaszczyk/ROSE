@@ -11,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 
 import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.roseapp.model.Writable;
 
 public class EntityTableBuilder
 {
@@ -19,6 +20,13 @@ public class EntityTableBuilder
 	private List<? extends Readable> entities; 
 	private int height;
 	private int width;
+	private Class<?> type;
+	
+	public EntityTableBuilder type(Class<?> type)
+	{
+		this.type = type;
+		return this;
+	}
 	
 	public EntityTableBuilder heigth(int heigth)
 	{
@@ -61,7 +69,7 @@ public class EntityTableBuilder
 	
 	public EntityTable build()
 	{
-		EntityTableModel tableModel= new EntityTableModel(entities, actions.size());
+		EntityTableModel tableModel= new EntityTableModel(entities, actions.size(),createInstance(type));
 		EntityTable table = new EntityTable(tableModel, width, height);
 		for(int i = 0; i < actions.size(); i++)
 			table.setButtonColumn(i, icons.get(i), actions.get(i));
@@ -71,5 +79,22 @@ public class EntityTableBuilder
 	public JScrollPane buildInScrollPane()
 	{
 		return new JScrollPane(build());
+	}
+	
+	private Writable createInstance(Class<?> type)
+	{
+		try
+		{
+			Writable instance = (Writable) type.newInstance();
+			for(int i = 0; i < instance.getEntityCount(); i++)
+				if(!instance.getRelationType(i).isSecondMany())
+					instance.setEntity(i, createInstance(instance.getEntityClass(i)));
+			return instance;
+		}
+		catch (InstantiationException | IllegalAccessException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

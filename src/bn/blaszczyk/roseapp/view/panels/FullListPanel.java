@@ -19,6 +19,7 @@ public class FullListPanel extends JPanel implements ThemeConstants, MyPanel {
 		this.type = type;
 		setLayout(null);
 		JScrollPane scrollPane = new EntityTableBuilder()
+				.type(type)
 				.width(FULL_TABLE_WIDTH)
 				.heigth(PANEL_HEIGHT)
 				.entities(modelController.getAllEntites(type))

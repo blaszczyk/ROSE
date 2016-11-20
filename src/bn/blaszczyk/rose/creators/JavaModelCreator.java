@@ -529,7 +529,7 @@ public class JavaModelCreator {
 						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() != null)\n"
 								+ "\t\t\t\t" + getGetterName(entityField) + "()."
 								+ getGetterName(entityField.getCouterpart()) + "().remove( this );\n"
-								+ "\t\t\tif( value != null )\n"
+								+ "\t\t\tif(value != null)\n"
 								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
 								+ getGetterName(entityField.getCouterpart()) + "().add( this );\n");
 					writer.write( "\t\t\t" + getSetterName(entityField) + "( (" + entityField.getEntity().getSimpleClassName() + ")value );\n"

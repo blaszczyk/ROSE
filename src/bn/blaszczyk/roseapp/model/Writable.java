@@ -7,6 +7,4 @@ public interface Writable extends Readable {
 	public void addEntity( int index, Writable value );
 	public void removeEntity( int index, Writable value );
 	
-//	public Entity createNew( ); -> Factory
-	
 }

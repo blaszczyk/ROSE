@@ -86,6 +86,7 @@ public class FullViewPanel extends AlignPanel {
 	private void addEntityTable( int index )
 	{
 		JScrollPane scrollPane = new EntityTableBuilder()
+				.type(entity.getEntityClass(index))
 				.width(BASIC_WIDTH)
 				.heigth(SUBTABLE_HEIGTH)
 				.entities((Set<? extends Readable>) entity.getEntityValue(index))

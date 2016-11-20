@@ -9,34 +9,37 @@ import javax.swing.table.TableModel;
 
 import bn.blaszczyk.roseapp.config.ViewConfig;
 import bn.blaszczyk.roseapp.model.Readable;
+import bn.blaszczyk.roseapp.model.Writable;
 import bn.blaszczyk.roseapp.view.ThemeConstants;
 
 public class EntityTableModel implements TableModel, ThemeConstants {
 	
 	private final List<? extends Readable> entites;
-	private boolean empty;
-	private Readable first;
+	private Readable instance;
 	private final int buttonCount;
 	private final List<ColumnContent> colContents = new ArrayList<>();
 	
 	
-	public EntityTableModel(List<? extends Readable> entities, int buttonCount)
+	public EntityTableModel(List<? extends Readable> entities, int buttonCount, Writable instance)
 	{
 		this.entites = entities;
-		this.empty = entities.isEmpty();
 		for( int i = 0; i < buttonCount; i++)
 			colContents.add(new ColumnContent());
-		if(!empty)
-		{
-			first = entities.get(0);
-			colContents.addAll(ViewConfig.getColumnContents(first.getClass()));
-//			for( String col : first.getTableCols().replaceAll(" ", "").split(";") )
-//				if(col.substring(0, 1).equalsIgnoreCase("m") )
-//					colContents.add(new ColumnContent(ColType.MEMBER, Integer.parseInt(col.substring(1))));
-//				else 
-//					if(col.substring(0, 1).equalsIgnoreCase("e") )
-//						colContents.add(new ColumnContent(ColType.ENTITY, Integer.parseInt(col.substring(1))));
-		}
+		if(instance != null)
+			this.instance = instance;
+		else if(!entities.isEmpty())
+			this.instance = entities.get(0);
+		colContents.addAll(ViewConfig.getColumnContents(instance.getClass()));
+//		if(!empty)
+//		{
+//			first = entities.get(0);
+////			for( String col : first.getTableCols().replaceAll(" ", "").split(";") )
+////				if(col.substring(0, 1).equalsIgnoreCase("m") )
+////					colContents.add(new ColumnContent(ColType.MEMBER, Integer.parseInt(col.substring(1))));
+////				else 
+////					if(col.substring(0, 1).equalsIgnoreCase("e") )
+////						colContents.add(new ColumnContent(ColType.ENTITY, Integer.parseInt(col.substring(1))));
+//		}
 		this.buttonCount = buttonCount > 0 ? buttonCount : 0;
 	}
 
@@ -65,13 +68,13 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 	@Override
 	public String getColumnName(int columnIndex)
 	{
-		return colContents.get(columnIndex).getName(first);
+		return colContents.get(columnIndex).getName(instance);
 	}
 	
 	@Override
 	public Class<?> getColumnClass(int columnIndex)
 	{
-		return colContents.get(columnIndex).getClass(first);
+		return colContents.get(columnIndex).getClass(instance);
 	}
 	
 	@Override
@@ -110,9 +113,7 @@ public class EntityTableModel implements TableModel, ThemeConstants {
 	{
 		if( columnIndex < buttonCount)
 			return BUTTON_WIDTH;
-		if(empty)
-			return 0;
-		return ViewConfig.getColumnWidths(first.getClass())[columnIndex-buttonCount];
+		return ViewConfig.getColumnWidths(instance.getClass())[columnIndex-buttonCount];
 //		if( getColumnClass(columnIndex) == String.class )
 //			return 7 * first.getLength1(colContents.get(columnIndex).getIndex());
 //		else if( getColumnClass(columnIndex) == BigDecimal.class )
