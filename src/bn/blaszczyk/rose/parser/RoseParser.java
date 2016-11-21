@@ -55,7 +55,17 @@ public class RoseParser {
 		}		
 	}
 	
-	private void createFile( String filetype )
+	List<Entity> getEntities()
+	{
+		return entities;
+	}
+
+	List<EnumType> getEnums()
+	{
+		return enums;
+	}
+
+	void createFile( String filetype )
 	{
 		switch(filetype.toLowerCase())
 		{
@@ -84,7 +94,7 @@ public class RoseParser {
 		}
 	}
 	
-	private void linkEntities() throws ParseException
+	protected void linkEntities() throws ParseException
 	{
 		Map<EntityField,Entity> originalFields = new HashMap<>();
 		for(Entity entity : entities)

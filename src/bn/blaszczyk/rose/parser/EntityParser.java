@@ -56,13 +56,13 @@ public class EntityParser {
 			{
 				split = split[1].split("\\s+", 3);
 					if(split.length == 3)
-						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1],split[2]) );	
+						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1], split[2]) );	
 					else if(split.length == 2)
-						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1], null) );					
+						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1]) );					
 					else
-						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[0], null) );			
+						entity.addEntityField(new EntityField(split[0], getRelationType(command) ) );			
 			}
-			else if( command.equalsIgnoreCase("tostring"))
+			else if( "tostring".equalsIgnoreCase(command))
 			{
 				if(split.length == 2)
 					entity.setToString(split[1]);

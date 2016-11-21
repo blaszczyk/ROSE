@@ -23,6 +23,16 @@ public class EntityField implements Field{
 		setCounterName(counterName);
 	}
 	
+	public EntityField(String entityName, RelationType type, String name )
+	{
+		this(entityName, type, entityName, null);
+	}
+	
+	public EntityField(String entityName, RelationType relationType)
+	{
+		this(entityName, relationType, entityName);
+	}
+	
 	public EntityField( Entity entity, EntityField counterpart )
 	{
 		this.entityName = counterpart.getEntity().getObjectName();
@@ -35,11 +45,6 @@ public class EntityField implements Field{
 		setCounterName(counterpart.getName());
 		this.entity = entity;
 		setCouterpart(counterpart);
-	}
-	
-	public EntityField(String entityName, RelationType relationType, String objectName)
-	{
-		this(entityName, relationType, objectName, null);
 	}
 
 	public Entity getEntity()
