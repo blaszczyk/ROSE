@@ -9,10 +9,14 @@ import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EnumField;
+import bn.blaszczyk.rose.model.Field;
+import bn.blaszczyk.rose.model.PrimitiveField;
 
 public class RoseAppLauncherCreator {
 
 	private static final String CONTROLLER_PACKAGE = "bn.blaszczyk.roseapp.controller";
+	private static final String CONFIG_PACKAGE = "bn.blaszczyk.roseapp.config";
 	private static final String TOOLS_PACKAGE = "bn.blaszczyk.roseapp.tools";
 
 	public static void createMain(List<Entity> entities, MetaData metadata)
@@ -80,6 +84,7 @@ public class RoseAppLauncherCreator {
 			
 			// imports
 			writer.write("import " + TOOLS_PACKAGE + ".*;\n"
+					+ "import " + CONFIG_PACKAGE + ".*;\n"
 					+ "import " + metadata.getModelpackage() + ".*;\n");
 			
 			// class declaration
@@ -90,8 +95,11 @@ public class RoseAppLauncherCreator {
 					+ "\t{\n"
 					+ "\t\tModelProvider.parseRoseFile( " + classname + ".class.getClassLoader().getResourceAsStream(\"" 
 						+ getRoseCopyFileName(metadata) + "\" ) );\n"
-					+ "\t\tModelProvider.putClasses( " + allClassesAsCSV + ");\n"
-					+ "\t}\n");
+					+ "\t\tModelProvider.putClasses( " + allClassesAsCSV + ");\n");
+			for(Entity entity : entities)
+				writer.write("\n\t\tViewConfig.putColumnWidthsAsString( " + entity.getSimpleClassName() + ".class , \"" + generateColWidths(entity) + "\" );\n"
+						+ "\t\tViewConfig.putColumnContentsAsString( " + entity.getSimpleClassName() + ".class, \"" + generateColContents(entity) + "\" );\n");
+			writer.write("\t}\n");
 			
 			//fin
 			writer.write("}\n");
@@ -102,7 +110,7 @@ public class RoseAppLauncherCreator {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void copyRose(File file, MetaData metadata)
 	{
 		String copyName = metadata.getSrcpath() + getRoseCopyFileName(metadata);
@@ -139,5 +147,57 @@ public class RoseAppLauncherCreator {
 		return builder.toString();
 		
 	}
+	
+	private static String generateColContents(Entity entity)
+	{
+		boolean first = true;
+		StringBuilder builder = new StringBuilder();
+		for(Field field : entity.getFields())
+		{
+			if(first)
+				first = false;
+			else
+				builder.append(";");
+			builder.append( field.getName() );
+		}
+		return builder.toString();
+	}
+
+	private static String generateColWidths(Entity entity)
+	{
+		boolean first = true;
+		StringBuilder builder = new StringBuilder();
+		for(Field field : entity.getFields())
+		{
+			if(first)
+				first = false;
+			else
+				builder.append(";");
+			int width = 0;
+			if(field instanceof EnumField)
+				width = ((EnumField)field).getEnumName().length() * 2;
+			else if(field instanceof PrimitiveField)
+			{
+				PrimitiveField pField = (PrimitiveField) field;
+				switch(pField.getType())
+				{
+				case CHAR:
+				case VARCHAR:
+				case NUMERIC:
+					width = pField.getLength1() * 2;
+					break;
+				case DATE:
+				case BOOLEAN:
+				case INT:
+					width = 50;
+					break;
+				}
+			}
+			builder.append( width );
+		}
+		return builder.toString();
+	}
+
+	
 
 }

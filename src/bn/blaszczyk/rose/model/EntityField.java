@@ -18,14 +18,14 @@ public class EntityField implements Field{
 	{
 		this.entityName = entityName;
 		this.type = type;
-		this.name = name.substring(0, 1).toLowerCase() + name.substring(1);
+		this.name = name.substring(0, 1).toLowerCase() + name.substring(1) + (type.isSecondMany() ? "s" : "");
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 		setCounterName(counterName);
 	}
 	
 	public EntityField(String entityName, RelationType type, String name )
 	{
-		this(entityName, type, entityName, null);
+		this(entityName, type, name, null);
 	}
 	
 	public EntityField(String entityName, RelationType relationType)
@@ -38,9 +38,9 @@ public class EntityField implements Field{
 		this.entityName = counterpart.getEntity().getObjectName();
 		this.type = counterpart.getType().getInverse();		
 		if(counterpart.getCounterName() == null)
-			this.name = entity.getObjectName();
+			this.name = entity.getObjectName() + (type.isSecondMany() ? "s" : "");
 		else
-			this.name = counterpart.getCounterName();
+			this.name = counterpart.getCounterName() + (type.isSecondMany() ? "s" : "");
 		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);		
 		setCounterName(counterpart.getName());
 		this.entity = entity;

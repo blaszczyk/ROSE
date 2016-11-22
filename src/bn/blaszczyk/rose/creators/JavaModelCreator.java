@@ -17,15 +17,11 @@ public class JavaModelCreator {
 	{
 		if(field instanceof PrimitiveField && ((PrimitiveField)field).getType().equals(PrimitiveType.BOOLEAN))
 			return "is" + field.getCapitalName();
-		if(field instanceof EntityField && ((EntityField)field).getType().isSecondMany())
-			return "get" + field.getCapitalName() + "s";
 		return "get" + field.getCapitalName();
 	}
 	
 	public static String getSetterName(Field field)
 	{
-		if(field instanceof EntityField && ((EntityField)field).getType().isSecondMany())
-			return "set" + field.getCapitalName() + "s";
 		return "set" + field.getCapitalName();
 	}
 	
@@ -118,7 +114,7 @@ public class JavaModelCreator {
 		for(EntityField entityfield : entity.getEntityFields())
 		{
 			if(entityfield.getType().isSecondMany())
-				writer.write("\tprivate java.util.Set<" + entityfield.getEntity().getSimpleClassName() + "> " + entityfield.getName() + "s = new java.util.TreeSet<>();\n");
+				writer.write("\tprivate java.util.Set<" + entityfield.getEntity().getSimpleClassName() + "> " + entityfield.getName() + " = new java.util.TreeSet<>();\n");
 			else
 				writer.write("\tprivate " + entityfield.getEntity().getSimpleClassName() + " " + entityfield.getName() + ";\n");
 		}
@@ -235,7 +231,7 @@ public class JavaModelCreator {
 					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
 					+ "\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\n");
 			else
-				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + ", mappedBy = \"" + entityField.getCounterName() + "s\" )\n");							
+				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + ", mappedBy = \"" + entityField.getCounterName() + "\" )\n");							
 			break;
 		}
 	}
@@ -260,13 +256,13 @@ public class JavaModelCreator {
 		// getter
 		writer.write("\tpublic java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + getGetterName(entityField)	+ "()\n"
 				+ "\t{\n"
-				+ "\t\treturn " + entityField.getName() + "s;\n"
+				+ "\t\treturn " + entityField.getName() + ";\n"
 				+ "\t}\n\n" );
 	
 		// setter
-		writer.write("\tpublic void " + getSetterName(entityField) + "( java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + entityField.getName() + "s )\n"
+		writer.write("\tpublic void " + getSetterName(entityField) + "( java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + entityField.getName() + " )\n"
 				+ "\t{\n"
-				+ "\t\tthis." + entityField.getName() + "s = " + entityField.getName() + "s;\n"
+				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\n"
 				+ "\t}\n\n" );
 	}
 	
@@ -392,8 +388,7 @@ public class JavaModelCreator {
 		count = 0;
 		for(EntityField entityField : entity.getEntityFields())
 			writer.write("\t\tcase " + count++ + ":\n"
-					+ "\t\t\treturn \"" + entityField.getCapitalName() + ( entityField.getType().isSecondMany() ? "s" : "" ) 
-					+  "\";\n" );
+					+ "\t\t\treturn \"" + entityField.getCapitalName()	+ "\";\n" );
 		writer.write("\t\t}\n"
 				+ "\t\treturn \"\";\n"
 				+ "\t}\n\n");
@@ -430,39 +425,6 @@ public class JavaModelCreator {
 				+ "\t\treturn null;\n"
 				+ "\t}\n\n");
 		
-		// public int getLength1( int index );			
-		if(usingAnnotations)
-			writeTransistenceAnnotation(writer);
-		writer.write("\t@Override\n"
-				+ "\tpublic int getLength1(int index)\n"
-				+ "\t{\n"
-				+ "\t\tswitch(index)\n"
-				+ "\t\t{\n");
-		count = 0;
-		for(Field field : entity.getFields())
-			if(field instanceof PrimitiveField)
-			writer.write("\t\tcase " + count++ + ":\n"
-					+ "\t\t\treturn " + ((PrimitiveField)field).getLength1() + ";\n" );
-		writer.write("\t\t}\n"
-				+ "\t\treturn 0;\n"
-				+ "\t}\n\n");
-		
-		// public int getLength2( int index );			
-		if(usingAnnotations)
-			writeTransistenceAnnotation(writer);
-		writer.write("\t@Override\n"
-				+ "\tpublic int getLength2(int index)\n"
-				+ "\t{\n"
-				+ "\t\tswitch(index)\n"
-				+ "\t\t{\n");
-		count = 0;
-		for(Field field : entity.getFields())
-			if(field instanceof PrimitiveField)
-			writer.write("\t\tcase " + count++ + ":\n"
-					+ "\t\t\treturn " + ((PrimitiveField)field).getLength2() + ";\n" );
-		writer.write("\t\t}\n"
-				+ "\t\treturn 0;\n"
-				+ "\t}\n\n");
 	}
 	
 	private static void writeWritableMethods(Entity entity, Writer writer, boolean usingAnnotations) throws IOException
