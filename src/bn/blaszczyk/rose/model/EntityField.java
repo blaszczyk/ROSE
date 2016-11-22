@@ -112,4 +112,10 @@ public class EntityField implements Field{
 		this.counterName = counterName;
 		this.counterCapitalName = counterName == null ? null : this.counterName.substring(0, 1).toUpperCase() + this.counterName.substring(1);
 	}	
+
+	@Override
+	public String toString()
+	{
+		return capitalName;
+	}
 }

@@ -12,7 +12,8 @@ setmetadata = "set " , ( stringmetadata | boolmetadata )
 stringmetadata = stringmetadataproperty , stringvalue
 
 stringmetadataproperty = "srcpath " | "sqlpath " | "dbtype " | "dbuser " | "dbpassword " | "dbserver " | "dbport " | "dbname " 
-						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat "
+						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat " | "resourcepackage" 
+						"initiatorpackage" | "initiatorname"
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
@@ -21,7 +22,7 @@ boolmetadataproperty = "usingAnnotations " | "usingForeignKeys "
 
 createoperation = "create " , createoption
 
-createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "javamain"
+createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "roseapplauncher"
 
 
 enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum"

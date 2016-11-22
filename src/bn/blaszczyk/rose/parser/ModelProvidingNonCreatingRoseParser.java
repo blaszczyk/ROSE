@@ -1,5 +1,6 @@
 package bn.blaszczyk.rose.parser;
 
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
@@ -9,10 +10,15 @@ import bn.blaszczyk.rose.model.EnumType;
 
 public class ModelProvidingNonCreatingRoseParser extends RoseParser {
 	
-	@Override
-	public void parse(String filename)
+	public ModelProvidingNonCreatingRoseParser(InputStream stream)
 	{
-		super.parse(filename);
+		super(stream);
+	}
+
+	@Override
+	public void parse()
+	{
+		super.parse();
 		try
 		{
 			linkEntities();

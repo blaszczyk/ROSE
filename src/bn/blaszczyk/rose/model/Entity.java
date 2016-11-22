@@ -6,7 +6,7 @@ import java.util.List;
 public class Entity {
 	
 	private String classname;
-	private String javaname;
+	private String objectname;
 	private String packagename;
 	private String toString;
 	private ImplInterface implInterface;
@@ -18,12 +18,12 @@ public class Entity {
 		this.classname = classname;
 		this.packagename = packagename;
 		this.implInterface = implInterface;
-		this.javaname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
+		this.objectname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
 	}
 
 	public String getObjectName()
 	{
-		return javaname;
+		return objectname;
 	}
 	
 	
@@ -73,6 +73,12 @@ public class Entity {
 	public void addEntityField(EntityField entityField)
 	{
 		entityFields.add(entityField);
-	}	
+	}
+	
+	@Override
+	public String toString()
+	{
+		return classname;
+	}
 
 }

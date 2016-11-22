@@ -62,12 +62,16 @@ public class EnumField implements Field{
 		return defValue;
 	}
 
-
-
 	@Override
 	public String getSqlType()
 	{
 		return "int";
+	}
+	
+	@Override
+	public String toString()
+	{
+		return capitalName;
 	}
 
 	

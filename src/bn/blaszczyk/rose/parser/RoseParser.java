@@ -1,7 +1,9 @@
 package bn.blaszczyk.rose.parser;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.*;
 
@@ -18,9 +20,24 @@ public class RoseParser {
 	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
 	
-	public void parse(String filename)
+	private final InputStream stream;
+	private File file;
+	
+	public RoseParser(File file) throws FileNotFoundException
 	{
-		try(Scanner scanner = new Scanner(new FileInputStream(filename)))
+		this(new FileInputStream(file));
+		this.file = file;
+	}
+	
+	RoseParser(InputStream stream)
+	{
+		this.stream = stream;
+	}
+	
+	public void parse()
+	{
+		Scanner scanner = new Scanner(stream);
+		try
 		{
 			boolean requiresLink = false;
 			while(scanner.hasNextLine())
@@ -49,10 +66,14 @@ public class RoseParser {
 				}
 			}
 		}
-		catch (FileNotFoundException | ParseException e)
+		catch (ParseException e)
 		{
 			e.printStackTrace();
-		}		
+		}
+		finally 
+		{
+			scanner.close();
+		}
 	}
 	
 	List<Entity> getEntities()
@@ -85,8 +106,10 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
 			break;
-		case "javamain":
-			JavaMainCreator.create(entities, metadata);
+		case "roseapplauncher":
+			RoseAppLauncherCreator.createMain(entities, metadata);
+			RoseAppLauncherCreator.createInitializer(entities, metadata);
+			RoseAppLauncherCreator.copyRose(file,metadata);
 			break;
 		default:
 			System.out.println( "Unknown Agrument: create " + filetype );

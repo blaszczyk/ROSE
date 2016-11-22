@@ -44,6 +44,15 @@ public class MetaDataParser
 		case "mainname":
 			metaData.setMainname( value );
 			break;
+		case "resourcepackage":
+			metaData.setResourcepackage( value );
+			break;
+		case "initiatorpackage":
+			metaData.setInitiatorpackage( value );
+			break;
+		case "initiatorname":
+			metaData.setInitiatorname( value );
+			break;
 		case "modelpackage":
 			metaData.setModelpackage( value );
 			break;
