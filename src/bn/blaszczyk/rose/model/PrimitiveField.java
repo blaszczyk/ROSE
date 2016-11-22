@@ -97,7 +97,11 @@ public class PrimitiveField implements Field{
 		return length2;
 	}
 	
-	
+	@Override
+	public String toString()
+	{
+		return capitalName;
+	}
 	
 	
 	

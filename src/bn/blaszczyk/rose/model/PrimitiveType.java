@@ -1,24 +1,22 @@
 package bn.blaszczyk.rose.model;
 
 public enum PrimitiveType {
-	VARCHAR("varchar","String","\"\"","%s"),
-	CHAR("char","String","\"\"","%s"),
-	INT("int","Integer","0","%s"),
-	DATE("date","java.util.Date"," ","new java.util.Date(%s)"),
-	NUMERIC("numeric","java.math.BigDecimal","0","new java.math.BigDecimal(%s)"),
-	BOOLEAN("boolean","Boolean","false","%s");
-	// TODO:
-	// DATETIME
+	VARCHAR("varchar",String.class,"\"\"","%s"),
+	CHAR("char",String.class,"\"\"","%s"),
+	INT("int",Integer.class,"0","%s"),
+	DATE("date",java.util.Date.class," ","new java.util.Date(%s)"),
+	NUMERIC("numeric",java.math.BigDecimal.class,"0","new java.math.BigDecimal(%s)"),
+	BOOLEAN("boolean",Boolean.class,"false","%s");
 	
-	private String sqlname;
-	private String javaname;
-	private String defValue;
-	private String defFormat;
+	private final String sqlname;
+	private final String defValue;
+	private final String defFormat;
+	private final Class<?> javaType;
 	
-	private PrimitiveType(String sqlname, String javaname, String defValue, String defFormat)
+	private PrimitiveType(String sqlname, Class<?> javaType, String defValue, String defFormat )
 	{
+		this.javaType = javaType;
 		this.sqlname = sqlname;
-		this.javaname = javaname;
 		this.defValue = defValue;
 		this.defFormat = defFormat;
 	}
@@ -27,10 +25,15 @@ public enum PrimitiveType {
 	{
 		return sqlname;
 	}
+	
+	public Class<?> getJavaType()
+	{
+		return javaType;
+	}
 
 	public String getJavaname()
 	{
-		return javaname;
+		return javaType.getName();
 	}
 
 	public String getDefValue()

@@ -1,7 +1,7 @@
 package bn.blaszczyk.rose.model;
 
 public enum ImplInterface {
-	Entity,
+	Identifyable,
 	Readable,
 	Writable;
 }

@@ -1,6 +1,6 @@
 set usingannotations false
 set modelpackage bn.blaszczyk.rose
-set parserpackage bn.blaszczyk.rose
+set parserpackage bn.blaszczyk.rose.parser
 set parserformat %sParser
 set srcpath src/
 
@@ -20,6 +20,11 @@ begin entity MetaData
 	
 	varchar(50) mainpackage null
 	varchar(50) mainname "Main"
+	
+	varchar(50) resourcepackage null
+	
+	varchar(50) initiatorpackage null
+	varchar(50) initiatorname "Initiator"
 	
 	varchar(50) modelpackage null
 	boolean usingAnnotations false

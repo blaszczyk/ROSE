@@ -6,10 +6,9 @@ import java.util.List;
 public class Entity {
 	
 	private String classname;
-	private String javaname;
+	private String objectname;
 	private String packagename;
 	private String toString;
-	private String tableCols;
 	private ImplInterface implInterface;
 	private List<Field> fields = new ArrayList<>();
 	private List<EntityField> entityFields = new ArrayList<>();
@@ -19,12 +18,12 @@ public class Entity {
 		this.classname = classname;
 		this.packagename = packagename;
 		this.implInterface = implInterface;
-		this.javaname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
+		this.objectname = classname.substring(0, 1).toLowerCase() + classname.substring(1);
 	}
 
 	public String getObjectName()
 	{
-		return javaname;
+		return objectname;
 	}
 	
 	
@@ -55,16 +54,6 @@ public class Entity {
 	{
 		return implInterface;
 	}
-
-	public String getTableCols()
-	{
-		return tableCols;
-	}
-
-	public void setTableCols(String tableCols)
-	{
-		this.tableCols = tableCols;
-	}	
 	
 	public List<Field> getFields()
 	{
@@ -81,15 +70,15 @@ public class Entity {
 		fields.add(field);
 	}
 
-	public void addEntityField(EntityField entityField, boolean cascade)
+	public void addEntityField(EntityField entityField)
 	{
 		entityFields.add(entityField);
-		if( cascade && entityField.getType().isFirstMany() )
-		{
-			EntityField counterpart = new EntityField(this, entityField);
-			entityField.setCouterpart(counterpart);
-			entityField.getEntity().addEntityField( counterpart, false );
-		}
-	}	
+	}
+	
+	@Override
+	public String toString()
+	{
+		return classname;
+	}
 
 }

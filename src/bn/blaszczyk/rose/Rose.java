@@ -1,17 +1,23 @@
 // ROSE : Relational-Object-tranSlator-rosE
 package bn.blaszczyk.rose;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.text.ParseException;
+
+import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Rose {
-	public static void main(String[] args) {
-		for (String roseFile : args) {
-			try {
-				RoseParser.parse(roseFile);
-			} catch (FileNotFoundException | ParseException e) {
+	
+	public static void main(String[] args) 
+	{
+		for (String roseFile : args) 			
+			try
+			{
+				new	RoseParser(new File(roseFile)).parse();
+			}
+			catch (FileNotFoundException e)
+			{
 				e.printStackTrace();
 			}
-		}
 	}
 }

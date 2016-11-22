@@ -64,7 +64,7 @@ public class JavaModelCreator {
 				writeWritableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
 			case Readable:
 				writeReadableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
-			case Entity:
+			case Identifyable:
 			}
 			
 			writer.write("}\n");
@@ -85,7 +85,7 @@ public class JavaModelCreator {
 	
 	private static void writeClassDeclaration( Entity entity, Writer writer) throws IOException
 	{
-		writer.write("public class " + entity.getSimpleClassName() + " implements bn.blaszczyk.roseapp.model." 
+		writer.write("public class " + entity.getSimpleClassName() + " implements bn.blaszczyk.rose.model." 
 					+ entity.getImplInterface() + ", Comparable<" + entity.getSimpleClassName() + ">\n");
 	}
 	
@@ -215,20 +215,22 @@ public class JavaModelCreator {
 		switch (entityField.getType())
 		{
 		case ONETOONE:
-			writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL) \n"
+			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
+				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );
+			else
+				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");	
 			break;
 		case ONETOMANY:
-			writer.write("\t@OneToMany( fetch=FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL, "
-					+ "mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
+			writer.write("\t@OneToMany( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
 			break;
 		case MANYTOONE:
-			writer.write("\t@ManyToOne( fetch=FetchType." + FETCH_TYPE + ",  cascade = CascadeType.ALL) \n"
+			writer.write("\t@ManyToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );						
 			break;
 		case MANYTOMANY:
 			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
-				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + ", cascade = CascadeType.ALL )\n"
+				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + " )\n"
 					+ "\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\", "
 					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
 					+ "\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\n");
@@ -400,14 +402,14 @@ public class JavaModelCreator {
 		if(usingAnnotations)
 			writeTransistenceAnnotation(writer);
 		writer.write("\t@Override\n"
-				+ "\tpublic bn.blaszczyk.roseapp.model.RelationType getRelationType(int index)\n"
+				+ "\tpublic bn.blaszczyk.rose.model.RelationType getRelationType(int index)\n"
 				+ "\t{\n"
 				+ "\t\tswitch(index)\n"
 				+ "\t\t{\n");
 		count = 0;
 		for(EntityField entityField : entity.getEntityFields())
 			writer.write("\t\tcase " + count++ + ":\n"
-					+ "\t\t\treturn bn.blaszczyk.roseapp.model.RelationType." + entityField.getType().name() + ";\n" );
+					+ "\t\t\treturn bn.blaszczyk.rose.model.RelationType." + entityField.getType().name() + ";\n" );
 		writer.write("\t\t}\n"
 				+ "\t\treturn null;\n"
 				+ "\t}\n\n");
@@ -426,29 +428,6 @@ public class JavaModelCreator {
 					+ "\t\t\treturn " + entityField.getEntity().getSimpleClassName() + ".class;\n" );
 		writer.write("\t\t}\n"
 				+ "\t\treturn null;\n"
-				+ "\t}\n\n");
-		
-		//public String getTableCols();
-		if(usingAnnotations)
-			writeTransistenceAnnotation(writer);
-		String cols = entity.getTableCols();
-		count = 0;
-		for(Field field : entity.getFields() )
-		{
-			cols = cols.replaceAll("\\%" + field.getName(), "M" + count);	
-			count++;
-		}
-		count = 0;
-		for(EntityField entityField : entity.getEntityFields() )
-		{
-			cols = cols.replaceAll("\\%" + entityField.getName(), "E" + count);			
-			count++;
-		}
-		cols.replaceAll("\\s+", "");
-		writer.write("\t@Override\n"
-				+ "\tpublic String getTableCols()\n"
-				+ "\t{\n"
-				+ "\t\treturn \"" + cols +  "\";\n"
 				+ "\t}\n\n");
 		
 		// public int getLength1( int index );			
@@ -539,7 +518,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void setEntity( int index, bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void setEntity( int index, bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tswitch( index )\n"
 					+ "\t\t{\n");
@@ -552,7 +531,8 @@ public class JavaModelCreator {
 						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() != null)\n"
 								+ "\t\t\t\t" + getGetterName(entityField) + "()."
 								+ getGetterName(entityField.getCouterpart()) + "().remove( this );\n"
-								+ "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+								+ "\t\t\tif(value != null)\n"
+								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
 								+ getGetterName(entityField.getCouterpart()) + "().add( this );\n");
 					writer.write( "\t\t\t" + getSetterName(entityField) + "( (" + entityField.getEntity().getSimpleClassName() + ")value );\n"
 							+ "\t\t\tbreak;\n" );
@@ -567,7 +547,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void addEntity( int index,  bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void addEntity( int index,  bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tif( value == null)\n"
 					+ "\t\t\treturn;\n"
@@ -601,7 +581,7 @@ public class JavaModelCreator {
 			if(usingAnnotations)
 				writeTransistenceAnnotation(writer);
 			writer.write("\t@Override\n"
-					+ "\tpublic void removeEntity( int index,  bn.blaszczyk.roseapp.model.Writable value )\n"
+					+ "\tpublic void removeEntity( int index,  bn.blaszczyk.rose.model.Writable value )\n"
 					+ "\t{\n"
 					+ "\t\tif( value == null )\n"
 					+ "\t\t\treturn;\n"

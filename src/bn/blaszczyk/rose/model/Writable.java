@@ -1,4 +1,4 @@
-package bn.blaszczyk.roseapp.model;
+package bn.blaszczyk.rose.model;
 
 public interface Writable extends Readable {
 	
@@ -6,7 +6,5 @@ public interface Writable extends Readable {
 	public void setEntity( int index, Writable value );
 	public void addEntity( int index, Writable value );
 	public void removeEntity( int index, Writable value );
-	
-//	public Entity createNew( ); -> Factory
 	
 }

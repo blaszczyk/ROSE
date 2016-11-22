@@ -39,6 +39,12 @@ public class EnumType implements Iterable<String>{
 	{
 		return options.add(e);
 	}
+	
+	@Override
+	public String toString()
+	{
+		return classname;
+	}
 
 	@Override
 	public Iterator<String> iterator()

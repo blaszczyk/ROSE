@@ -1,0 +1,67 @@
+rosesourcecode = { rosecommand , "\n" }
+
+rosecommand =  setmetadata
+			| enumdef
+			| entitydef
+			| createoperation
+
+			
+			
+setmetadata = "set " , ( stringmetadata | boolmetadata )
+
+stringmetadata = stringmetadataproperty , stringvalue
+
+stringmetadataproperty = "srcpath " | "sqlpath " | "dbtype " | "dbuser " | "dbpassword " | "dbserver " | "dbport " | "dbname " 
+						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat " | "resourcepackage" 
+						"initiatorpackage" | "initiatorname"
+	
+boolmetadata = boolmetadataproperty , boolvalue
+
+boolmetadataproperty = "usingAnnotations " | "usingForeignKeys "
+
+
+createoperation = "create " , createoption
+
+createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "roseapplauncher"
+
+
+enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum"
+
+
+entitydef = "begin entity " , identifier , [ ":" , interface ] , "\n" , { fielddecl , "\n" } , "end entity"
+
+interface = "r" | "w"
+
+fielddecl = primitivefielddecl 
+		| enumfielddecl 
+		| entityfielddecl 
+		| tostring
+
+primitivefielddecl = primitivetype ,  identifier , [ defvalue ]
+
+primitivetype = "varchar(" , integervalue , ") " 
+			| "char(" , integervalue , ") "
+			| "numeric(" , integervalue , "," , integervalue , ") "
+			| "int " 
+			| "date " 
+			| "boolean "
+
+enumfielddecl = "enum " , identifier , [ identifier , [ defvalue ] ]
+
+entityfielddecl = relationtype , identifier , [ identifier , [ identifier ] ]
+
+relationtype = "onetoone " | "onetomany " | "manytoone " | "manytomany "
+
+tostring = "tostring " , { stringvalue | "%" , identifier }
+
+
+
+boolvalue = "true" | "false"
+
+integervalue = an integer
+
+stringvalue = a string without newline
+
+identifier = a string, starting with a letter, no inner whitespace, whitespace at the end
+
+defvalue = corresponding default value, e.g. 123 or "string"
