@@ -14,6 +14,11 @@ public class ModelProvidingNonCreatingRoseParser extends RoseParser {
 	{
 		super(stream);
 	}
+	
+	public String getMainClassAsString()
+	{
+		return getMetaData().getMainpackage() + "." + getMetaData().getMainname();
+	}
 
 	@Override
 	public void parse()

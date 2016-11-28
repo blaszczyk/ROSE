@@ -139,6 +139,11 @@ public class RoseParser {
 			entityField.getEntity().addEntityField(counterpart);
 		}		
 	}
+	
+	protected MetaData getMetaData()
+	{
+		return metadata;
+	}
 
 	private Entity getEntityType(String name) throws ParseException
 	{
