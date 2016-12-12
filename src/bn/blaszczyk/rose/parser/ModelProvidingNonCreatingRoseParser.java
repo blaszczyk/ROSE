@@ -10,6 +10,8 @@ import bn.blaszczyk.rose.model.EnumType;
 
 public class ModelProvidingNonCreatingRoseParser extends RoseParser {
 	
+	private boolean isLinked = false;
+	
 	public ModelProvidingNonCreatingRoseParser(InputStream stream)
 	{
 		super(stream);
@@ -18,6 +20,16 @@ public class ModelProvidingNonCreatingRoseParser extends RoseParser {
 	public String getMainClassAsString()
 	{
 		return getMetaData().getMainpackage() + "." + getMetaData().getMainname();
+	}
+	
+	
+
+	@Override
+	protected void linkEntities() throws ParseException
+	{
+		if(!isLinked)
+			super.linkEntities();
+		isLinked = true;
 	}
 
 	@Override
