@@ -2,9 +2,8 @@ package bn.blaszczyk.rose.model;
 
 import java.text.ParseException;
 
-public class PrimitiveField implements Field{
-	private String name;
-	private String capitalName;
+public class PrimitiveField extends AbstractField
+{
 	private String sqlType;
 	private PrimitiveType type = null;
 	private String defValue = null;
@@ -14,8 +13,7 @@ public class PrimitiveField implements Field{
 	
 	public PrimitiveField( String sqltype, String name, String defvalue) throws ParseException
 	{
-		this.name = name;
-		this.capitalName = name.substring(0,1).toUpperCase() + name.substring(1);
+		super(name);
 		this.sqlType = sqltype;
 		this.defValue = defvalue;
 		for(PrimitiveType primitiveType : PrimitiveType.values() )
@@ -65,18 +63,6 @@ public class PrimitiveField implements Field{
 	}
 
 	@Override
-	public String getName()
-	{
-		return name;
-	}
-	
-	@Override
-	public String getCapitalName()
-	{
-		return capitalName;
-	}
-
-	@Override
 	public String getSqlType()
 	{
 		return sqlType;
@@ -96,14 +82,5 @@ public class PrimitiveField implements Field{
 	{
 		return length2;
 	}
-	
-	@Override
-	public String toString()
-	{
-		return capitalName;
-	}
-	
-	
-	
 	
 }

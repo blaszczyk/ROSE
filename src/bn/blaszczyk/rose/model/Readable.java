@@ -1,7 +1,7 @@
 package bn.blaszczyk.rose.model;
 
-public interface Readable extends Identifyable{
-	
+public interface Readable extends Identifyable
+{	
 	public String getEntityName();
 	
 	public int getFieldCount();
@@ -13,5 +13,4 @@ public interface Readable extends Identifyable{
 	public String getEntityName( int index );
 	public RelationType getRelationType( int index );
 	public Class<?> getEntityClass( int index );
-
 }

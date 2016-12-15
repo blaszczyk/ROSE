@@ -49,20 +49,27 @@ public class JavaModelCreator {
 			
 			writer.write("{\n");
 			
+			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
+				writeIdDeclarations(writer);
+				
 			writeFieldDeclarations(entity, writer);
 			writeConstructors(entity, writer);
+
+			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
+				writeIdGettersSetters(entity, writer, metadata.isUsingAnnotations());
+			
 			writeGettersSetters(entity, writer, metadata.isUsingAnnotations());
-			writeOverwrittenMethods(entity, writer);
+			writeToString(entity, writer);			
+
+			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
+				writeCompareEqualsById(entity, writer);
 			
-			switch(entity.getImplInterface())
-			{
-			case Writable:
-				writeWritableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
-			case Readable:
-				writeReadableMethods(entity, writer, metadata.isUsingAnnotations()); //fallthrough
-			case Identifyable:
-			}
+			if(entity.getImplInterface().doesExtend(ImplInterface.READABLE))
+				writeReadableMethods(entity, writer, metadata.isUsingAnnotations());
 			
+			if(entity.getImplInterface().doesExtend(ImplInterface.WRITABLE))
+				writeWritableMethods(entity, writer, metadata.isUsingAnnotations()); 
+
 			writer.write("}\n");
 			System.out.println( "File created: " + fullpath);
 		}
@@ -81,15 +88,20 @@ public class JavaModelCreator {
 	
 	private static void writeClassDeclaration( Entity entity, Writer writer) throws IOException
 	{
-		writer.write("public class " + entity.getSimpleClassName() + " implements bn.blaszczyk.rose.model." 
-					+ entity.getImplInterface() + ", Comparable<" + entity.getSimpleClassName() + ">\n");
+		writer.write("public class " + entity.getSimpleClassName() );
+		if(entity.getImplInterface() != ImplInterface.NONE)
+			writer.write( " implements bn.blaszczyk.rose.model." + entity.getImplInterface().getIdentifyer() 
+					+ ", Comparable<" + entity.getSimpleClassName() + ">");
+		writer.write( "\n");
 	}
 	
+	private static void writeIdDeclarations(  Writer writer) throws IOException
+	{
+		writer.write("\tprivate int id = -1;\n");
+	}
+		
 	private static void writeFieldDeclarations( Entity entity, Writer writer) throws IOException
 	{
-		// id
-		writer.write("\tprivate int id = -1;\n");
-
 		// primitive and enum fields
 		for(Field field : entity.getFields())
 			if( field instanceof PrimitiveField)
@@ -129,9 +141,8 @@ public class JavaModelCreator {
 				+ "\t}\n\n");
 	}
 	
-	private static void writeGettersSetters(Entity entity, Writer writer, boolean usingAnnotations) throws IOException
+	private static void writeIdGettersSetters(Entity entity, Writer writer, boolean usingAnnotations) throws IOException
 	{
-		// for id:
 		if(usingAnnotations)
 			writer.write("\t@Id\n"
 					+ "\t@GeneratedValue\n"
@@ -146,7 +157,10 @@ public class JavaModelCreator {
 				+ "\t{\n"
 				+ "\t\tthis.id = id;\n"
 				+ "\t}\n\n");
-
+	}
+	
+	private static void writeGettersSetters(Entity entity, Writer writer, boolean usingAnnotations) throws IOException
+	{
 		// primitive and enum Fields
 		for(Field field : entity.getFields())
 			if( field instanceof PrimitiveField)
@@ -266,7 +280,8 @@ public class JavaModelCreator {
 				+ "\t}\n\n" );
 	}
 	
-	private static void writeOverwrittenMethods(Entity entity, Writer writer ) throws IOException
+
+	private static void writeCompareEqualsById(Entity entity, Writer writer ) throws IOException
 	{
 		// Comparable.compareto
 		writer.write("\t@Override\n"
@@ -275,7 +290,18 @@ public class JavaModelCreator {
 				+ "\t\treturn Integer.compare( this.id, that.id );\n"
 				+ "\t}\n\n");
 		
-		// toString
+		// equals
+		writer.write("\t@Override\n"
+				+ "\tpublic boolean equals( Object that)\n"
+				+ "\t{\n"
+				+ "\t\tif(!(that instanceof " + entity.getSimpleClassName() + "))\n"
+				+ "\t\t\treturn false;\n"
+				+ "\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\n"
+				+ "\t}\n\n");	
+	}
+	
+	private static void writeToString(Entity entity, Writer writer ) throws IOException
+	{
 		String toString = "\"" + entity.getToString() + "\"";
 		for(Field field : entity.getFields() )
 			toString = toString.replaceAll("\\%" + field.getName(), "\" + " + field.getName() + " + \"");	
@@ -286,15 +312,6 @@ public class JavaModelCreator {
 				+ "\tpublic String toString()\n"
 				+ "\t{\n"
 				+ "\t\treturn " + toString + ";\n"
-				+ "\t}\n\n");
-		
-		// equals
-		writer.write("\t@Override\n"
-				+ "\tpublic boolean equals( Object that)\n"
-				+ "\t{\n"
-				+ "\t\tif(!(that instanceof " + entity.getSimpleClassName() + "))\n"
-				+ "\t\t\treturn false;\n"
-				+ "\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\n"
 				+ "\t}\n\n");
 	}
 	

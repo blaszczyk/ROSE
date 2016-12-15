@@ -108,7 +108,6 @@ public class RoseParser {
 			break;
 		case "roseapplauncher":
 			RoseAppLauncherCreator.createMain(entities, metadata);
-			RoseAppLauncherCreator.createInitializer(entities, metadata);
 			RoseAppLauncherCreator.copyRose(file,metadata);
 			break;
 		default:

@@ -1,12 +1,10 @@
 package bn.blaszczyk.rose.model;
 
-public class EntityField implements Field{
-	
+public class EntityField  extends AbstractField
+{	
 	private Entity entity = null;
 	
 	private final String entityName;
-	private final String name;
-	private final String capitalName;
 	
 	private final RelationType type;
 	
@@ -16,10 +14,9 @@ public class EntityField implements Field{
 
 	public EntityField(String entityName, RelationType type, String name, String counterName)
 	{
+		super( quantify(name, type) );
 		this.entityName = entityName;
 		this.type = type;
-		this.name = name.substring(0, 1).toLowerCase() + name.substring(1) + (type.isSecondMany() ? "s" : "");
-		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);
 		setCounterName(counterName);
 	}
 	
@@ -35,15 +32,12 @@ public class EntityField implements Field{
 	
 	public EntityField( Entity entity, EntityField counterpart )
 	{
+		super( quantify( counterpart.getCounterName() == null ? entity.getObjectName() : counterpart.getCounterName() ,
+				counterpart.getType().getInverse() ) );
 		this.entityName = counterpart.getEntity().getObjectName();
-		this.type = counterpart.getType().getInverse();		
-		if(counterpart.getCounterName() == null)
-			this.name = entity.getObjectName() + (type.isSecondMany() ? "s" : "");
-		else
-			this.name = counterpart.getCounterName() + (type.isSecondMany() ? "s" : "");
-		this.capitalName = this.name.substring(0, 1).toUpperCase() + this.name.substring(1);		
-		setCounterName(counterpart.getName());
+		this.type = counterpart.getType().getInverse();			
 		this.entity = entity;
+		setCounterName(counterpart.getName());
 		setCouterpart(counterpart);
 	}
 
@@ -65,24 +59,6 @@ public class EntityField implements Field{
 	public RelationType getType()
 	{
 		return type;
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-	
-	@Override
-	public String getCapitalName()
-	{
-		return capitalName;
-	}
-	
-	@Override
-	public String getSqlType()
-	{
-		return "int";
 	}
 	
 	public String getCounterName()
@@ -112,10 +88,9 @@ public class EntityField implements Field{
 		this.counterName = counterName;
 		this.counterCapitalName = counterName == null ? null : this.counterName.substring(0, 1).toUpperCase() + this.counterName.substring(1);
 	}	
-
-	@Override
-	public String toString()
+	
+	private static String quantify(String name, RelationType type)
 	{
-		return capitalName;
+		return name + (type.isSecondMany() ? "s" : "");
 	}
 }

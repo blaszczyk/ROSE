@@ -19,12 +19,14 @@ public class EntityParser {
 	public Entity parseEntity(String args, Scanner scanner ) throws ParseException
 	{
 		String[] split = args.split(":");
-		ImplInterface implInterface = ImplInterface.Identifyable;
+		ImplInterface implInterface = ImplInterface.NONE;
 		if(split.length > 1)
 			if(split[1].toLowerCase().contains("w"))
-				implInterface = ImplInterface.Writable;
+				implInterface = ImplInterface.WRITABLE;
 			else if(split[1].toLowerCase().contains("r"))
-				implInterface = ImplInterface.Readable;
+				implInterface = ImplInterface.READABLE;
+			else if(split[1].toLowerCase().contains("i"))
+				implInterface = ImplInterface.IDENTIFYABLE;
 		Entity entity = new Entity(split[0].trim(),metadata.getModelpackage(), implInterface);
 		String line;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )

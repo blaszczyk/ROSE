@@ -7,28 +7,27 @@ rosecommand =  setmetadata
 
 			
 			
-setmetadata = "set " , ( stringmetadata | boolmetadata )
+setmetadata = "set" , ( stringmetadata | boolmetadata )
 
 stringmetadata = stringmetadataproperty , stringvalue
 
-stringmetadataproperty = "srcpath " | "sqlpath " | "dbtype " | "dbuser " | "dbpassword " | "dbserver " | "dbport " | "dbname " 
-						| "mainpackage " | "mainname " | "modelpackage " | "parserpackage " | "parserformat " | "resourcepackage" 
-						"initiatorpackage" | "initiatorname"
+stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
+						| "mainpackage" | "mainname" | "modelpackage" | "parserpackage" | "parserformat" | "resourcepackage" 
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
-boolmetadataproperty = "usingAnnotations " | "usingForeignKeys "
+boolmetadataproperty = "usingAnnotations" | "usingForeignKeys"
 
 
-createoperation = "create " , createoption
+createoperation = "create" , createoption
 
 createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "roseapplauncher"
 
 
-enumdef = "begin enum " , identifier , "\n" , { identifier , "\n"} , "end enum"
+enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"
 
 
-entitydef = "begin entity " , identifier , [ ":" , interface ] , "\n" , { fielddecl , "\n" } , "end entity"
+entitydef = "begin entity" , identifier , [ ":" , interface ] , "\n" , { fielddecl , "\n" } , "end entity"
 
 interface = "r" | "w"
 
@@ -39,20 +38,20 @@ fielddecl = primitivefielddecl
 
 primitivefielddecl = primitivetype ,  identifier , [ defvalue ]
 
-primitivetype = "varchar(" , integervalue , ") " 
+primitivetype = "varchar(" , integervalue , ")" 
 			| "char(" , integervalue , ") "
 			| "numeric(" , integervalue , "," , integervalue , ") "
-			| "int " 
-			| "date " 
+			| "int" 
+			| "date" 
 			| "boolean "
 
-enumfielddecl = "enum " , identifier , [ identifier , [ defvalue ] ]
+enumfielddecl = "enum" , identifier , [ identifier , [ defvalue ] ]
 
 entityfielddecl = relationtype , identifier , [ identifier , [ identifier ] ]
 
-relationtype = "onetoone " | "onetomany " | "manytoone " | "manytomany "
+relationtype = "onetoone" | "onetomany" | "manytoone" | "manytomany "
 
-tostring = "tostring " , { stringvalue | "%" , identifier }
+tostring = "tostring" , { stringvalue | "%" , identifier }
 
 
 

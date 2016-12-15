@@ -18,18 +18,15 @@ begin entity MetaData
 	
 	boolean usingForeignKeys false
 	
-	varchar(50) mainpackage null
+	varchar(50) mainpackage "foo"
 	varchar(50) mainname "Main"
 	
 	varchar(50) resourcepackage null
 	
-	varchar(50) initiatorpackage null
-	varchar(50) initiatorname "Initiator"
-	
-	varchar(50) modelpackage null
+	varchar(50) modelpackage "foo.model"
 	boolean usingAnnotations false
 	
-	varchar(50) parserpackage null
+	varchar(50) parserpackage "foo.parser"
 	varchar(50) parserformat "%sParser"
 	
 end entity

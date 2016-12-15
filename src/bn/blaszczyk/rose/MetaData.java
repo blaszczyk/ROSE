@@ -16,14 +16,12 @@ public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparabl
 	private java.lang.String dbport = "3306";
 	private java.lang.String dbname = "MyDB";
 	private java.lang.Boolean usingForeignKeys = false;
-	private java.lang.String mainpackage = null;
+	private java.lang.String mainpackage = "foo";
 	private java.lang.String mainname = "Main";
 	private java.lang.String resourcepackage = null;
-	private java.lang.String initiatorpackage = null;
-	private java.lang.String initiatorname = "Initiator";
-	private java.lang.String modelpackage = null;
+	private java.lang.String modelpackage = "foo.model";
 	private java.lang.Boolean usingAnnotations = false;
-	private java.lang.String parserpackage = null;
+	private java.lang.String parserpackage = "foo.parser";
 	private java.lang.String parserformat = "%sParser";
 
 	public MetaData()
@@ -160,26 +158,6 @@ public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparabl
 	public void setResourcepackage( java.lang.String resourcepackage )
 	{
 		this.resourcepackage = resourcepackage;
-	}
-
-	public java.lang.String getInitiatorpackage()
-	{
-		return initiatorpackage;
-	}
-
-	public void setInitiatorpackage( java.lang.String initiatorpackage )
-	{
-		this.initiatorpackage = initiatorpackage;
-	}
-
-	public java.lang.String getInitiatorname()
-	{
-		return initiatorname;
-	}
-
-	public void setInitiatorname( java.lang.String initiatorname )
-	{
-		this.initiatorname = initiatorname;
 	}
 
 	public java.lang.String getModelpackage()
