@@ -29,7 +29,7 @@ enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"
 
 entitydef = "begin entity" , identifier , [ ":" , interface ] , "\n" , { fielddecl , "\n" } , "end entity"
 
-interface = "r" | "w"
+interface = "i" | "r" | "w"
 
 fielddecl = primitivefielddecl 
 		| enumfielddecl 
