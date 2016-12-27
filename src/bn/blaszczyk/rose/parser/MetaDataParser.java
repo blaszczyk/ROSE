@@ -37,15 +37,6 @@ public class MetaDataParser
 		case "usingforeignkeys":
 			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
 			break;
-		case "mainpackage":
-			metaData.setMainpackage( value );
-			break;
-		case "mainname":
-			metaData.setMainname( value );
-			break;
-		case "resourcepackage":
-			metaData.setResourcepackage( value );
-			break;
 		case "modelpackage":
 			metaData.setModelpackage( value );
 			break;
@@ -57,6 +48,24 @@ public class MetaDataParser
 			break;
 		case "parserformat":
 			metaData.setParserformat( value );
+			break;
+		case "mainpackage":
+			metaData.setMainpackage( value );
+			break;
+		case "mainname":
+			metaData.setMainname( value );
+			break;
+		case "resourcepackage":
+			metaData.setResourcepackage( value );
+			break;
+		case "roseappmessages":
+			metaData.setRoseappmessages( value );
+			break;
+		case "custommessages":
+			metaData.setCustommessages( value );
+			break;
+		case "initialcommands":
+			metaData.setInitialcommands( value );
 			break;
 		default:
 			System.out.println( "Unknown Primitive Field: " + name + " in MetaData");

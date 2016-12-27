@@ -4,9 +4,8 @@
  */
 package bn.blaszczyk.rose;
 
-public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparable<MetaData>
+public class MetaData
 {
-	private int id = -1;
 	private java.lang.String srcpath = "src/";
 	private java.lang.String sqlpath = "sql/";
 	private java.lang.String dbtype = "mysql";
@@ -16,28 +15,19 @@ public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparabl
 	private java.lang.String dbport = "3306";
 	private java.lang.String dbname = "MyDB";
 	private java.lang.Boolean usingForeignKeys = false;
-	private java.lang.String mainpackage = "foo";
-	private java.lang.String mainname = "Main";
-	private java.lang.String resourcepackage = null;
 	private java.lang.String modelpackage = "foo.model";
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
 	private java.lang.String parserformat = "%sParser";
+	private java.lang.String mainpackage = "foo";
+	private java.lang.String mainname = "Main";
+	private java.lang.String resourcepackage = "foo.resources";
+	private java.lang.String roseappmessages = "deutsch";
+	private java.lang.String custommessages = "foo";
+	private java.lang.String initialcommands = "";
 
 	public MetaData()
 	{
-	}
-
-	@Override
-	public Integer getId()
-	{
-		return id;
-	}
-
-	@Override
-	public void setId( Integer id )
-	{
-		this.id = id;
 	}
 
 	public java.lang.String getSrcpath()
@@ -130,36 +120,6 @@ public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparabl
 		this.usingForeignKeys = usingForeignKeys;
 	}
 
-	public java.lang.String getMainpackage()
-	{
-		return mainpackage;
-	}
-
-	public void setMainpackage( java.lang.String mainpackage )
-	{
-		this.mainpackage = mainpackage;
-	}
-
-	public java.lang.String getMainname()
-	{
-		return mainname;
-	}
-
-	public void setMainname( java.lang.String mainname )
-	{
-		this.mainname = mainname;
-	}
-
-	public java.lang.String getResourcepackage()
-	{
-		return resourcepackage;
-	}
-
-	public void setResourcepackage( java.lang.String resourcepackage )
-	{
-		this.resourcepackage = resourcepackage;
-	}
-
 	public java.lang.String getModelpackage()
 	{
 		return modelpackage;
@@ -200,24 +160,70 @@ public class MetaData implements bn.blaszczyk.rose.model.Identifyable, Comparabl
 		this.parserformat = parserformat;
 	}
 
-	@Override
-	public int compareTo(MetaData that)
+	public java.lang.String getMainpackage()
 	{
-		return Integer.compare( this.id, that.id );
+		return mainpackage;
+	}
+
+	public void setMainpackage( java.lang.String mainpackage )
+	{
+		this.mainpackage = mainpackage;
+	}
+
+	public java.lang.String getMainname()
+	{
+		return mainname;
+	}
+
+	public void setMainname( java.lang.String mainname )
+	{
+		this.mainname = mainname;
+	}
+
+	public java.lang.String getResourcepackage()
+	{
+		return resourcepackage;
+	}
+
+	public void setResourcepackage( java.lang.String resourcepackage )
+	{
+		this.resourcepackage = resourcepackage;
+	}
+
+	public java.lang.String getRoseappmessages()
+	{
+		return roseappmessages;
+	}
+
+	public void setRoseappmessages( java.lang.String roseappmessages )
+	{
+		this.roseappmessages = roseappmessages;
+	}
+
+	public java.lang.String getCustommessages()
+	{
+		return custommessages;
+	}
+
+	public void setCustommessages( java.lang.String custommessages )
+	{
+		this.custommessages = custommessages;
+	}
+
+	public java.lang.String getInitialcommands()
+	{
+		return initialcommands;
+	}
+
+	public void setInitialcommands( java.lang.String initialcommands )
+	{
+		this.initialcommands = initialcommands;
 	}
 
 	@Override
 	public String toString()
 	{
 		return "null";
-	}
-
-	@Override
-	public boolean equals( Object that)
-	{
-		if(!(that instanceof MetaData))
-			return false;
-		return this.id == ((MetaData)that).id;
 	}
 
 }

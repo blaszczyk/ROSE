@@ -13,6 +13,7 @@ stringmetadata = stringmetadataproperty , stringvalue
 
 stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
 						| "mainpackage" | "mainname" | "modelpackage" | "parserpackage" | "parserformat" | "resourcepackage" 
+						| "roseappmessages" | "custommessages" | "initialcommands"
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
@@ -43,13 +44,13 @@ primitivetype = "varchar(" , integervalue , ")"
 			| "numeric(" , integervalue , "," , integervalue , ") "
 			| "int" 
 			| "date" 
-			| "boolean "
+			| "boolean"
 
 enumfielddecl = "enum" , identifier , [ identifier , [ defvalue ] ]
 
 entityfielddecl = relationtype , identifier , [ identifier , [ identifier ] ]
 
-relationtype = "onetoone" | "onetomany" | "manytoone" | "manytomany "
+relationtype = "onetoone" | "onetomany" | "manytoone" | "manytomany"
 
 tostring = "tostring" , { stringvalue | "%" , identifier }
 

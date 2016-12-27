@@ -18,16 +18,18 @@ begin entity MetaData
 	
 	boolean usingForeignKeys false
 	
-	varchar(50) mainpackage "foo"
-	varchar(50) mainname "Main"
-	
-	varchar(50) resourcepackage null
-	
 	varchar(50) modelpackage "foo.model"
 	boolean usingAnnotations false
 	
 	varchar(50) parserpackage "foo.parser"
 	varchar(50) parserformat "%sParser"
+	
+	varchar(50) mainpackage "foo"
+	varchar(50) mainname "Main"
+	varchar(50) resourcepackage "foo.resources"
+	varchar(100) roseappmessages "deutsch"
+	varchar(100) custommessages "foo"
+	varchar(100) initialcommands ""
 	
 end entity
 
