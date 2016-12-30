@@ -487,7 +487,7 @@ public class JavaModelCreator {
 				{
 					EnumField enumField = (EnumField) field;
 					writer.write("\t\tcase " + count++ + ":\r\n"
-							+ "\t\t\t\t" + getSetterName(enumField) + "( (" + enumField.getEnumType().getSimpleClassName() + ")value );\r\n" 
+							+ "\t\t\t" + getSetterName(enumField) + "( (" + enumField.getEnumType().getSimpleClassName() + ")value );\r\n" 
 							+ "\t\t\tbreak;\r\n" );					
 				}
 			writer.write("\t\t}\r\n"
@@ -510,10 +510,22 @@ public class JavaModelCreator {
 					if(entityField.getType().isFirstMany())
 						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() != null)\r\n"
 								+ "\t\t\t\t" + getGetterName(entityField) + "()."
-								+ getGetterName(entityField.getCouterpart()) + "().remove( this );\r\n"
+									+ getGetterName(entityField.getCouterpart()) + "().remove( this );\r\n"
 								+ "\t\t\tif(value != null)\r\n"
 								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
-								+ getGetterName(entityField.getCouterpart()) + "().add( this );\r\n");
+									+ getGetterName(entityField.getCouterpart()) + "().add( this );\r\n");
+					else
+						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() == " + "value" + ")\r\n"
+								+ "\t\t\t\treturn;\r\n"
+								+ "\t\t\tif(" + getGetterName(entityField) + "() != null)\r\n"
+								+ "\t\t\t{\r\n"
+								+ "\t\t\t\tif(" + getGetterName(entityField) + "()." + getGetterName(entityField.getCouterpart()) + "() != null)\r\n"
+								+ "\t\t\t\t\t" + getGetterName(entityField) + "()." + getGetterName(entityField.getCouterpart()) + "()." 
+									+ getSetterName(entityField) + "(null);\r\n"
+								+ "\t\t\t\t" + getGetterName(entityField) + "()." + getSetterName(entityField.getCouterpart()) + "(null);\r\n"
+								+ "\t\t\t}\r\n" 
+								+ "\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getSetterName(entityField.getCouterpart()) 
+									+ "(this);\r\n");
 					writer.write( "\t\t\t" + getSetterName(entityField) + "( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"
 							+ "\t\t\tbreak;\r\n" );
 				}		
