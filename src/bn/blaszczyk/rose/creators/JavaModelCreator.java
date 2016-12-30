@@ -11,7 +11,8 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaModelCreator {
 	
-	private static final String FETCH_TYPE = "EAGER";
+	private static final String ONE_FETCH_TYPE = "LAZY";
+	private static final String MANY_FETCH_TYPE = "LAZY";
 
 	public static String getGetterName(Field field)
 	{
@@ -226,26 +227,26 @@ public class JavaModelCreator {
 		{
 		case ONETOONE:
 			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
-				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
+				writer.write("\t@OneToOne( fetch=FetchType." + ONE_FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );
 			else
-				writer.write("\t@OneToOne( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");	
+				writer.write("\t@OneToOne( fetch=FetchType." + ONE_FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");	
 			break;
 		case ONETOMANY:
-			writer.write("\t@OneToMany( fetch=FetchType." + FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
+			writer.write("\t@OneToMany( fetch=FetchType." + MANY_FETCH_TYPE + ", mappedBy=\"" + 		entityField.getCounterName() + "\" )\n");
 			break;
 		case MANYTOONE:
-			writer.write("\t@ManyToOne( fetch=FetchType." + FETCH_TYPE + " ) \n"
+			writer.write("\t@ManyToOne( fetch=FetchType." + ONE_FETCH_TYPE + " ) \n"
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\n" );						
 			break;
 		case MANYTOMANY:
 			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
-				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + " )\n"
+				writer.write("\t@ManyToMany( fetch = FetchType." + MANY_FETCH_TYPE + " )\n"
 					+ "\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\", "
 					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
 					+ "\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\n");
 			else
-				writer.write("\t@ManyToMany( fetch = FetchType." + FETCH_TYPE + ", mappedBy = \"" + entityField.getCounterName() + "\" )\n");							
+				writer.write("\t@ManyToMany( fetch = FetchType." + MANY_FETCH_TYPE + ", mappedBy = \"" + entityField.getCounterName() + "\" )\n");							
 			break;
 		}
 	}
@@ -554,7 +555,7 @@ public class JavaModelCreator {
 			}
 			writer.write("\t\t}\n"
 					+ "\t}\n\n");
-			
+
 			// removeEntity()
 			count = 0;
 			if(usingAnnotations)
@@ -585,6 +586,23 @@ public class JavaModelCreator {
 			}
 			writer.write("\t\t}\n"
 					+ "\t}\n\n");
+			
+
+			// resetSets()
+			if(usingAnnotations)
+				writeTransistenceAnnotation(writer);
+			writer.write("\t@Override\n"
+					+ "\tpublic void resetSets()\n"
+					+ "\t{\n");
+			for(EntityField entityField : entity.getEntityFields())
+			{
+				if( entityField.getType().isSecondMany() )
+				{
+					writer.write("\t\t" + getSetterName(entityField) + "( new java.util.TreeSet<" + entityField.getEntity().getClassName() 
+							+ ">( " + getGetterName(entityField) +  "() ) );\n" );
+				}	
+			}
+			writer.write("\t}\n\n");
 	}
 	
 	private static void writeTransistenceAnnotation(Writer writer) throws IOException

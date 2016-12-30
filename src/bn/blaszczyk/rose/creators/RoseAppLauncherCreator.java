@@ -51,14 +51,15 @@ public class RoseAppLauncherCreator {
 			loadMessages(writer, classname, RESOURCE_PACKAGE , metadata.getRoseappmessages());
 			loadMessages(writer, classname, metadata.getResourcepackage(), metadata.getCustommessages());
 			
+			writer.write("\t\tModelController modelController = new " + "HibernateController();\n"
+					+ "\t\tmodelController.loadEntities();\n"
+					+ "\t\tGUIController guiController = new GUIController(modelController);\n");
+
 			String[] split = (metadata.getInitialcommands() + " ").split(";");
 			for(int i = 0; i < split.length - 1; i++)
 				writer.write("\t\t" + split[i] + ";\n");
 			
-			writer.write("\t\tModelController modelController = new " + "HibernateController();\n"
-					+ "\t\tmodelController.loadEntities();\n"
-					+ "\t\tGUIController guiController = new GUIController(modelController);\n"
-					+ "\t\tguiController.createMainFrame( \"" + metadata.getMainname() + "\" );\n"
+			writer.write("\t\tguiController.createMainFrame( \"" + metadata.getMainname() + "\" );\n"
 					+ "\t}\n");
 			
 			//fin
