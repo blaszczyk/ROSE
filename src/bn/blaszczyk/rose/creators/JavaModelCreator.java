@@ -8,7 +8,6 @@ import java.io.Writer;
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
 
-
 public class JavaModelCreator {
 	
 	private static final String ONE_FETCH_TYPE = "LAZY";
@@ -461,26 +460,7 @@ public class JavaModelCreator {
 				{
 					PrimitiveField primitiveField = (PrimitiveField) field;
 					writer.write("\t\tcase " + count++ + ":\r\n"
-							+ "\t\t\t" + getSetterName(primitiveField) + "( " );
-					switch(primitiveField.getType())
-					{
-					case VARCHAR:
-					case CHAR:
-						writer.write( "value.toString()" );
-						break;
-					case INT:
-						writer.write( "(Integer) value" );
-						break;
-					case DATE:
-						writer.write( "(java.util.Date) value" );
-						break;
-					case NUMERIC:
-						writer.write( "(java.math.BigDecimal) value" );
-						break;
-					case BOOLEAN:
-						writer.write( "(Boolean) value" ) ;
-					}
-					writer.write( " );\r\n"
+							+ "\t\t\t" + getSetterName(primitiveField) + "( (" + primitiveField.getType().getJavaname() + ") value );\r\n"
 							+ "\t\t\tbreak;\r\n" );
 				}
 				else if( field instanceof EnumField )
@@ -518,14 +498,15 @@ public class JavaModelCreator {
 						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() == " + "value" + ")\r\n"
 								+ "\t\t\t\treturn;\r\n"
 								+ "\t\t\tif(" + getGetterName(entityField) + "() != null)\r\n"
-								+ "\t\t\t{\r\n"
-								+ "\t\t\t\tif(" + getGetterName(entityField) + "()." + getGetterName(entityField.getCouterpart()) + "() != null)\r\n"
-								+ "\t\t\t\t\t" + getGetterName(entityField) + "()." + getGetterName(entityField.getCouterpart()) + "()." 
-									+ getSetterName(entityField) + "(null);\r\n"
 								+ "\t\t\t\t" + getGetterName(entityField) + "()." + getSetterName(entityField.getCouterpart()) + "(null);\r\n"
-								+ "\t\t\t}\r\n" 
-								+ "\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getSetterName(entityField.getCouterpart()) 
-									+ "(this);\r\n");
+								+ "\t\t\tif(value != null)\r\n"
+								+ "\t\t\t{\r\n"
+								+ "\t\t\t\tif( ((" + entityField.getEntity().getSimpleClassName() + ")value)." + getGetterName(entityField.getCouterpart()) + "() != null)\r\n"
+								+ "\t\t\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getGetterName(entityField.getCouterpart()) + "()." 
+									+ getSetterName(entityField) + "(null);\r\n"
+								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getSetterName(entityField.getCouterpart()) 
+								+ "(this);\r\n"
+								+ "\t\t\t}\r\n");
 					writer.write( "\t\t\t" + getSetterName(entityField) + "( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"
 							+ "\t\t\tbreak;\r\n" );
 				}		
