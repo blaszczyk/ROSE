@@ -430,7 +430,7 @@ public class JavaModelCreator {
 		if(usingAnnotations)
 			writeTransistenceAnnotation(writer);
 		writer.write("\t@Override\r\n"
-				+ "\tpublic Class<?> getEntityClass(int index)\r\n"
+				+ "\tpublic Class<? extends bn.blaszczyk.rose.model.Readable> getEntityClass(int index)\r\n"
 				+ "\t{\r\n"
 				+ "\t\tswitch(index)\r\n"
 				+ "\t\t{\r\n");

@@ -12,5 +12,5 @@ public interface Readable extends Identifyable
 	public Object getEntityValue( int index );
 	public String getEntityName( int index );
 	public RelationType getRelationType( int index );
-	public Class<?> getEntityClass( int index );
+	public Class<? extends Readable> getEntityClass( int index );
 }
