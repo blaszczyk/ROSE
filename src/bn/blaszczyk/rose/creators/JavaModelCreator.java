@@ -377,19 +377,43 @@ public class JavaModelCreator {
 				+ "\t{\r\n"
 				+ "\t\treturn " + entity.getEntityFields().size() + ";\r\n"
 				+ "\t}\r\n\r\n");
-		
-		// public Object getEntityValue( int index );
+
+		// public Object getEntityValueOne( int index );
 		if(usingAnnotations)
 			writeTransistenceAnnotation(writer);
 		writer.write("\t@Override\r\n"
-				+ "\tpublic Object getEntityValue(int index)\r\n"
+				+ "\tpublic bn.blaszczyk.rose.model.Readable getEntityValueOne(int index)\r\n"
 				+ "\t{\r\n"
 				+ "\t\tswitch(index)\r\n"
 				+ "\t\t{\r\n");
 		count = 0;
 		for(EntityField entityField : entity.getEntityFields())
-			writer.write("\t\tcase " + count++ + ":\r\n"
-					+ "\t\t\treturn " + getGetterName(entityField)+ "();\r\n" );
+		{
+			if(!entityField.getType().isSecondMany())
+				writer.write("\t\tcase " + count + ":\r\n"
+						+ "\t\t\treturn " + getGetterName(entityField)+ "();\r\n" );
+			count++;
+		}
+		writer.write("\t\t}\r\n"
+				+ "\t\treturn null;\r\n"
+				+ "\t}\r\n\r\n");
+
+		// public Object getEntityValueMany( int index );
+		if(usingAnnotations)
+			writeTransistenceAnnotation(writer);
+		writer.write("\t@Override\r\n"
+				+ "\tpublic java.util.Set<? extends bn.blaszczyk.rose.model.Readable> getEntityValueMany(int index)\r\n"
+				+ "\t{\r\n"
+				+ "\t\tswitch(index)\r\n"
+				+ "\t\t{\r\n");
+		count = 0;
+		for(EntityField entityField : entity.getEntityFields())
+		{
+			if(entityField.getType().isSecondMany())
+				writer.write("\t\tcase " + count + ":\r\n"
+						+ "\t\t\treturn " + getGetterName(entityField)+ "();\r\n" );
+			count++;
+		}
 		writer.write("\t\t}\r\n"
 				+ "\t\treturn null;\r\n"
 				+ "\t}\r\n\r\n");
