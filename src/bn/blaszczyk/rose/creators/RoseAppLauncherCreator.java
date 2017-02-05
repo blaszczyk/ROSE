@@ -51,9 +51,8 @@ public class RoseAppLauncherCreator {
 			loadMessages(writer, classname, RESOURCE_PACKAGE , metadata.getRoseappmessages());
 			loadMessages(writer, classname, metadata.getResourcepackage(), metadata.getCustommessages());
 			
-			writer.write("\t\tModelController modelController = new " + "HibernateController();\r\n"
-					+ "\t\tmodelController.loadEntities();\r\n"
-					+ "\t\tGUIController guiController = new GUIController(modelController);\r\n");
+			writer.write("\t\tfinal ModelController modelController = new " + "HibernateController();\r\n"
+					+ "\t\tfinal GUIController guiController = new GUIController(modelController);\r\n");
 
 			String[] split = (metadata.getInitialcommands() + " ").split(";");
 			for(int i = 0; i < split.length - 1; i++)

@@ -291,13 +291,13 @@ public class JavaModelCreator {
 				+ "\t}\r\n\r\n");
 		
 		// equals
-		writer.write("\t@Override\r\n"
-				+ "\tpublic boolean equals( Object that)\r\n"
-				+ "\t{\r\n"
-				+ "\t\tif(!(that instanceof " + entity.getSimpleClassName() + "))\r\n"
-				+ "\t\t\treturn false;\r\n"
-				+ "\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\r\n"
-				+ "\t}\r\n\r\n");	
+//		writer.write("\t@Override\r\n"
+//				+ "\tpublic boolean equals( Object that)\r\n"
+//				+ "\t{\r\n"
+//				+ "\t\tif(!(that instanceof " + entity.getSimpleClassName() + "))\r\n"
+//				+ "\t\t\treturn false;\r\n"
+//				+ "\t\treturn this.id == ((" + entity.getSimpleClassName() + ")that).id;\r\n"
+//				+ "\t}\r\n\r\n");	
 	}
 	
 	private static void writeToString(Entity entity, Writer writer ) throws IOException
@@ -603,23 +603,6 @@ public class JavaModelCreator {
 			}
 			writer.write("\t\t}\r\n"
 					+ "\t}\r\n\r\n");
-			
-
-			// resetSets()
-			if(usingAnnotations)
-				writeTransistenceAnnotation(writer);
-			writer.write("\t@Override\r\n"
-					+ "\tpublic void resetSets()\r\n"
-					+ "\t{\r\n");
-			for(EntityField entityField : entity.getEntityFields())
-			{
-				if( entityField.getType().isSecondMany() )
-				{
-					writer.write("\t\t" + getSetterName(entityField) + "( new java.util.TreeSet<" + entityField.getEntity().getClassName() 
-							+ ">( " + getGetterName(entityField) +  "() ) );\r\n" );
-				}	
-			}
-			writer.write("\t}\r\n\r\n");
 	}
 	
 	private static void writeTransistenceAnnotation(Writer writer) throws IOException

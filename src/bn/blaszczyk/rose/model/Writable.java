@@ -6,5 +6,4 @@ public interface Writable extends Readable
 	public void setEntity( int index, Writable value );
 	public void addEntity( int index, Writable value );
 	public void removeEntity( int index, Writable value );
-	public void resetSets();
 }
