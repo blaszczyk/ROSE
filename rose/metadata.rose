@@ -17,6 +17,7 @@ begin entity MetaData
 	varchar(50) dbname "MyDB"
 	
 	boolean usingForeignKeys false
+	boolean usingTimestamp true
 	
 	varchar(50) modelpackage "foo.model"
 	boolean usingAnnotations false

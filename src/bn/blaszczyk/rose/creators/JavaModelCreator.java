@@ -52,13 +52,15 @@ public class JavaModelCreator {
 			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
 				writeIdDeclarations(writer);
 				
-			writeFieldDeclarations(entity, writer);
+			writeFieldDeclarations(entity, writer, metadata.isUsingTimestamp());
 			writeConstructors(entity, writer);
 
 			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
 				writeIdGettersSetters(entity, writer, metadata.isUsingAnnotations());
-			
+
 			writeGettersSetters(entity, writer, metadata.isUsingAnnotations());
+			if(metadata.isUsingTimestamp())
+				writeTimestampGetterSetter(writer, metadata.isUsingAnnotations());
 			writeToString(entity, writer);			
 
 			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
@@ -77,7 +79,7 @@ public class JavaModelCreator {
 		{
 			e.printStackTrace();
 		}
-	}	
+	}
 
 	private static void writeAnnotationHeader( Entity entity, Writer writer) throws IOException
 	{
@@ -100,7 +102,7 @@ public class JavaModelCreator {
 		writer.write("\tprivate int id = -1;\r\n");
 	}
 		
-	private static void writeFieldDeclarations( Entity entity, Writer writer) throws IOException
+	private static void writeFieldDeclarations( Entity entity, Writer writer, boolean usingTimestamp) throws IOException
 	{
 		// primitive and enum fields
 		for(Field field : entity.getFields())
@@ -130,7 +132,8 @@ public class JavaModelCreator {
 			else
 				writer.write("\tprivate " + entityfield.getEntity().getSimpleClassName() + " " + entityfield.getName() + ";\r\n");
 		}
-		
+		if(usingTimestamp)
+			writer.write("\tprivate java.util.Date timestamp;\r\n");
 	}
 	
 	private static void writeConstructors(Entity entity, Writer writer) throws IOException
@@ -279,7 +282,21 @@ public class JavaModelCreator {
 				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	}
-	
+
+	private static void writeTimestampGetterSetter(Writer writer, Boolean usingAnnotations) throws IOException
+	{
+		if(usingAnnotations)
+			writer.write("\t@GeneratedValue\r\n"
+					+ "\t@Column(name=\"timestamp_update\")\r\n");
+		writer.write("\tpublic java.util.Date getTimestamp()\r\n"
+				+ "\t{\r\n"
+				+ "\t\treturn timestamp;\r\n"
+				+ "\t}\r\n\r\n" );
+		writer.write("\tpublic void setTimestamp( java.util.Date timestamp )\r\n"
+				+ "\t{\r\n"
+				+ "\t\tthis.timestamp = timestamp;\r\n"
+				+ "\t}\r\n\r\n");
+	}
 
 	private static void writeCompareEqualsById(Entity entity, Writer writer ) throws IOException
 	{

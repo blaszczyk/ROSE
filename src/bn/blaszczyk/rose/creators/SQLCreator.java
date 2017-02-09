@@ -58,8 +58,7 @@ public class SQLCreator {
 		else
 			return String.format(format, field.getCounterCapitalName(), field.getCapitalName());
 	}
-	
-	
+
 	private static void createManyToManyTable( EntityField field, Writer writer ) throws IOException
 	{
 		if( field.getType() == RelationType.MANYTOMANY && ( field.getName().compareTo(field.getCounterName()) < 0 ) )
@@ -92,7 +91,11 @@ public class SQLCreator {
 		for(EntityField entityField : entity.getEntityFields())
 			if(entityField.getType() == RelationType.MANYTOONE 
 				 || ( entityField.getType() == RelationType.ONETOONE  &&  entityField.getName().compareTo(entityField.getCounterName()) < 0 ))
-				writer.write( "\t" + entityField.getName() + "_id int,\r\n" );		
+				writer.write( "\t" + entityField.getName() + "_id int,\r\n" );
+		
+		// timestamp
+		if(metadata.isUsingTimestamp())
+			writer.write("\ttimestamp_update timestamp default current_timestamp on update current_timestamp,\r\n");
 		// primary key
 		writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
 		

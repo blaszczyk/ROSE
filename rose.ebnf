@@ -17,7 +17,7 @@ stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpasswo
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
-boolmetadataproperty = "usingAnnotations" | "usingForeignKeys"
+boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp"
 
 
 createoperation = "create" , createoption

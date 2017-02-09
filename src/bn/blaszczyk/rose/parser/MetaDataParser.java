@@ -37,6 +37,9 @@ public class MetaDataParser
 		case "usingforeignkeys":
 			metaData.setUsingForeignKeys( Boolean.parseBoolean( value ) );
 			break;
+		case "usingtimestamp":
+			metaData.setUsingTimestamp( Boolean.parseBoolean( value ) );
+			break;
 		case "modelpackage":
 			metaData.setModelpackage( value );
 			break;

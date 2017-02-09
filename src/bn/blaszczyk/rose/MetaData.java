@@ -15,6 +15,7 @@ public class MetaData
 	private java.lang.String dbport = "3306";
 	private java.lang.String dbname = "MyDB";
 	private java.lang.Boolean usingForeignKeys = false;
+	private java.lang.Boolean usingTimestamp = true;
 	private java.lang.String modelpackage = "foo.model";
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
@@ -118,6 +119,16 @@ public class MetaData
 	public void setUsingForeignKeys( java.lang.Boolean usingForeignKeys )
 	{
 		this.usingForeignKeys = usingForeignKeys;
+	}
+
+	public java.lang.Boolean isUsingTimestamp()
+	{
+		return usingTimestamp;
+	}
+
+	public void setUsingTimestamp( java.lang.Boolean usingTimestamp )
+	{
+		this.usingTimestamp = usingTimestamp;
 	}
 
 	public java.lang.String getModelpackage()

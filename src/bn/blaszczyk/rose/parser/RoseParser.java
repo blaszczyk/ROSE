@@ -36,8 +36,7 @@ public class RoseParser {
 	
 	public void parse()
 	{
-		Scanner scanner = new Scanner(stream);
-		try
+		try(Scanner scanner = new Scanner(stream))
 		{
 			boolean requiresLink = false;
 			while(scanner.hasNextLine())
@@ -69,10 +68,6 @@ public class RoseParser {
 		catch (ParseException e)
 		{
 			e.printStackTrace();
-		}
-		finally 
-		{
-			scanner.close();
 		}
 	}
 	
