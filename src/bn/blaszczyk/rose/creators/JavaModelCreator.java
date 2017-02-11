@@ -133,7 +133,7 @@ public class JavaModelCreator {
 				writer.write("\tprivate " + entityfield.getEntity().getSimpleClassName() + " " + entityfield.getName() + ";\r\n");
 		}
 		if(usingTimestamp)
-			writer.write("\tprivate java.util.Date timestamp;\r\n");
+			writer.write("\tprivate java.util.Date timestamp = new java.util.Date();\r\n");
 	}
 	
 	private static void writeConstructors(Entity entity, Writer writer) throws IOException
@@ -287,7 +287,8 @@ public class JavaModelCreator {
 	{
 		if(usingAnnotations)
 			writer.write("\t@GeneratedValue\r\n"
-					+ "\t@Column(name=\"timestamp_update\")\r\n");
+					+ "\t@Temporal(TemporalType.TIMESTAMP)\r\n"
+					+ "\t@Column(name=\"timestamp_update\", updatable=false)\r\n");
 		writer.write("\tpublic java.util.Date getTimestamp()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn timestamp;\r\n"
