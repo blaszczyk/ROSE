@@ -59,10 +59,10 @@ public class RoseAppLauncherCreator {
 			String actionpack = metadata.getActionpack();
 			if(actionpack != null)
 					writer.write("\t\tguiController.addActionPack(new " + actionpack + " (guiController));\r\n");
-//
-//			String[] split = (metadata.getInitialcommands() + " ").split(";");
-//			for(int i = 0; i < split.length - 1; i++)
-//				writer.write("\t\t" + split[i] + ";\r\n");
+
+			String[] split = (metadata.getInitialcommands() + " ").split(";");
+			for(int i = 0; i < split.length - 1; i++)
+				writer.write("\t\t" + split[i] + ";\r\n");
 			
 			writer.write("\t\tguiController.createMainFrame( \"" + metadata.getMainname() + "\" );\r\n"
 					+ "\t}\r\n");
