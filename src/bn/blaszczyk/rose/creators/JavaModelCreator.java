@@ -45,7 +45,7 @@ public class JavaModelCreator {
 			if(metadata.isUsingAnnotations())
 				writeAnnotationHeader(entity, writer);
 			
-			writeClassDeclaration(entity, writer);			
+			writeClassDeclaration(entity, metadata.isUsingTimestamp(), writer);			
 			
 			writer.write("{\r\n");
 			
@@ -85,15 +85,19 @@ public class JavaModelCreator {
 	{
 		writer.write("import javax.persistence.*;\r\n\r\n"
 				+ "@Entity\r\n"
-				+ "@Table(name=\"" + entity.getSimpleClassName() + "\")\r\n");
+				+ "@Table(name=\"" + entity.getObjectName().toLowerCase() + "\")\r\n");
 	}
 	
-	private static void writeClassDeclaration( Entity entity, Writer writer) throws IOException
+	private static void writeClassDeclaration( Entity entity, boolean timestamped, Writer writer) throws IOException
 	{
 		writer.write("public class " + entity.getSimpleClassName() );
 		if(entity.getImplInterface() != ImplInterface.NONE)
-			writer.write( " implements bn.blaszczyk.rose.model." + entity.getImplInterface().getIdentifyer() 
+		{
+			writer.write( " implements bn.blaszczyk.rose.model." + entity.getImplInterface().getIdentifyer()
 					+ ", Comparable<" + entity.getSimpleClassName() + ">");
+			if(timestamped)
+				writer.write(", " + Timestamped.class.getName());
+		}
 		writer.write( "\r\n");
 	}
 	
@@ -286,14 +290,15 @@ public class JavaModelCreator {
 	private static void writeTimestampGetterSetter(Writer writer, Boolean usingAnnotations) throws IOException
 	{
 		if(usingAnnotations)
-			writer.write("\t@GeneratedValue\r\n"
-					+ "\t@Temporal(TemporalType.TIMESTAMP)\r\n"
-					+ "\t@Column(name=\"timestamp_update\", updatable=false)\r\n");
-		writer.write("\tpublic java.util.Date getTimestamp()\r\n"
+			writer.write("\t@Temporal(TemporalType.TIMESTAMP)\r\n"
+					+ "\t@Column(name=\"timestamp_update\")\r\n");
+		writer.write("\t@Override\r\n"
+				+ "\tpublic java.util.Date getTimestamp()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn timestamp;\r\n"
 				+ "\t}\r\n\r\n" );
-		writer.write("\tpublic void setTimestamp( java.util.Date timestamp )\r\n"
+		writer.write("\t@Override\r\n"
+				+ "\tpublic void setTimestamp( java.util.Date timestamp )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis.timestamp = timestamp;\r\n"
 				+ "\t}\r\n\r\n");

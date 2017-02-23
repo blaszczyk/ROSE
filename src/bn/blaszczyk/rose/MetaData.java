@@ -15,7 +15,7 @@ public class MetaData
 	private java.lang.String dbport = "3306";
 	private java.lang.String dbname = "MyDB";
 	private java.lang.Boolean usingForeignKeys = false;
-	private java.lang.Boolean usingTimestamp = true;
+	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
@@ -26,6 +26,8 @@ public class MetaData
 	private java.lang.String roseappmessages = "deutsch";
 	private java.lang.String custommessages = "foo";
 	private java.lang.String initialcommands = "";
+	private java.lang.String behaviour = null;
+	private java.lang.String actionpack = null;
 
 	public MetaData()
 	{
@@ -229,6 +231,26 @@ public class MetaData
 	public void setInitialcommands( java.lang.String initialcommands )
 	{
 		this.initialcommands = initialcommands;
+	}
+
+	public java.lang.String getBehaviour()
+	{
+		return behaviour;
+	}
+
+	public void setBehaviour( java.lang.String behaviour )
+	{
+		this.behaviour = behaviour;
+	}
+
+	public java.lang.String getActionpack()
+	{
+		return actionpack;
+	}
+
+	public void setActionpack( java.lang.String actionpack )
+	{
+		this.actionpack = actionpack;
 	}
 
 	@Override

@@ -70,6 +70,12 @@ public class MetaDataParser
 		case "initialcommands":
 			metaData.setInitialcommands( value );
 			break;
+		case "behaviour":
+			metaData.setBehaviour( value );
+			break;
+		case "actionpack":
+			metaData.setActionpack( value );
+			break;
 		default:
 			System.out.println( "Unknown Primitive Field: " + name + " in MetaData");
 		}

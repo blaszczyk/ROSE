@@ -17,7 +17,7 @@ begin entity MetaData
 	varchar(50) dbname "MyDB"
 	
 	boolean usingForeignKeys false
-	boolean usingTimestamp true
+	boolean usingTimestamp false
 	
 	varchar(50) modelpackage "foo.model"
 	boolean usingAnnotations false
@@ -31,6 +31,8 @@ begin entity MetaData
 	varchar(100) roseappmessages "deutsch"
 	varchar(100) custommessages "foo"
 	varchar(100) initialcommands ""
+	varchar(100) behaviour null
+	varchar(100) actionpack null
 	
 end entity
 

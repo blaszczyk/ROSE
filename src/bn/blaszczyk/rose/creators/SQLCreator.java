@@ -72,7 +72,7 @@ public class SQLCreator {
 	private static void createTable(Entity entity, MetaData metadata, DBType dbType, Writer writer) throws IOException
 	{
 		// create table
-		writer.write( "\r\ncreate table " + entity.getSimpleClassName() + "\r\n"
+		writer.write( "\r\ncreate table " + entity.getObjectName().toLowerCase() + "\r\n"
 				+ "(\r\n" );
 		
 		// primary column

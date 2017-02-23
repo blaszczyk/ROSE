@@ -51,12 +51,18 @@ public class RoseAppLauncherCreator {
 			loadMessages(writer, classname, RESOURCE_PACKAGE , metadata.getRoseappmessages());
 			loadMessages(writer, classname, metadata.getResourcepackage(), metadata.getCustommessages());
 			
+			String behaviour = metadata.getBehaviour() == null ? "bn.blaszczyk.roseapp.DefaultBehaviour" : metadata.getBehaviour();
+			
 			writer.write("\t\tfinal ModelController modelController = new " + "HibernateController();\r\n"
-					+ "\t\tfinal GUIController guiController = new GUIController(modelController);\r\n");
+					+ "\t\tfinal GUIController guiController = new GUIController( modelController, new " + behaviour + "() );\r\n");
 
-			String[] split = (metadata.getInitialcommands() + " ").split(";");
-			for(int i = 0; i < split.length - 1; i++)
-				writer.write("\t\t" + split[i] + ";\r\n");
+			String actionpack = metadata.getActionpack();
+			if(actionpack != null)
+					writer.write("\t\tguiController.addActionPack(new " + actionpack + " (guiController));\r\n");
+//
+//			String[] split = (metadata.getInitialcommands() + " ").split(";");
+//			for(int i = 0; i < split.length - 1; i++)
+//				writer.write("\t\t" + split[i] + ";\r\n");
 			
 			writer.write("\t\tguiController.createMainFrame( \"" + metadata.getMainname() + "\" );\r\n"
 					+ "\t}\r\n");
