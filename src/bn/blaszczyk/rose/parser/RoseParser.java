@@ -64,6 +64,8 @@ public class RoseParser {
 					createFile(split[1]);
 				}
 			}
+			if(requiresLink)
+				linkEntities();
 		}
 		catch (ParseException e)
 		{
@@ -113,7 +115,7 @@ public class RoseParser {
 	
 	protected void linkEntities() throws ParseException
 	{
-		Map<EntityField,Entity> originalFields = new HashMap<>();
+		Map<EntityField,Entity> originalFields = new LinkedHashMap<>();
 		for(Entity entity : entities)
 		{
 			for(Field field : entity.getFields())

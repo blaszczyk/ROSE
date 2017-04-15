@@ -8,7 +8,7 @@ import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Rose {
 	
-	public static final String VERSION_ID = "0.100";
+	public static final String VERSION_ID = "0.101";
 	
 	public static void main(String[] args) 
 	{

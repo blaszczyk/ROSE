@@ -1,6 +1,8 @@
 package bn.blaszczyk.rose.model;
 
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum ImplInterface {
 	NONE(""),
@@ -9,12 +11,13 @@ public enum ImplInterface {
 	WRITABLE("Writable","Readable","Identifyable");
 	
 	private final String identifyer;
-	private final String[] extend;
+	private final Set<String> extend;
 	
 	private ImplInterface(String identifyer, String... extend)
 	{
 		this.identifyer = identifyer;
-		this.extend = extend;
+		this.extend = new HashSet<>();
+		Collections.addAll(this.extend, extend);
 	}
 
 	public String getIdentifyer()
@@ -24,7 +27,7 @@ public enum ImplInterface {
 	
 	public boolean doesExtend(ImplInterface that)
 	{
-		return this.equals(that) || Arrays.asList(extend).contains(that.getIdentifyer());
+		return this.equals(that) || extend.contains(that.getIdentifyer());
 	}
 	
 }
