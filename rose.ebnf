@@ -13,16 +13,16 @@ stringmetadata = stringmetadataproperty , stringvalue
 
 stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
 						| "mainpackage" | "mainname" | "modelpackage" | "parserpackage" | "parserformat" | "resourcepackage" 
-						| "roseappmessages" | "custommessages" | "initialcommands"
+						| "roseappmessages" | "custommessages" | "initialcommands" | "behaviour" | "actionpack"
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
-boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp"
+boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp" | "usingInterfaces"
 
 
 createoperation = "create" , createoption
 
-createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "roseapplauncher"
+createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "roseapplauncher" | "rosefilecopy"
 
 
 enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"

@@ -56,7 +56,8 @@ public class HibernateCreator {
 
 	private static void writeEntity(Entity entity, MetaData metadata, Writer writer) throws IOException
 	{
-		writer.write("\t\t<mapping class=\"" + metadata.getModelpackage() + "." + entity.getSimpleClassName() + "\"/>\r\n");
+		String optionalImpl = metadata.isUsingInterfaces() ? "Impl" : "";
+		writer.write("\t\t<mapping class=\"" + metadata.getModelpackage() + "." + entity.getSimpleClassName() + optionalImpl + "\"/>\r\n");
 	}
 	
 }

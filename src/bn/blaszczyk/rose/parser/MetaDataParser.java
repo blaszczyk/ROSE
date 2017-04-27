@@ -43,6 +43,9 @@ public class MetaDataParser
 		case "modelpackage":
 			metaData.setModelpackage( value );
 			break;
+		case "usinginterfaces":
+			metaData.setUsingInterfaces( Boolean.parseBoolean( value ) );
+			break;
 		case "usingannotations":
 			metaData.setUsingAnnotations( Boolean.parseBoolean( value ) );
 			break;

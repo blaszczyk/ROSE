@@ -17,6 +17,7 @@ public class MetaData
 	private java.lang.Boolean usingForeignKeys = false;
 	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
+	private java.lang.Boolean usingInterfaces = false;
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
 	private java.lang.String parserformat = "%sParser";
@@ -141,6 +142,16 @@ public class MetaData
 	public void setModelpackage( java.lang.String modelpackage )
 	{
 		this.modelpackage = modelpackage;
+	}
+
+	public java.lang.Boolean isUsingInterfaces()
+	{
+		return usingInterfaces;
+	}
+
+	public void setUsingInterfaces( java.lang.Boolean usingInterfaces )
+	{
+		this.usingInterfaces = usingInterfaces;
 	}
 
 	public java.lang.Boolean isUsingAnnotations()

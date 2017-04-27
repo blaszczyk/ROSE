@@ -97,7 +97,11 @@ public class RoseParser {
 			for(EnumType enumType : enums)
 				JavaEnumCreator.create(enumType, metadata);
 			for(Entity entity : entities)
+			{
+				if(metadata.isUsingInterfaces())
+					JavaInterfaceCreator.create(entity, metadata);
 				JavaModelCreator.create(entity, metadata);
+			}
 			break;
 		case "javaparser":
 			for(Entity entity : entities)
@@ -105,6 +109,7 @@ public class RoseParser {
 			break;
 		case "roseapplauncher":
 			RoseAppLauncherCreator.createMain(entities, metadata);
+		case "rosefilecopy": // fall through
 			RoseAppLauncherCreator.copyRose(file,metadata);
 			break;
 		default:
