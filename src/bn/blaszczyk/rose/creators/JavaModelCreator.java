@@ -70,9 +70,12 @@ public class JavaModelCreator {
 			
 			if(entity.getImplInterface().doesExtend(ImplInterface.READABLE))
 				writeReadableMethods(entity, writer, metadata.isUsingAnnotations());
-			
+
 			if(entity.getImplInterface().doesExtend(ImplInterface.WRITABLE))
-				writeWritableMethods(entity, writer, metadata.isUsingAnnotations()); 
+				writeWritableMethods(entity, writer, metadata.isUsingAnnotations());
+			
+			if(entity.getImplInterface().doesExtend(ImplInterface.REPRESENTABLE))
+				writeRepresentableMethods(entity, writer, metadata.isUsingAnnotations());
 
 			writer.write("}\r\n");
 			System.out.println( "File created: " + fullpath);
@@ -622,6 +625,118 @@ public class JavaModelCreator {
 					if(entityField.getType().isFirstMany())
 						writer.write( "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
 								+ getGetterName(entityField.getCouterpart()) + "().remove( this );\r\n");
+					else
+						writer.write( "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." + getSetterName(entityField.getCouterpart()) + "( null );\r\n");
+					writer.write( "\t\t\t" + getGetterName(entityField) + "().remove( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"
+							+ "\t\t\tbreak;\r\n" );
+				}	
+				count++;
+			}
+			writer.write("\t\t}\r\n"
+					+ "\t}\r\n\r\n");
+	}
+	
+	private static void writeRepresentableMethods(Entity entity, Writer writer, boolean usingAnnotations) throws IOException
+	{			
+
+			// setEntity
+			int count = 0;
+			if(usingAnnotations)
+				writeTransistenceAnnotation(writer);
+			writer.write("\t@Override\r\n"
+					+ "\tpublic void setEntity( int index, bn.blaszczyk.rose.model.Writable value, bn.blaszczyk.rose.model.Representable representor )\r\n"
+					+ "\t{\r\n"
+					+ "\t\tswitch( index )\r\n"
+					+ "\t\t{\r\n");
+			for(EntityField entityField : entity.getEntityFields())
+			{
+				if( !entityField.getType().isSecondMany() )
+				{
+					writer.write("\t\tcase " + count + ":\r\n");
+					if(entityField.getType().isFirstMany())
+						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() != null)\r\n"
+								+ "\t\t\t\t" + getGetterName(entityField) + "()."
+									+ getGetterName(entityField.getCouterpart()) + "().remove( ("+ entity.getSimpleClassName() +") representor );\r\n"
+								+ "\t\t\tif(value != null)\r\n"
+								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+									+ getGetterName(entityField.getCouterpart()) + "().add( ("+ entity.getSimpleClassName() +")representor );\r\n");
+					else
+						writer.write( "\t\t\tif(" + getGetterName(entityField) + "() == " + "value" + ")\r\n"
+								+ "\t\t\t\treturn;\r\n"
+								+ "\t\t\tif(" + getGetterName(entityField) + "() != null)\r\n"
+								+ "\t\t\t\t" + getGetterName(entityField) + "()." + getSetterName(entityField.getCouterpart()) + "(null);\r\n"
+								+ "\t\t\tif(value != null)\r\n"
+								+ "\t\t\t{\r\n"
+								+ "\t\t\t\tif( ((" + entityField.getEntity().getSimpleClassName() + ")value)." + getGetterName(entityField.getCouterpart()) + "() != null)\r\n"
+								+ "\t\t\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getGetterName(entityField.getCouterpart()) + "()." 
+									+ getSetterName(entityField) + "(null);\r\n"
+								+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() + ")value)." + getSetterName(entityField.getCouterpart()) 
+								+ "(("+ entity.getSimpleClassName() +")representor);\r\n"
+								+ "\t\t\t}\r\n");
+					writer.write( "\t\t\t" + getSetterName(entityField) + "( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"
+							+ "\t\t\tbreak;\r\n" );
+				}		
+				count++;
+			}
+			writer.write("\t\t}\r\n"
+					+ "\t}\r\n\r\n");
+
+			// addEntity()
+			count = 0;
+			if(usingAnnotations)
+				writeTransistenceAnnotation(writer);
+			writer.write("\t@Override\r\n"
+					+ "\tpublic void addEntity( int index,  bn.blaszczyk.rose.model.Writable value,  bn.blaszczyk.rose.model.Representable representor )\r\n"
+					+ "\t{\r\n"
+					+ "\t\tif( value == null)\r\n"
+					+ "\t\t\treturn;\r\n"
+					+ "\t\tswitch( index )\r\n"
+					+ "\t\t{\r\n");
+			for(EntityField entityField : entity.getEntityFields())
+			{
+				if( entityField.getType().isSecondMany() )
+				{
+					writer.write("\t\tcase " + count + ":\r\n");
+					if(entityField.getType().isFirstMany())
+						writer.write( "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+								+ getGetterName(entityField.getCouterpart()) + "().add( ("+ entity.getSimpleClassName() +")representor );\r\n");
+					else
+						writer.write( "\t\t\tif( ((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+									+ getGetterName(entityField.getCouterpart()) + "() != null)\r\n"
+									+ "\t\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+									+ getGetterName(entityField.getCouterpart()) + "()." + getGetterName(entityField)
+									+ "().remove( (" + entityField.getEntity().getSimpleClassName() +  ")value );\r\n"
+									+ "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." + getSetterName(entityField.getCouterpart()) 
+									+ "( ("+ entity.getSimpleClassName() +")representor );\r\n");
+					writer.write( "\t\t\t" + getGetterName(entityField) + "().add( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"
+								+ "\t\t\tbreak;\r\n" );
+				}	
+				count++;
+			}
+			writer.write("\t\t}\r\n"
+					+ "\t}\r\n\r\n");
+
+			// removeEntity()
+			count = 0;
+			if(usingAnnotations)
+				writeTransistenceAnnotation(writer);
+			writer.write("\t@Override\r\n"
+					+ "\tpublic void removeEntity( int index,  bn.blaszczyk.rose.model.Writable value ,  bn.blaszczyk.rose.model.Representable representor )\r\n"
+					+ "\t{\r\n"
+					+ "\t\tif( value == null )\r\n"
+					+ "\t\t\treturn;\r\n"
+					+ "\t\tswitch( index )\r\n"
+					+ "\t\t{\r\n");
+			for(EntityField entityField : entity.getEntityFields())
+			{
+				if( entityField.getType().isSecondMany() )
+				{
+					writer.write("\t\tcase " + count + ":\r\n"
+							+ "\t\t\tif( ! " + getGetterName(entityField) + "().contains( (" + entityField.getEntity().getSimpleClassName() + ")value ) )\r\n"
+							+ "\t\t\t\treturn;\r\n");
+					if(entityField.getType().isFirstMany())
+						writer.write( "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." 
+								+ getGetterName(entityField.getCouterpart()) + "().remove( ("+ entity.getSimpleClassName() +")representor );\r\n");
 					else
 						writer.write( "\t\t\t((" + entityField.getEntity().getSimpleClassName() +  ")value)." + getSetterName(entityField.getCouterpart()) + "( null );\r\n");
 					writer.write( "\t\t\t" + getGetterName(entityField) + "().remove( (" + entityField.getEntity().getSimpleClassName() + ")value );\r\n"

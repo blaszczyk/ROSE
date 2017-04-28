@@ -21,7 +21,9 @@ public class EntityParser {
 		String[] split = args.split(":");
 		ImplInterface implInterface = ImplInterface.NONE;
 		if(split.length > 1)
-			if(split[1].toLowerCase().contains("w"))
+			if(split[1].toLowerCase().contains("p"))
+				implInterface = ImplInterface.REPRESENTABLE;
+			else if(split[1].toLowerCase().contains("w"))
 				implInterface = ImplInterface.WRITABLE;
 			else if(split[1].toLowerCase().contains("r"))
 				implInterface = ImplInterface.READABLE;

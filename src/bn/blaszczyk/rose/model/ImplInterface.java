@@ -8,7 +8,8 @@ public enum ImplInterface {
 	NONE(""),
 	IDENTIFYABLE("Identifyable"),
 	READABLE("Readable","Identifyable"),
-	WRITABLE("Writable","Readable","Identifyable");
+	WRITABLE("Writable","Readable","Identifyable"),
+	REPRESENTABLE("Representable","Writable","Readable","Identifyable");
 	
 	private final String identifyer;
 	private final Set<String> extend;
