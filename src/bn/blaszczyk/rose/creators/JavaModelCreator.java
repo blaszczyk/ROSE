@@ -335,9 +335,9 @@ public class JavaModelCreator {
 	{
 		String toString = "\"" + entity.getToString() + "\"";
 		for(Field field : entity.getFields() )
-			toString = toString.replaceAll("\\%" + field.getName(), "\" + " + field.getName() + " + \"");	
+			toString = toString.replaceAll("\\%" + field.getName(), "\" + " + getGetterName(field) + "() + \"");	
 		for(EntityField entityField : entity.getEntityFields() )
-			toString = toString.replaceAll("\\%" + entityField.getName(), "\" + String.valueOf(" + entityField.getName() + ") + \"");			
+			toString = toString.replaceAll("\\%" + entityField.getName(), "\" + String.valueOf(" + getGetterName(entityField) + "()) + \"");			
 		toString = toString.replaceAll("\\\"\\\" \\+ ", "").replaceAll(" \\+ \\\"\\\"", "");
 		writer.write("\t@Override\r\n"
 				+ "\tpublic String toString()\r\n"
