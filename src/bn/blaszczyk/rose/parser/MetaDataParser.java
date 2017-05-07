@@ -55,29 +55,8 @@ public class MetaDataParser
 		case "parserformat":
 			metaData.setParserformat( value );
 			break;
-		case "mainpackage":
-			metaData.setMainpackage( value );
-			break;
-		case "mainname":
-			metaData.setMainname( value );
-			break;
 		case "resourcepackage":
 			metaData.setResourcepackage( value );
-			break;
-		case "roseappmessages":
-			metaData.setRoseappmessages( value );
-			break;
-		case "custommessages":
-			metaData.setCustommessages( value );
-			break;
-		case "initialcommands":
-			metaData.setInitialcommands( value );
-			break;
-		case "behaviour":
-			metaData.setBehaviour( value );
-			break;
-		case "actionpack":
-			metaData.setActionpack( value );
 			break;
 		default:
 			System.out.println( "Unknown Primitive Field: " + name + " in MetaData");

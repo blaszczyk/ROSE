@@ -14,7 +14,7 @@ begin entity MetaData
 	varchar(50) dbpassword ""
 	varchar(50) dbserver "localhost"
 	char(5) dbport "3306"
-	varchar(50) dbname "MyDB"
+	varchar(50) dbname "foodb"
 	
 	boolean usingForeignKeys false
 	boolean usingTimestamp false
@@ -26,14 +26,7 @@ begin entity MetaData
 	varchar(50) parserpackage "foo.parser"
 	varchar(50) parserformat "%sParser"
 	
-	varchar(50) mainpackage "foo"
-	varchar(50) mainname "Main"
 	varchar(50) resourcepackage "foo.resources"
-	varchar(100) roseappmessages "deutsch"
-	varchar(100) custommessages "foo"
-	varchar(100) initialcommands ""
-	varchar(100) behaviour null
-	varchar(100) actionpack null
 	
 end entity
 

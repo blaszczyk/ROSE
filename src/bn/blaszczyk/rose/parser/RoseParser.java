@@ -3,7 +3,10 @@ package bn.blaszczyk.rose.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.*;
 
@@ -107,10 +110,8 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
 			break;
-		case "roseapplauncher":
-			RoseAppLauncherCreator.createMain(entities, metadata);
 		case "rosefilecopy": // fall through
-			RoseAppLauncherCreator.copyRose(file,metadata);
+			copyRoseFile();
 			break;
 		default:
 			System.out.println( "Unknown Agrument: create " + filetype );
@@ -160,6 +161,22 @@ public class RoseParser {
 			if( enumType.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumType;
 		throw new ParseException("Unknown Enum Type: \"" + name + "\"", 0);
+	}
+
+	public void copyRoseFile()
+	{
+		String copyName = metadata.getSrcpath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + file.getName();
+		File copy = new File(copyName);
+		try
+		{
+			copy.getParentFile().mkdirs();
+			Files.copy(file.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			System.out.println("File created: " + copyName);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 }

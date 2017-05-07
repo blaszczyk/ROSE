@@ -13,7 +13,7 @@ public class MetaData
 	private java.lang.String dbpassword = "";
 	private java.lang.String dbserver = "localhost";
 	private java.lang.String dbport = "3306";
-	private java.lang.String dbname = "MyDB";
+	private java.lang.String dbname = "foodb";
 	private java.lang.Boolean usingForeignKeys = false;
 	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
@@ -21,14 +21,7 @@ public class MetaData
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
 	private java.lang.String parserformat = "%sParser";
-	private java.lang.String mainpackage = "foo";
-	private java.lang.String mainname = "Main";
 	private java.lang.String resourcepackage = "foo.resources";
-	private java.lang.String roseappmessages = "deutsch";
-	private java.lang.String custommessages = "foo";
-	private java.lang.String initialcommands = "";
-	private java.lang.String behaviour = null;
-	private java.lang.String actionpack = null;
 
 	public MetaData()
 	{
@@ -184,26 +177,6 @@ public class MetaData
 		this.parserformat = parserformat;
 	}
 
-	public java.lang.String getMainpackage()
-	{
-		return mainpackage;
-	}
-
-	public void setMainpackage( java.lang.String mainpackage )
-	{
-		this.mainpackage = mainpackage;
-	}
-
-	public java.lang.String getMainname()
-	{
-		return mainname;
-	}
-
-	public void setMainname( java.lang.String mainname )
-	{
-		this.mainname = mainname;
-	}
-
 	public java.lang.String getResourcepackage()
 	{
 		return resourcepackage;
@@ -212,56 +185,6 @@ public class MetaData
 	public void setResourcepackage( java.lang.String resourcepackage )
 	{
 		this.resourcepackage = resourcepackage;
-	}
-
-	public java.lang.String getRoseappmessages()
-	{
-		return roseappmessages;
-	}
-
-	public void setRoseappmessages( java.lang.String roseappmessages )
-	{
-		this.roseappmessages = roseappmessages;
-	}
-
-	public java.lang.String getCustommessages()
-	{
-		return custommessages;
-	}
-
-	public void setCustommessages( java.lang.String custommessages )
-	{
-		this.custommessages = custommessages;
-	}
-
-	public java.lang.String getInitialcommands()
-	{
-		return initialcommands;
-	}
-
-	public void setInitialcommands( java.lang.String initialcommands )
-	{
-		this.initialcommands = initialcommands;
-	}
-
-	public java.lang.String getBehaviour()
-	{
-		return behaviour;
-	}
-
-	public void setBehaviour( java.lang.String behaviour )
-	{
-		this.behaviour = behaviour;
-	}
-
-	public java.lang.String getActionpack()
-	{
-		return actionpack;
-	}
-
-	public void setActionpack( java.lang.String actionpack )
-	{
-		this.actionpack = actionpack;
 	}
 
 	@Override
