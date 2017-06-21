@@ -21,7 +21,7 @@ boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp
 
 createoperation = "create" , createoption
 
-createoption = "sqlcreate" | "hibernate" | "javamodels" | "javaparser" | "rosefilecopy"
+createoption = "sqlcreate" | "persistence" | "javamodels" | "javaparser" | "rosefilecopy"
 
 
 enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"

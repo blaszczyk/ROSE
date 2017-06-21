@@ -93,8 +93,8 @@ public class RoseParser {
 		case "sqlcreate":
 			SQLCreator.create(entities, metadata);
 			break;
-		case "hibernate":
-			HibernateCreator.create(entities, enums, metadata);
+		case "persistence":
+			PersistenceCreator.create(entities, enums, metadata);
 			break;
 		case "javamodels":
 			for(EnumType enumType : enums)
@@ -110,7 +110,7 @@ public class RoseParser {
 			for(Entity entity : entities)
 				JavaParserCreator.create(entity, metadata);
 			break;
-		case "rosefilecopy": // fall through
+		case "rosefilecopy":
 			copyRoseFile();
 			break;
 		default:
