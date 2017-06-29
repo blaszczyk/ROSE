@@ -43,7 +43,8 @@ public class PersistenceCreator {
 			writeProperty("javax.persistence.jdbc.driver", dbType.getJdbcDriver(), writer);
 			
 			writeProperty("hibernate.dialect", dbType.getDialect(), writer);
-			
+			writeProperty("hibernate.id.new_generator_mappings", "false", writer);
+
 			writer.write( XML_FOOTER );
 			System.out.println( "File created: " + fullpath);
 		}
