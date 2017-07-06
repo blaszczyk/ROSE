@@ -9,7 +9,6 @@ import java.util.List;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.model.DBType;
 import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EnumType;
 
 public class PersistenceCreator {
 	
@@ -22,7 +21,7 @@ public class PersistenceCreator {
 			+ "\t</persistence-unit>\r\n"
 			+ "</persistence>\r\n";
 
-	public static void create(List<Entity> entities, List<EnumType> enums, MetaData metadata)
+	public static void create(List<Entity> entities, MetaData metadata) throws CreateException
 	{
 		DBType dbType = DBType.getType(metadata.getDbtype());
 		String fullpath = metadata.getSrcpath() + "META-INF/persistence.xml";
@@ -50,7 +49,7 @@ public class PersistenceCreator {
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new CreateException("error creating persistence.xml", e);
 		}
 	}
 	

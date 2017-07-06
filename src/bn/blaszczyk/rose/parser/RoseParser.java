@@ -3,10 +3,7 @@ package bn.blaszczyk.rose.parser;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.util.*;
 
@@ -37,7 +34,17 @@ public class RoseParser {
 		this.stream = stream;
 	}
 	
+	public void parseAndCreate()
+	{
+		parseCreateOptional(true);
+	}
+	
 	public void parse()
+	{
+		parseCreateOptional(false);
+	}
+	
+	private void parseCreateOptional(final boolean executeCreate)
 	{
 		try(Scanner scanner = new Scanner(stream))
 		{
@@ -59,7 +66,7 @@ public class RoseParser {
 					enums.add(enumParser.parseEnum(split[2], scanner));
 					requiresLink = true;
 				}
-				else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
+				else if(split.length > 1 && split[0].equalsIgnoreCase("create") && executeCreate)
 				{
 					if(requiresLink)
 						linkEntities();
@@ -76,50 +83,53 @@ public class RoseParser {
 		}
 	}
 	
-	List<Entity> getEntities()
+	public List<Entity> getEntities()
 	{
 		return entities;
 	}
 
-	List<EnumType> getEnums()
+	public List<EnumType> getEnums()
 	{
 		return enums;
 	}
 
+	public MetaData getMetadata()
+	{
+		return metadata;
+	}
+
 	void createFile( String filetype )
 	{
-		switch(filetype.toLowerCase())
+		try
 		{
-		case "sqlcreate":
-			SQLCreator.create(entities, metadata);
-			break;
-		case "persistence":
-			PersistenceCreator.create(entities, enums, metadata);
-			break;
-		case "javamodels":
-			for(EnumType enumType : enums)
-				JavaEnumCreator.create(enumType, metadata);
-			for(Entity entity : entities)
+			switch(filetype.toLowerCase())
 			{
-				if(metadata.isUsingInterfaces())
-					JavaInterfaceCreator.create(entity, metadata);
-				JavaModelCreator.create(entity, metadata);
+			case "sqlcreate":
+				Creator.createSql(this);
+				break;
+			case "persistence":
+				Creator.createPersistence(this);
+				break;
+			case "javamodels":
+				Creator.createJavaModel(this);
+				break;
+			case "javaparser":
+				Creator.createJavaParser(this);
+				break;
+			case "rosefilecopy":
+				Creator.copyRoseFile(this, file);
+				break;
+			default:
+				throw new CreateException("Unknown Agrument: create " + filetype);
 			}
-			break;
-		case "javaparser":
-			for(Entity entity : entities)
-				JavaParserCreator.create(entity, metadata);
-			break;
-		case "rosefilecopy":
-			copyRoseFile();
-			break;
-		default:
-			System.out.println( "Unknown Agrument: create " + filetype );
-				
+		}
+		catch (CreateException e) 
+		{
+			e.printStackTrace();
 		}
 	}
 	
-	protected void linkEntities() throws ParseException
+	public void linkEntities() throws ParseException
 	{
 		Map<EntityField,Entity> originalFields = new LinkedHashMap<>();
 		for(Entity entity : entities)
@@ -161,22 +171,6 @@ public class RoseParser {
 			if( enumType.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumType;
 		throw new ParseException("Unknown Enum Type: \"" + name + "\"", 0);
-	}
-
-	public void copyRoseFile()
-	{
-		String copyName = metadata.getSrcpath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + file.getName();
-		File copy = new File(copyName);
-		try
-		{
-			copy.getParentFile().mkdirs();
-			Files.copy(file.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("File created: " + copyName);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 }

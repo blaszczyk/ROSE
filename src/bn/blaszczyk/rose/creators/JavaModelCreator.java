@@ -28,7 +28,7 @@ public class JavaModelCreator {
 	/*
 	 * create Entity
 	 */
-	public static void create(Entity entity, MetaData metadata)
+	public static void create(Entity entity, MetaData metadata) throws CreateException
 	{
 		boolean isImplementation = metadata.isUsingInterfaces();
 		String optionalImpl = isImplementation ? "Impl" : "";
@@ -82,7 +82,7 @@ public class JavaModelCreator {
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new CreateException("error creating java model classes", e);
 		}
 	}
 

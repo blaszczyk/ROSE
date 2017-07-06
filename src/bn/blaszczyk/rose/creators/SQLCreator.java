@@ -11,7 +11,7 @@ import bn.blaszczyk.rose.model.*;
 
 public class SQLCreator {
 	
-	public static void create(List<Entity> entities, MetaData metadata)
+	public static void create(List<Entity> entities, MetaData metadata) throws CreateException
 	{
 		DBType dbType = DBType.getType(metadata.getDbtype());
 		String fullpath = metadata.getSqlpath() + "createtables.sql";
@@ -46,7 +46,7 @@ public class SQLCreator {
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			throw new CreateException("error creating sql script", e);
 		}
 	}
 	

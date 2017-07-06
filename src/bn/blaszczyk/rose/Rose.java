@@ -8,14 +8,14 @@ import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Rose {
 	
-	public static final String VERSION_ID = "0.106";
+	public static final String VERSION_ID = "0.108";
 	
 	public static void main(String[] args) 
 	{
 		for (String roseFile : args) 			
 			try
 			{
-				new	RoseParser(new File(roseFile)).parse();
+				new	RoseParser(new File(roseFile)).parseAndCreate();
 			}
 			catch (FileNotFoundException e)
 			{
