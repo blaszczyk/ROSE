@@ -20,6 +20,12 @@
       <version>3.4</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.39</version>
+      <scope />
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
