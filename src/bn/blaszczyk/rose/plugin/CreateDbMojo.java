@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.text.ParseException;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -37,7 +36,6 @@ public class CreateDbMojo extends AbstractMojo {
 		{
 			final RoseParser parser = new RoseParser(file);
 			parser.parse();
-			parser.linkEntities();
 			final MetaData metadata = parser.getMetadata();
 			endureDbExistence(metadata);
 			final List<Entity> entities = parser.getEntities();
@@ -46,10 +44,6 @@ public class CreateDbMojo extends AbstractMojo {
 		catch (final FileNotFoundException e)
 		{
 			throw new MojoFailureException("rosefile not found: " + rosefile,e);
-		}
-		catch (final ParseException e)
-		{
-			throw new MojoFailureException("error parsing rosefile: " + rosefile,e);
 		}
 		catch (CreateException e)
 		{
