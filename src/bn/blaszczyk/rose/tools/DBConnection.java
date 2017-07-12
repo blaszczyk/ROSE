@@ -2,6 +2,7 @@ package bn.blaszczyk.rose.tools;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -63,6 +64,30 @@ public class DBConnection
 				throw new CreateException("error executing update with '" + sql + "'", e);
 			}
 		return -1;
+	}
+
+	
+	public static boolean databaseExists(final String dbName) throws CreateException
+	{
+		final ResultSet rs;
+		try
+		{
+			rs = DBConnection.getConnection().getMetaData().getCatalogs();
+			while(rs.next())
+				if(rs.getString(1).equals(dbName))
+					return true;
+		}
+		catch (SQLException e)
+		{
+			throw new CreateException("Fehler beim Zugriff auf SQL Server",e);
+		}
+		return false;
+	}
+	
+	public static void createDatabase(final String dbName) throws CreateException
+	{
+		String sql = "CREATE DATABASE " + dbName;
+		DBConnection.executeUpdate(sql);
 	}
 	
 }

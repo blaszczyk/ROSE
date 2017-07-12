@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -37,18 +38,10 @@ public class CreateDbMojo extends AbstractMojo {
 			final RoseParser parser = new RoseParser(file);
 			parser.parse();
 			parser.linkEntities();
-			final MetaData metadata = parser.getMetadata();	
-			final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
-			DBConnection.connectToDatabase(driver, connectionString, metadata.getDbuser(), metadata.getDbpassword());
-			for(final Entity entity : parser.getEntities())
-			{
-				final Writer writer = new StringWriter();
-				SQLCreator.createTable(entity, metadata, writer);
-				writer.flush();
-				final String sql = writer.toString();
-				DBConnection.executeUpdate(sql);
-			}
-			DBConnection.closeConnection();
+			final MetaData metadata = parser.getMetadata();
+			endureDbExistence(metadata);
+			final List<Entity> entities = parser.getEntities();
+			executeCreateTables(metadata, entities);
 		}
 		catch (final FileNotFoundException e)
 		{
@@ -66,6 +59,32 @@ public class CreateDbMojo extends AbstractMojo {
 		{
 			throw new MojoFailureException("error generating create script",e);
 		}
+	}
+
+	private void executeCreateTables(final MetaData metadata, final List<Entity> entities)
+			throws CreateException, IOException
+	{
+		final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
+		DBConnection.connectToDatabase(driver, connectionString, metadata.getDbuser(), metadata.getDbpassword());
+		for(final Entity entity : entities)
+		{
+			final Writer writer = new StringWriter();
+			SQLCreator.createTable(entity, metadata, writer);
+			writer.flush();
+			final String sql = writer.toString();
+			DBConnection.executeUpdate(sql);
+		}
+		DBConnection.closeConnection();
+	}
+
+	private void endureDbExistence(final MetaData metadata) throws CreateException
+	{
+		final String connectionString = String.format("jdbc:mysql://%s:%s", metadata.getDbserver(), metadata.getDbport());
+		DBConnection.connectToDatabase(driver, connectionString, metadata.getDbuser(), metadata.getDbpassword());
+		final String dbName = metadata.getDbname();
+		if(!DBConnection.databaseExists(dbName))
+			DBConnection.createDatabase(dbName);
+		DBConnection.closeConnection();
 	}
 
 }
