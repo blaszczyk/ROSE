@@ -23,7 +23,7 @@ import bn.blaszczyk.rose.tools.DBConnection;
 @Mojo(name = "createDb")
 public class CreateDbMojo extends AbstractMojo {
 
-	private static final String driver = "com.mysql.jdbc.Driver";	
+	private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";	
 	
 	@Parameter(property="sql.rosefile", required=true)
 	private String rosefile;
@@ -37,7 +37,7 @@ public class CreateDbMojo extends AbstractMojo {
 			final RoseParser parser = new RoseParser(file);
 			parser.parse();
 			final MetaData metadata = parser.getMetadata();
-			endureDbExistence(metadata);
+			ensureDbExistence(metadata);
 			final List<Entity> entities = parser.getEntities();
 			executeCreateTables(metadata, entities);
 		}
@@ -59,7 +59,7 @@ public class CreateDbMojo extends AbstractMojo {
 			throws CreateException, IOException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
-		DBConnection.connectToDatabase(driver, connectionString, metadata.getDbuser(), metadata.getDbpassword());
+		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		for(final Entity entity : entities)
 		{
 			final Writer writer = new StringWriter();
@@ -71,10 +71,10 @@ public class CreateDbMojo extends AbstractMojo {
 		DBConnection.closeConnection();
 	}
 
-	private void endureDbExistence(final MetaData metadata) throws CreateException
+	private void ensureDbExistence(final MetaData metadata) throws CreateException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s", metadata.getDbserver(), metadata.getDbport());
-		DBConnection.connectToDatabase(driver, connectionString, metadata.getDbuser(), metadata.getDbpassword());
+		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		final String dbName = metadata.getDbname();
 		if(!DBConnection.databaseExists(dbName))
 			DBConnection.createDatabase(dbName);

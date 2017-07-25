@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 import bn.blaszczyk.rose.*;
 import bn.blaszczyk.rose.model.*;
@@ -34,6 +35,8 @@ public class JavaInterfaceCreator
 			writeClassDeclaration(entity, metadata.isUsingTimestamp(), writer);			
 			
 			writer.write("{\r\n");
+			
+			writeConstants(entity.getEntityFields(), writer);
 
 			writeGettersSetters(entity, writer);
 
@@ -44,6 +47,14 @@ public class JavaInterfaceCreator
 		{
 			throw new CreateException("error creating java interfaces", e);
 		}
+	}
+
+	private static void writeConstants(List<EntityField> entityFields, Writer writer) throws IOException
+	{
+		int count = 0;
+		for(final EntityField field : entityFields)
+			writer.write("\tpublic static final int " + field.getName().toUpperCase() + " = " + count++ + ";\r\n");
+		writer.write("\r\n");
 	}
 
 	private static void writeClassDeclaration( Entity entity, boolean timestamped, Writer writer) throws IOException
