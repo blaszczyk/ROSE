@@ -17,12 +17,14 @@ import bn.blaszczyk.rose.parser.RoseParser;
 @Mojo(name = "copyrose")
 public class CopyRoseMojo extends AbstractMojo {
 
-	@Parameter(property="copyrose.rosefile", required=true)
+	@Parameter(property="copyrose.rosefile", required=false)
 	private String rosefile;
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		if(rosefile == null)
+			return;
 		final File file = new File(rosefile);
 		try
 		{

@@ -25,12 +25,14 @@ public class CreateDbMojo extends AbstractMojo {
 
 	private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";	
 	
-	@Parameter(property="sql.rosefile", required=true)
+	@Parameter(property="sql.rosefile", required=false)
 	private String rosefile;
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
+		if(rosefile == null)
+			return;
 		final File file = new File(rosefile);
 		try
 		{

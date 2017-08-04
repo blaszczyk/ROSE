@@ -14,13 +14,15 @@ import bn.blaszczyk.rose.parser.RoseParser;
 @Mojo(name = "all")
 public class AllMojo extends AbstractMojo {
 
-	@Parameter(property="all.rosefile", required=true)
+	@Parameter(property="all.rosefile", required=false)
 	private String rosefile;
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
-		final File file = new File(rosefile);
+		if(rosefile == null)
+			return;
+		final File file = new File( rosefile);
 		try
 		{
 			final RoseParser parser = new RoseParser(file);

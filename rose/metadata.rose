@@ -7,6 +7,7 @@ set srcpath src/
 begin entity MetaData
 
 	varchar(50) srcpath "src/"
+	varchar(50) resourcepath "src/"
 	varchar(50) sqlpath "sql/"
 	
 	varchar(50) dbtype "mysql"

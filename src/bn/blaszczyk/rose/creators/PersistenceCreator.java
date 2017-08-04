@@ -24,7 +24,7 @@ public class PersistenceCreator {
 	public static void create(List<Entity> entities, MetaData metadata) throws CreateException
 	{
 		DBType dbType = DBType.getType(metadata.getDbtype());
-		String fullpath = metadata.getSrcpath() + "META-INF/persistence.xml";
+		String fullpath = metadata.getResourcepath() + "META-INF/persistence.xml";
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();

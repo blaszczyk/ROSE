@@ -7,6 +7,7 @@ package bn.blaszczyk.rose;
 public class MetaData
 {
 	private java.lang.String srcpath = "src/";
+	private java.lang.String resourcepath = "src/";
 	private java.lang.String sqlpath = "sql/";
 	private java.lang.String dbtype = "mysql";
 	private java.lang.String dbuser = "root";
@@ -35,6 +36,16 @@ public class MetaData
 	public void setSrcpath( java.lang.String srcpath )
 	{
 		this.srcpath = srcpath;
+	}
+
+	public java.lang.String getResourcepath()
+	{
+		return resourcepath;
+	}
+
+	public void setResourcepath( java.lang.String resourcepath )
+	{
+		this.resourcepath = resourcepath;
 	}
 
 	public java.lang.String getSqlpath()

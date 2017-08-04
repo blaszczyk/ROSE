@@ -39,7 +39,7 @@ public class Creator {
 	public static void copyRoseFile(final RoseParser parser, final File origin) throws CreateException
 	{
 		final MetaData metadata = parser.getMetadata();
-		final String copyName = metadata.getSrcpath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + origin.getName();
+		final String copyName = metadata.getResourcepath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + origin.getName();
 		final File copy = new File(copyName);
 		try
 		{

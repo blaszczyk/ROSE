@@ -13,6 +13,9 @@ public class MetaDataParser
 		case "srcpath":
 			metaData.setSrcpath( value );
 			break;
+		case "resourcepath":
+			metaData.setResourcepath( value );
+			break;
 		case "sqlpath":
 			metaData.setSqlpath( value );
 			break;
