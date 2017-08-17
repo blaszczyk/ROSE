@@ -60,7 +60,7 @@ public class JavaModelCreator {
 			if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
 				writeIdGettersSetters(entity, writer, metadata.isUsingAnnotations());
 
-			writeGettersSetters(entity, optionalImpl,  writer, metadata.isUsingAnnotations());
+			writeGettersSetters(entity, optionalImpl,  writer, metadata.isUsingAnnotations(), metadata.isUsingInterfaces());
 			if(metadata.isUsingTimestamp())
 				writeTimestampGetterSetter(writer, metadata.isUsingAnnotations());
 			writeToString(entity, writer);			
@@ -174,64 +174,72 @@ public class JavaModelCreator {
 				+ "\t}\r\n\r\n");
 	}
 	
-	private static void writeGettersSetters(Entity entity, String optionalImpl,  Writer writer, boolean usingAnnotations) throws IOException
+	private static void writeGettersSetters(Entity entity, String optionalImpl,  Writer writer, boolean usingAnnotations, boolean usingInterfaces) throws IOException
 	{
 		// primitive and enum Fields
 		for(Field field : entity.getFields())
 			if( field instanceof PrimitiveField)
-				writePrimitiveGetterSetter((PrimitiveField) field, writer, usingAnnotations);
+				writePrimitiveGetterSetter((PrimitiveField) field, writer, usingAnnotations, usingInterfaces);
 			else if( field instanceof EnumField )
-				writeEnumGetterSetter((EnumField) field, writer, usingAnnotations);
+				writeEnumGetterSetter((EnumField) field, writer, usingAnnotations, usingInterfaces);
 		
 		// entity Fields
 		for(EntityField entityField : entity.getEntityFields())
-			writeEntityGetterSetter(entityField,  optionalImpl, writer, usingAnnotations);
+			writeEntityGetterSetter(entityField,  optionalImpl, writer, usingAnnotations, usingInterfaces);
 	}
 
-	private static void writePrimitiveGetterSetter(PrimitiveField primitiveField, Writer writer, boolean usingAnnotations) throws IOException
+	private static void writePrimitiveGetterSetter(PrimitiveField primitiveField, Writer writer, boolean usingAnnotations, boolean usingInterfaces) throws IOException
 	{
 		// annotations
 		if(usingAnnotations)
 			writer.write("\t@Column(name=\"" + primitiveField.getName() + "\")\r\n");
 		// getter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic " + primitiveField.getType().getJavaname() + " " + getGetterName(primitiveField) + "()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn " + primitiveField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 		// setter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic void " + getSetterName(primitiveField) + "( " + primitiveField.getType().getJavaname() + " " + primitiveField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + primitiveField.getName() + " = " + primitiveField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	}
 
-	private static void writeEnumGetterSetter(EnumField enumField, Writer writer, boolean usingAnnotations) throws IOException
+	private static void writeEnumGetterSetter(EnumField enumField, Writer writer, boolean usingAnnotations, boolean usingInterfaces) throws IOException
 	{
 		// annotations
 		if(usingAnnotations)
 			writer.write("\t@Column(name=\"" + enumField.getName() + "\")\r\n"
 					+ "\t@Enumerated(EnumType.ORDINAL)\r\n");
 		// getter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic " + enumField.getEnumType().getSimpleClassName() + " " + getGetterName(enumField) + "()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn " + enumField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	
 		// setter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic void " + getSetterName(enumField) + "( " + enumField.getEnumType().getSimpleClassName() + " " + enumField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + enumField.getName() + " = " + enumField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	}
 
-	private static void writeEntityGetterSetter(EntityField entityField, String optionalImpl,  Writer writer, boolean usingAnnotations) throws IOException
+	private static void writeEntityGetterSetter(EntityField entityField, String optionalImpl,  Writer writer, boolean usingAnnotations, boolean usingInterfaces) throws IOException
 	{
 		if(usingAnnotations)
 			writeEntityAnnotations(entityField, optionalImpl, writer);
 		if(entityField.getType().isSecondMany())
-			writeMultipleEntityGetterSetter(entityField, writer);
+			writeMultipleEntityGetterSetter(entityField, writer, usingInterfaces);
 		else
-			writeSingleEntityGetterSetter(entityField, writer);
+			writeSingleEntityGetterSetter(entityField, writer, usingInterfaces);
 	}
 	
 
@@ -265,30 +273,38 @@ public class JavaModelCreator {
 		}
 	}
 
-	private static void writeSingleEntityGetterSetter(EntityField entityField, Writer writer ) throws IOException
+	private static void writeSingleEntityGetterSetter(EntityField entityField, Writer writer, boolean usingInterfaces ) throws IOException
 	{
 		// getter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic " + entityField.getEntity().getSimpleClassName() + " " + getGetterName(entityField) + "()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 		
 		// setter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic void " + getSetterName(entityField) + "( " + entityField.getEntity().getSimpleClassName() + " " 	+ entityField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	}
 
-	private static void writeMultipleEntityGetterSetter(EntityField entityField, Writer writer ) throws IOException
+	private static void writeMultipleEntityGetterSetter(EntityField entityField, Writer writer, boolean usingInterfaces ) throws IOException
 	{
 		// getter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + getGetterName(entityField)	+ "()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
 	
 		// setter
+		if(usingInterfaces)
+			writer.write("\t@Override\r\n");
 		writer.write("\tpublic void " + getSetterName(entityField) + "( java.util.Set<" + entityField.getEntity().getSimpleClassName() + "> " + entityField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\r\n"
