@@ -18,7 +18,7 @@ public class JavaInterfaceCreator
 	/*
 	 * create Entity
 	 */
-	public static void create(Entity entity, MetaData metadata) throws CreateException
+	public static void create(Entity entity, MetaData metadata) throws RoseException
 	{
 		String fullpath = metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entity.getSimpleClassName() + ".java";
 		File file = new File(fullpath);
@@ -45,7 +45,7 @@ public class JavaInterfaceCreator
 		}
 		catch (IOException e)
 		{
-			throw new CreateException("error creating java interfaces", e);
+			throw new RoseException("error creating java interfaces", e);
 		}
 	}
 

@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.*;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.creators.*;
 import bn.blaszczyk.rose.model.*;
 
@@ -19,39 +20,46 @@ public class RoseParser {
 
 	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
-	
+
 	private final InputStream stream;
 	private File file;
-	
-	public RoseParser(File file) throws FileNotFoundException
+
+	public RoseParser(final File file) throws RoseException
 	{
-		this(new FileInputStream(file));
-		this.file = file;
+		try
+		{
+			this.stream = new FileInputStream(file);
+			this.file = file;
+		}
+		catch (final FileNotFoundException e)
+		{
+			throw new RoseException("rosefile not found", e);
+		}
 	}
-	
-	RoseParser(InputStream stream)
+
+	public RoseParser(final InputStream stream)
 	{
 		this.stream = stream;
 	}
 	
-	public void parseAndCreate()
+	public void parseAndCreate() throws RoseException
 	{
 		parseCreateOptional(true);
 	}
 	
-	public void parse()
+	public void parse() throws RoseException
 	{
 		parseCreateOptional(false);
 	}
 	
-	private void parseCreateOptional(final boolean executeCreate)
+	private void parseCreateOptional(final boolean executeCreate) throws RoseException
 	{
-		try(Scanner scanner = new Scanner(stream))
+		try(final Scanner scanner = new Scanner(stream))
 		{
-			boolean requiresLink = false;
+			boolean requiresLink = true;
 			while(scanner.hasNextLine())
 			{
-				String[] split = scanner.nextLine().trim().split("\\s+",3);
+				final String[] split = scanner.nextLine().trim().split("\\s+",3);
 				if(split.length > 2 && split[0].equalsIgnoreCase("set") )
 				{
 					MetaDataParser.parseField(metadata, split[1], split[2]);
@@ -59,12 +67,10 @@ public class RoseParser {
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
 				{
 					entities.add(entityParser.parseEntity(split[2], scanner));
-					requiresLink = true;
 				}
 				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("enum"))
 				{
 					enums.add(enumParser.parseEnum(split[2], scanner));
-					requiresLink = true;
 				}
 				else if(split.length > 1 && split[0].equalsIgnoreCase("create") && executeCreate)
 				{
@@ -98,38 +104,31 @@ public class RoseParser {
 		return metadata;
 	}
 
-	void createFile( String filetype )
+	private void createFile( String filetype ) throws RoseException
 	{
-		try
+		switch(filetype.toLowerCase())
 		{
-			switch(filetype.toLowerCase())
-			{
-			case "sqlcreate":
-				Creator.createSql(this);
-				break;
-			case "persistence":
-				Creator.createPersistence(this);
-				break;
-			case "javamodels":
-				Creator.createJavaModel(this);
-				break;
-			case "javaparser":
-				Creator.createJavaParser(this);
-				break;
-			case "rosefilecopy":
-				Creator.copyRoseFile(this, file);
-				break;
-			default:
-				throw new CreateException("Unknown Agrument: create " + filetype);
-			}
-		}
-		catch (CreateException e) 
-		{
-			e.printStackTrace();
+		case "sqlcreate":
+			Creator.createSql(this);
+			break;
+		case "persistence":
+			Creator.createPersistence(this);
+			break;
+		case "javamodels":
+			Creator.createJavaModel(this);
+			break;
+		case "javaparser":
+			Creator.createJavaParser(this);
+			break;
+		case "rosefilecopy":
+			Creator.copyRoseFile(this, file);
+			break;
+		default:
+			throw new RoseException("Unknown Agrument: create " + filetype);
 		}
 	}
 	
-	public void linkEntities() throws ParseException
+	public void linkEntities() throws RoseException
 	{
 		Map<EntityField,Entity> originalFields = new LinkedHashMap<>();
 		for(Entity entity : entities)
@@ -157,20 +156,20 @@ public class RoseParser {
 		return metadata;
 	}
 
-	private Entity getEntityType(String name) throws ParseException
+	private Entity getEntityType(String name) throws RoseException
 	{
 		for(Entity entity : entities)
 			if( entity.getSimpleClassName().equalsIgnoreCase( name ) )
 				return entity;
-		throw new ParseException("Unknown Entity Type: \"" + name + "\"", 0);
+		throw new RoseException("Unknown Entity Type: \"" + name + "\"");
 	}
 	
-	private EnumType getEnumType(String name) throws ParseException
+	private EnumType getEnumType(String name) throws RoseException
 	{
 		for(EnumType enumType : enums)
 			if( enumType.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumType;
-		throw new ParseException("Unknown Enum Type: \"" + name + "\"", 0);
+		throw new RoseException("Unknown Enum Type: \"" + name + "\"");
 	}
 
 }

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.*;
 
 public class JavaParserCreator {
@@ -16,7 +17,7 @@ public class JavaParserCreator {
 		return String.format(metadata.getParserformat(), entity.getSimpleClassName());
 	}
 	
-	public static void create(Entity entity, MetaData metadata) throws CreateException
+	public static void create(Entity entity, MetaData metadata) throws RoseException
 	{
 		String classname = getParserName(entity, metadata);
 		String fullpath = metadata.getSrcpath() + metadata.getParserpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
@@ -76,7 +77,7 @@ public class JavaParserCreator {
 		}
 		catch (IOException e)
 		{
-			throw new CreateException("error creating java parser", e);
+			throw new RoseException("error creating java parser", e);
 		}
 		
 	}

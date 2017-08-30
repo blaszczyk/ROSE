@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import bn.blaszczyk.rose.creators.CreateException;
+import bn.blaszczyk.rose.RoseException;
 
 public class DBConnection
 {
@@ -18,7 +18,7 @@ public class DBConnection
 	/*
 	 * Static DB Access Methods
 	 */
-	public static void connectToDatabase(final String driverClass, final String connectionString, final String userID, final String passWord) throws CreateException
+	public static void connectToDatabase(final String driverClass, final String connectionString, final String userID, final String passWord) throws RoseException
 	{
 		try
 		{
@@ -28,7 +28,7 @@ public class DBConnection
 		catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e)
 		{
 			dbConn = null;
-			throw new CreateException("error connecting to DB", e);
+			throw new RoseException("error connecting to DB", e);
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class DBConnection
 		return dbConn;
 	}
 
-	public static int executeUpdate(final String sql) throws CreateException
+	public static int executeUpdate(final String sql) throws RoseException
 	{
 		final Statement stmt;
 		if (dbConn != null)
@@ -61,13 +61,13 @@ public class DBConnection
 			}
 			catch (SQLException e)
 			{
-				throw new CreateException("error executing update with '" + sql + "'", e);
+				throw new RoseException("error executing update with '" + sql + "'", e);
 			}
 		return -1;
 	}
 
 	
-	public static boolean databaseExists(final String dbName) throws CreateException
+	public static boolean databaseExists(final String dbName) throws RoseException
 	{
 		final ResultSet rs;
 		try
@@ -79,12 +79,12 @@ public class DBConnection
 		}
 		catch (SQLException e)
 		{
-			throw new CreateException("Fehler beim Zugriff auf SQL Server",e);
+			throw new RoseException("Fehler beim Zugriff auf SQL Server",e);
 		}
 		return false;
 	}
 	
-	public static void createDatabase(final String dbName) throws CreateException
+	public static void createDatabase(final String dbName) throws RoseException
 	{
 		String sql = "CREATE DATABASE " + dbName;
 		DBConnection.executeUpdate(sql);

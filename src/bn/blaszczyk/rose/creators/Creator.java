@@ -7,13 +7,14 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.Entity;
 import bn.blaszczyk.rose.model.EnumType;
 import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Creator {
 	
-	public static void createJavaModel(final RoseParser parser) throws CreateException
+	public static void createJavaModel(final RoseParser parser) throws RoseException
 	{
 		final List<Entity> entities = parser.getEntities();
 		final List<EnumType> enums = parser.getEnums();
@@ -28,7 +29,7 @@ public class Creator {
 		}
 	}
 	
-	public static void createJavaParser(final RoseParser parser) throws CreateException
+	public static void createJavaParser(final RoseParser parser) throws RoseException
 	{
 		final List<Entity> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();
@@ -36,7 +37,7 @@ public class Creator {
 			JavaParserCreator.create(entity, metadata);
 	}
 
-	public static void copyRoseFile(final RoseParser parser, final File origin) throws CreateException
+	public static void copyRoseFile(final RoseParser parser, final File origin) throws RoseException
 	{
 		final MetaData metadata = parser.getMetadata();
 		final String copyName = metadata.getResourcepath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + origin.getName();
@@ -49,18 +50,18 @@ public class Creator {
 		}
 		catch (final IOException e)
 		{
-			throw new CreateException("error copying rosefile", e);
+			throw new RoseException("error copying rosefile", e);
 		}
 	}
 	
-	public static void createPersistence(final RoseParser parser) throws CreateException
+	public static void createPersistence(final RoseParser parser) throws RoseException
 	{
 		final List<Entity> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();
 		PersistenceCreator.create(entities, metadata);
 	}
 	
-	public static void createSql(final RoseParser parser) throws CreateException
+	public static void createSql(final RoseParser parser) throws RoseException
 	{
 		final List<Entity> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();

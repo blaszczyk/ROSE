@@ -7,11 +7,12 @@ import java.io.Writer;
 import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.*;
 
 public class SQLCreator {
 	
-	public static void create(List<Entity> entities, MetaData metadata) throws CreateException
+	public static void create(List<Entity> entities, MetaData metadata) throws RoseException
 	{
 		String fullpath = metadata.getSqlpath() + "createtables.sql";
 		File file = new File(fullpath);
@@ -36,7 +37,7 @@ public class SQLCreator {
 		}
 		catch (IOException e)
 		{
-			throw new CreateException("error creating sql script", e);
+			throw new RoseException("error creating sql script", e);
 		}
 	}
 	
@@ -59,46 +60,53 @@ public class SQLCreator {
 					+ ");\r\n\r\n"   );
 	}
 	
-	public static void createTable(Entity entity, MetaData metadata, Writer writer) throws IOException
+	public static void createTable(Entity entity, MetaData metadata, Writer writer) throws RoseException
 	{
-		// create table
-		writer.write( "\r\ncreate table " + entity.getObjectName().toLowerCase() + "\r\n"
-				+ "(\r\n" );
-		
-		// primary column
-		writer.write("\t" + entity.getObjectName() + "_id int");
-		switch(DBType.getType(metadata.getDbtype()))
+		try
 		{
-		case MYSQL:
-			writer.write( " auto_increment,\r\n");
-			break;
-		}
-		// primitive and enum columns
-		for(Field field : entity.getFields())
-			writer.write( "\t" + field.getName() + " " + field.getSqlType() + ",\r\n");
-		
-		// relational columns
-		for(EntityField entityField : entity.getEntityFields())
-			if(entityField.getType() == RelationType.MANYTOONE 
-				 || ( entityField.getType() == RelationType.ONETOONE  &&  entityField.getName().compareTo(entityField.getCounterName()) < 0 ))
-				writer.write( "\t" + entityField.getName() + "_id int,\r\n" );
-		
-		// timestamp
-		if(metadata.isUsingTimestamp())
-			writer.write("\ttimestamp_update timestamp default current_timestamp on update current_timestamp,\r\n");
-		// primary key
-		writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
-		
-		//foreign keys
-		if(metadata.isUsingForeignKeys())
+			// create table
+			writer.write( "\r\ncreate table " + entity.getObjectName().toLowerCase() + "\r\n"
+					+ "(\r\n" );
+			
+			// primary column
+			writer.write("\t" + entity.getObjectName() + "_id int");
+			switch(DBType.getType(metadata.getDbtype()))
+			{
+			case MYSQL:
+				writer.write( " auto_increment,\r\n");
+				break;
+			}
+			// primitive and enum columns
+			for(Field field : entity.getFields())
+				writer.write( "\t" + field.getName() + " " + field.getSqlType() + ",\r\n");
+			
+			// relational columns
 			for(EntityField entityField : entity.getEntityFields())
-				if(entityField.getType() == RelationType.MANYTOONE)
-					writer.write( ",\r\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityField.getEntity().getSimpleClassName().toLowerCase()
-								+ " foreign key ( " + entityField.getName() + "_id ) references "
-								+ entityField.getEntity().getSimpleClassName() + "( " + entityField.getEntity().getObjectName() + "_id )");
-		//fin
-		writer.write( "\r\n"
-				+ ");\r\n" );
+				if(entityField.getType() == RelationType.MANYTOONE 
+					 || ( entityField.getType() == RelationType.ONETOONE  &&  entityField.getName().compareTo(entityField.getCounterName()) < 0 ))
+					writer.write( "\t" + entityField.getName() + "_id int,\r\n" );
+			
+			// timestamp
+			if(metadata.isUsingTimestamp())
+				writer.write("\ttimestamp_update timestamp default current_timestamp on update current_timestamp,\r\n");
+			// primary key
+			writer.write( "\tconstraint pk_" + entity.getSimpleClassName().toLowerCase() + " primary key ( " + entity.getObjectName() + "_id )");
+			
+			//foreign keys
+			if(metadata.isUsingForeignKeys())
+				for(EntityField entityField : entity.getEntityFields())
+					if(entityField.getType() == RelationType.MANYTOONE)
+						writer.write( ",\r\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityField.getEntity().getSimpleClassName().toLowerCase()
+									+ " foreign key ( " + entityField.getName() + "_id ) references "
+									+ entityField.getEntity().getSimpleClassName() + "( " + entityField.getEntity().getObjectName() + "_id )");
+			//fin
+			writer.write( "\r\n"
+					+ ");\r\n" );
+		}
+		catch(IOException e)
+		{
+			throw new RoseException("error writing table create", e);			
+		}
 	}
 }
 

@@ -13,7 +13,7 @@ public class JavaEnumCreator {
 	/*
 	 * create Enum
 	 */
-	public static void create(EnumType enumType, MetaData metadata) throws CreateException
+	public static void create(EnumType enumType, MetaData metadata) throws RoseException
 	{
 		String fullpath = metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + enumType.getSimpleClassName() + ".java";
 		File file = new File(fullpath);
@@ -48,7 +48,7 @@ public class JavaEnumCreator {
 		}
 		catch (IOException e)
 		{
-			throw new CreateException("Error creating enum java files", e);
+			throw new RoseException("Error creating enum java files", e);
 		}
 		
 	}
