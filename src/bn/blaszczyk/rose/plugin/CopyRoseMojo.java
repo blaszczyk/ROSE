@@ -14,7 +14,6 @@ public class CopyRoseMojo extends AbstractRoseMojo
 	void doExecute(final RoseParser parser) throws RoseException
 	{
 		parser.parse();
-		parser.linkEntities();
 		Creator.copyRoseFile(parser, rosefile);
 	}
 

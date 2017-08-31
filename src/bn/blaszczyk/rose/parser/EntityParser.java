@@ -16,7 +16,7 @@ public class EntityParser {
 	}
 	
 
-	public Entity parseEntity(String args, Scanner scanner ) throws ParseException
+	public EntityModel parseEntity(String args, Scanner scanner ) throws ParseException
 	{
 		String[] split = args.split(":");
 		ImplInterface implInterface = ImplInterface.NONE;
@@ -29,7 +29,7 @@ public class EntityParser {
 				implInterface = ImplInterface.READABLE;
 			else if(split[1].toLowerCase().contains("i"))
 				implInterface = ImplInterface.IDENTIFYABLE;
-		Entity entity = new Entity(split[0].trim(),metadata.getModelpackage(), implInterface);
+		EntityModel entityModel = new EntityModel(split[0].trim(),metadata.getModelpackage(), implInterface);
 		String line;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
@@ -41,40 +41,40 @@ public class EntityParser {
 			{
 				split = split[1].split("\\s+");
 				if( split.length == 1) 
-					entity.addField(new EnumField(split[0]));
+					entityModel.addField(new EnumField(split[0]));
 				else if( split.length == 2)
-					entity.addField(new EnumField(split[0], split[1]));
+					entityModel.addField(new EnumField(split[0], split[1]));
 				else
-					entity.addField(new EnumField(split[0], split[1],split[2]));
+					entityModel.addField(new EnumField(split[0], split[1],split[2]));
 				continue;
 			}
 			if( isPrimitiveType(command) )
 			{
 				split = split[1].split("\\s+",2);
 				if(split.length == 2)
-					entity.addField(new PrimitiveField(command, split[0], split[1]));
+					entityModel.addField(new PrimitiveField(command, split[0], split[1]));
 				else
-					entity.addField(new PrimitiveField(command, split[0]));
+					entityModel.addField(new PrimitiveField(command, split[0]));
 			}
 			else if( isRelationType(command) )
 			{
 				split = split[1].split("\\s+", 3);
 					if(split.length == 3)
-						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1], split[2]) );	
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1], split[2]) );	
 					else if(split.length == 2)
-						entity.addEntityField(new EntityField(split[0], getRelationType(command), split[1]) );					
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1]) );					
 					else
-						entity.addEntityField(new EntityField(split[0], getRelationType(command) ) );			
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command) ) );			
 			}
 			else if( "tostring".equalsIgnoreCase(command))
 			{
 				if(split.length == 2)
-					entity.setToString(split[1]);
+					entityModel.setToString(split[1]);
 			}
 			else 
 				System.out.println("Invalid Field: " + line);
 		}
-		return entity;
+		return entityModel;
 	}
 
 	private static boolean isPrimitiveType(String sqltype)

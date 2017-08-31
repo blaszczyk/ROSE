@@ -3,17 +3,18 @@ package bn.blaszczyk.rose.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Entity {
+public class EntityModel {
 	
-	private String classname;
-	private String objectname;
-	private String packagename;
+	private final String classname;
+	private final String objectname;
+	private final String packagename;
+	private final ImplInterface implInterface;
+	private final List<Field> fields = new ArrayList<>();
+	private final List<EntityField> entityFields = new ArrayList<>();
+
 	private String toString;
-	private ImplInterface implInterface;
-	private List<Field> fields = new ArrayList<>();
-	private List<EntityField> entityFields = new ArrayList<>();
  
-	public Entity(String classname, String packagename, ImplInterface implInterface)
+	public EntityModel(final String classname, final String packagename, final ImplInterface implInterface)
 	{
 		this.classname = classname;
 		this.packagename = packagename;

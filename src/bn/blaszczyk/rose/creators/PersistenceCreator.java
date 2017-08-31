@@ -9,7 +9,7 @@ import java.util.List;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.DBType;
-import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EntityModel;
 
 public class PersistenceCreator {
 	
@@ -22,7 +22,7 @@ public class PersistenceCreator {
 			+ "\t</persistence-unit>\r\n"
 			+ "</persistence>\r\n";
 
-	public static void create(List<Entity> entities, MetaData metadata) throws RoseException
+	public static void create(List<EntityModel> entities, MetaData metadata) throws RoseException
 	{
 		DBType dbType = DBType.getType(metadata.getDbtype());
 		String fullpath = metadata.getResourcepath() + "META-INF/persistence.xml";
@@ -32,7 +32,7 @@ public class PersistenceCreator {
 		try(FileWriter writer = new FileWriter(file))
 		{
 			writer.write( XML_HEADER );
-			for(Entity entity : entities)
+			for(EntityModel entity : entities)
 				writeEntity(entity, metadata, writer);
 			writer.write("\t\t<properties>\r\n");
 			
@@ -59,7 +59,7 @@ public class PersistenceCreator {
 		writer.write("\t\t\t<property name=\"" + name + "\" value=\"" + value + "\" />\r\n");
 	}
 
-	private static void writeEntity(Entity entity, MetaData metadata, Writer writer) throws IOException
+	private static void writeEntity(EntityModel entity, MetaData metadata, Writer writer) throws IOException
 	{
 		String optionalImpl = metadata.isUsingInterfaces() ? "Impl" : "";
 		writer.write("\t\t<class>" + metadata.getModelpackage() + "." + entity.getSimpleClassName() + optionalImpl + "</class>\r\n");

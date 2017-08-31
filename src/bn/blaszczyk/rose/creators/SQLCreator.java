@@ -12,7 +12,7 @@ import bn.blaszczyk.rose.model.*;
 
 public class SQLCreator {
 	
-	public static void create(List<Entity> entities, MetaData metadata) throws RoseException
+	public static void create(List<EntityModel> entities, MetaData metadata) throws RoseException
 	{
 		String fullpath = metadata.getSqlpath() + "createtables.sql";
 		File file = new File(fullpath);
@@ -27,7 +27,7 @@ public class SQLCreator {
 			{
 				writer.write("drop table " + entities.get(i).getSimpleClassName() + ";\r\n");
 			}
-			for(Entity entity : entities)
+			for(EntityModel entity : entities)
 			{
 				createTable(entity, metadata, writer);
 				for(EntityField entityField : entity.getEntityFields() )
@@ -60,7 +60,7 @@ public class SQLCreator {
 					+ ");\r\n\r\n"   );
 	}
 	
-	public static void createTable(Entity entity, MetaData metadata, Writer writer) throws RoseException
+	public static void createTable(EntityModel entity, MetaData metadata, Writer writer) throws RoseException
 	{
 		try
 		{
@@ -96,9 +96,9 @@ public class SQLCreator {
 			if(metadata.isUsingForeignKeys())
 				for(EntityField entityField : entity.getEntityFields())
 					if(entityField.getType() == RelationType.MANYTOONE)
-						writer.write( ",\r\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityField.getEntity().getSimpleClassName().toLowerCase()
+						writer.write( ",\r\n\tconstraint fk_" + entity.getSimpleClassName().toLowerCase() + "_" + entityField.getEntityModel().getSimpleClassName().toLowerCase()
 									+ " foreign key ( " + entityField.getName() + "_id ) references "
-									+ entityField.getEntity().getSimpleClassName() + "( " + entityField.getEntity().getObjectName() + "_id )");
+									+ entityField.getEntityModel().getSimpleClassName() + "( " + entityField.getEntityModel().getObjectName() + "_id )");
 			//fin
 			writer.write( "\r\n"
 					+ ");\r\n" );

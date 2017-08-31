@@ -2,7 +2,7 @@ package bn.blaszczyk.rose.model;
 
 public class EnumField  extends AbstractField
 {
-	private EnumType enumType;
+	private EnumModel enumModel;
 	private String enumName;
 	private String defValue;
 
@@ -23,9 +23,9 @@ public class EnumField  extends AbstractField
 		this(enumName, enumName );
 	}
 
-	public EnumType getEnumType()
+	public EnumModel getEnumType()
 	{
-		return enumType;
+		return enumModel;
 	}
 
 	public String getEnumName()
@@ -33,16 +33,21 @@ public class EnumField  extends AbstractField
 		return enumName;
 	}
 
-	public void setEnumType(EnumType enumType)
+	public void setEnumModel(EnumModel enumModel)
 	{
-		this.enumType = enumType;
+		this.enumModel = enumModel;
 		if(defValue == null)
-			defValue = enumType.iterator().next();
+			defValue = enumModel.iterator().next();
 	}
 	
 	public String getDefValue()
 	{
 		return defValue;
+	}
+
+	public boolean isLinked()
+	{
+		return enumModel != null;
 	}
 
 }

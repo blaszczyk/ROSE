@@ -19,7 +19,10 @@ abstract class AbstractRoseMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException
 	{
 		if(rosefile == null || !rosefile.exists() || !rosefile.isFile())
+		{
+			getLog().warn("rosefile not found: " + rosefile);
 			return;
+		}
 		try
 		{
 			final RoseParser parser = new RoseParser(rosefile);

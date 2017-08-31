@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.Scanner;
 
 import bn.blaszczyk.rose.MetaData;
-import bn.blaszczyk.rose.model.EnumType;
+import bn.blaszczyk.rose.model.EnumModel;
 
 public class EnumParser {
 
@@ -15,9 +15,9 @@ public class EnumParser {
 		this.metadata = metadata;
 	}
 
-	public EnumType parseEnum(String sqlname, Scanner scanner ) throws ParseException
+	public EnumModel parseEnum(String sqlname, Scanner scanner ) throws ParseException
 	{
-		EnumType enumType = new EnumType(sqlname,metadata.getModelpackage());
+		EnumModel enumType = new EnumModel(sqlname,metadata.getModelpackage());
 		String line;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end enum" ) )
 		{

@@ -11,10 +11,9 @@ public class ParserMojo extends AbstractRoseMojo
 {
 
 	@Override
-	void doExecute(RoseParser parser) throws RoseException
+	void doExecute(final RoseParser parser) throws RoseException
 	{
 		parser.parse();
-		parser.linkEntities();
 		Creator.createJavaParser(parser);
 	}
 

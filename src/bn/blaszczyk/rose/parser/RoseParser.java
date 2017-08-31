@@ -14,8 +14,8 @@ import bn.blaszczyk.rose.model.*;
 
 public class RoseParser {
 
-	private final List<Entity> entities = new ArrayList<>();
-	private final List<EnumType> enums = new ArrayList<>();
+	private final List<EntityModel> entities = new ArrayList<>();
+	private final List<EnumModel> enums = new ArrayList<>();
 	private final MetaData metadata = new MetaData();
 
 	private final EntityParser entityParser = new EntityParser(metadata);
@@ -56,7 +56,6 @@ public class RoseParser {
 	{
 		try(final Scanner scanner = new Scanner(stream))
 		{
-			boolean requiresLink = true;
 			while(scanner.hasNextLine())
 			{
 				final String[] split = scanner.nextLine().trim().split("\\s+",3);
@@ -74,27 +73,24 @@ public class RoseParser {
 				}
 				else if(split.length > 1 && split[0].equalsIgnoreCase("create") && executeCreate)
 				{
-					if(requiresLink)
-						linkEntities();
-					requiresLink = false;
+					linkEntities();
 					createFile(split[1]);
 				}
 			}
-			if(requiresLink)
-				linkEntities();
+			linkEntities();
 		}
 		catch (ParseException e)
 		{
-			e.printStackTrace();
+			throw new RoseException("error parsing rose file", e);
 		}
 	}
 	
-	public List<Entity> getEntities()
+	public List<EntityModel> getEntities()
 	{
 		return entities;
 	}
 
-	public List<EnumType> getEnums()
+	public List<EnumModel> getEnums()
 	{
 		return enums;
 	}
@@ -128,26 +124,30 @@ public class RoseParser {
 		}
 	}
 	
-	public void linkEntities() throws RoseException
+	private void linkEntities() throws RoseException
 	{
-		Map<EntityField,Entity> originalFields = new LinkedHashMap<>();
-		for(Entity entity : entities)
+		Map<EntityField,EntityModel> originalFields = new LinkedHashMap<>();
+		for(EntityModel entity : entities)
 		{
 			for(Field field : entity.getFields())
 				if(field instanceof EnumField)
 				{
-					EnumField eField = ((EnumField)field);
-					eField.setEnumType(getEnumType(eField.getEnumName()));
+					EnumField enumField = ((EnumField)field);
+					if(!enumField.isLinked())
+						enumField.setEnumModel(getEnumModel(enumField.getEnumName()));
 				}
 			for(EntityField entityField : entity.getEntityFields())
-				originalFields.put(entityField,entity);
+				if(!entityField.isLinked())
+					originalFields.put(entityField,entity);
 		}
-		for(EntityField entityField : originalFields.keySet())
+		for(Map.Entry<EntityField, EntityModel> entry : originalFields.entrySet())
 		{
-			entityField.setEntity(getEntityType(entityField.getEntityName()));
-			EntityField counterpart = new EntityField(originalFields.get(entityField), entityField);
+			final EntityField entityField = entry.getKey();
+			final EntityModel entityModel = entry.getValue();
+			entityField.setEntityModel(getEntityModel(entityField.getEntityName()));
+			EntityField counterpart = new EntityField(entityModel, entityField);
 			entityField.setCouterpart(counterpart);
-			entityField.getEntity().addEntityField(counterpart);
+			entityField.getEntityModel().addEntityField(counterpart);
 		}		
 	}
 	
@@ -156,19 +156,19 @@ public class RoseParser {
 		return metadata;
 	}
 
-	private Entity getEntityType(String name) throws RoseException
+	private EntityModel getEntityModel(String name) throws RoseException
 	{
-		for(Entity entity : entities)
+		for(EntityModel entity : entities)
 			if( entity.getSimpleClassName().equalsIgnoreCase( name ) )
 				return entity;
 		throw new RoseException("Unknown Entity Type: \"" + name + "\"");
 	}
 	
-	private EnumType getEnumType(String name) throws RoseException
+	private EnumModel getEnumModel(String name) throws RoseException
 	{
-		for(EnumType enumType : enums)
-			if( enumType.getSimpleClassName().equalsIgnoreCase( name ) )
-				return enumType;
+		for(EnumModel enumModel : enums)
+			if( enumModel.getSimpleClassName().equalsIgnoreCase( name ) )
+				return enumModel;
 		throw new RoseException("Unknown Enum Type: \"" + name + "\"");
 	}
 

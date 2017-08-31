@@ -8,20 +8,20 @@ import java.util.List;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
-import bn.blaszczyk.rose.model.Entity;
-import bn.blaszczyk.rose.model.EnumType;
+import bn.blaszczyk.rose.model.EntityModel;
+import bn.blaszczyk.rose.model.EnumModel;
 import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Creator {
 	
 	public static void createJavaModel(final RoseParser parser) throws RoseException
 	{
-		final List<Entity> entities = parser.getEntities();
-		final List<EnumType> enums = parser.getEnums();
+		final List<EntityModel> entities = parser.getEntities();
+		final List<EnumModel> enums = parser.getEnums();
 		final MetaData metadata = parser.getMetadata();
-		for(final EnumType enumType : enums)
+		for(final EnumModel enumType : enums)
 			JavaEnumCreator.create(enumType, metadata);
-		for(final Entity entity : entities)
+		for(final EntityModel entity : entities)
 		{
 			if(metadata.isUsingInterfaces())
 				JavaInterfaceCreator.create(entity, metadata);
@@ -31,9 +31,9 @@ public class Creator {
 	
 	public static void createJavaParser(final RoseParser parser) throws RoseException
 	{
-		final List<Entity> entities = parser.getEntities();
+		final List<EntityModel> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();
-		for(final Entity entity : entities)
+		for(final EntityModel entity : entities)
 			JavaParserCreator.create(entity, metadata);
 	}
 
@@ -56,14 +56,14 @@ public class Creator {
 	
 	public static void createPersistence(final RoseParser parser) throws RoseException
 	{
-		final List<Entity> entities = parser.getEntities();
+		final List<EntityModel> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();
 		PersistenceCreator.create(entities, metadata);
 	}
 	
 	public static void createSql(final RoseParser parser) throws RoseException
 	{
-		final List<Entity> entities = parser.getEntities();
+		final List<EntityModel> entities = parser.getEntities();
 		final MetaData metadata = parser.getMetadata();
 		SQLCreator.create(entities, metadata);
 	}

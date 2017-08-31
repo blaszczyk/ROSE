@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class EnumType implements Iterable<String>{
+public class EnumModel implements Iterable<String>{
 	private String classname;
 	private String objectname;
 	private String packagename;
 	private List<String> options = new ArrayList<>();
  
-	public EnumType(String classname, String packagename)
+	public EnumModel(String classname, String packagename)
 	{
 		this.classname = classname;
 		this.packagename = packagename;

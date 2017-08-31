@@ -10,7 +10,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.creators.SQLCreator;
-import bn.blaszczyk.rose.model.Entity;
+import bn.blaszczyk.rose.model.EntityModel;
 import bn.blaszczyk.rose.parser.RoseParser;
 import bn.blaszczyk.rose.tools.DBConnection;
 
@@ -20,20 +20,20 @@ public class CreateDbMojo extends AbstractRoseMojo
 	private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";	
 	
 	@Override
-	void doExecute(RoseParser parser) throws RoseException
+	void doExecute(final RoseParser parser) throws RoseException
 	{
 		parser.parse();
 		final MetaData metadata = parser.getMetadata();
 		ensureDbExistence(metadata);
-		final List<Entity> entities = parser.getEntities();
+		final List<EntityModel> entities = parser.getEntities();
 		executeCreateTables(metadata, entities);
 	}
 
-	private void executeCreateTables(final MetaData metadata, final List<Entity> entities) throws RoseException
+	private void executeCreateTables(final MetaData metadata, final List<EntityModel> entities) throws RoseException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
 		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
-		for(final Entity entity : entities)
+		for(final EntityModel entity : entities)
 		{
 			final Writer writer = new StringWriter();
 			SQLCreator.createTable(entity, metadata, writer);

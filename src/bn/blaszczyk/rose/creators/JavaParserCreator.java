@@ -12,14 +12,14 @@ public class JavaParserCreator {
 	
 	public static final String PARSE_METHOD = "parseField";
 	
-	public static String getParserName(Entity entity, MetaData metadata)
+	public static String getParserName(EntityModel entity, MetaData metadata)
 	{
 		return String.format(metadata.getParserformat(), entity.getSimpleClassName());
 	}
 	
-	public static void create(Entity entity, MetaData metadata) throws RoseException
+	public static void create(EntityModel entityModel, MetaData metadata) throws RoseException
 	{
-		String classname = getParserName(entity, metadata);
+		String classname = getParserName(entityModel, metadata);
 		String fullpath = metadata.getSrcpath() + metadata.getParserpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
 		File file = new File(fullpath);
 		if(!file.getParentFile().exists())
@@ -37,17 +37,17 @@ public class JavaParserCreator {
 					+ "{\r\n");
 			
 			// parseField
-			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entity.getClassName() + " " + entity.getObjectName() 
+			writer.write("\tpublic static void " + PARSE_METHOD + "( " + entityModel.getClassName() + " " + entityModel.getObjectName() 
 						+ ", String name, String value ) throws java.text.ParseException\r\n"
 						+ "\t{\r\n" );
 			writer.write("\t\tswitch( name.toLowerCase() )\r\n"
 					+ "\t\t{\r\n");
-			for(Field field : entity.getFields())
+			for(Field field : entityModel.getFields())
 				if( field instanceof PrimitiveField)
 				{
 					PrimitiveField primitiveField = (PrimitiveField) field;
 					writer.write("\t\tcase \"" + primitiveField.getName().toLowerCase() + "\":\r\n"
-							+ "\t\t\t" + entity.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
+							+ "\t\t\t" + entityModel.getObjectName() + "." + JavaModelCreator.getSetterName(primitiveField) + "( " );
 					switch(primitiveField.getType())
 					{
 					case VARCHAR:
@@ -69,7 +69,7 @@ public class JavaParserCreator {
 					writer.write( " );\r\n\t\t\tbreak;\r\n" );
 				}		
 			writer.write("\t\tdefault:\r\n"
-					+ "\t\t\tSystem.out.println( \"Unknown Primitive Field: \" + name + \" in " + entity.getSimpleClassName() + "\");\r\n"
+					+ "\t\t\tSystem.out.println( \"Unknown Primitive Field: \" + name + \" in " + entityModel.getSimpleClassName() + "\");\r\n"
 					+ "\t\t}\r\n"
 					+ "\t}\r\n"
 					+ "}\r\n");

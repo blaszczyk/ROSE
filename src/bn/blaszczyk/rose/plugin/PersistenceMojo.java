@@ -11,10 +11,9 @@ public class PersistenceMojo extends AbstractRoseMojo
 {
 
 	@Override
-	void doExecute(RoseParser parser) throws RoseException
+	void doExecute(final RoseParser parser) throws RoseException
 	{
 		parser.parse();
-		parser.linkEntities();
 		Creator.createPersistence(parser);
 	}
 

@@ -2,7 +2,7 @@ package bn.blaszczyk.rose.model;
 
 public class EntityField  extends AbstractField
 {	
-	private Entity entity = null;
+	private EntityModel entityModel = null;
 	
 	private final String entityName;
 	
@@ -14,12 +14,12 @@ public class EntityField  extends AbstractField
 
 	public EntityField(String entityName, RelationType type, String name, String counterName)
 	{
-		super( quantify(name, type) );
+		super( quantifedName(name, type) );
 		this.entityName = entityName;
 		this.type = type;
 		setCounterName(counterName);
 	}
-	
+
 	public EntityField(String entityName, RelationType type, String name )
 	{
 		this(entityName, type, name, null);
@@ -30,20 +30,24 @@ public class EntityField  extends AbstractField
 		this(entityName, relationType, entityName);
 	}
 	
-	public EntityField( Entity entity, EntityField counterpart )
+	public EntityField( EntityModel entityModel, EntityField counterpart )
 	{
-		super( quantify( counterpart.getCounterName() == null ? entity.getObjectName() : counterpart.getCounterName() ,
-				counterpart.getType().getInverse() ) );
-		this.entityName = counterpart.getEntity().getObjectName();
+		super( quantifedName( entityModel, counterpart ) );
+		this.entityName = counterpart.getEntityModel().getObjectName();
 		this.type = counterpart.getType().getInverse();			
-		this.entity = entity;
+		this.entityModel = entityModel;
 		setCounterName(counterpart.getName());
 		setCouterpart(counterpart);
 	}
 
-	public Entity getEntity()
+	public EntityModel getEntityModel()
 	{
-		return entity;
+		return entityModel;
+	}
+	
+	public boolean isLinked()
+	{
+		return entityModel !=  null;
 	}
 	
 	public String getEntityName()
@@ -51,9 +55,9 @@ public class EntityField  extends AbstractField
 		return entityName;
 	}
 
-	public void setEntity(Entity entity)
+	public void setEntityModel(EntityModel entityModel)
 	{
-		this.entity = entity;
+		this.entityModel = entityModel;
 	}
 
 	public RelationType getType()
@@ -87,9 +91,16 @@ public class EntityField  extends AbstractField
 	{
 		this.counterName = counterName;
 		this.counterCapitalName = counterName == null ? null : this.counterName.substring(0, 1).toUpperCase() + this.counterName.substring(1);
-	}	
-	
-	private static String quantify(String name, RelationType type)
+	}
+
+	private static String quantifedName(final EntityModel entityModel, final EntityField counterpart)
+	{
+		final String name = counterpart.getCounterName() == null ? entityModel.getObjectName() : counterpart.getCounterName();
+		final RelationType type = counterpart.getType().getInverse();
+		return quantifedName(name, type);
+	}
+
+	private static String quantifedName(final String name, final RelationType type)
 	{
 		return name + (type.isSecondMany() ? "s" : "");
 	}

@@ -10,7 +10,7 @@ public class AllMojo extends AbstractRoseMojo
 {
 
 	@Override
-	void doExecute(RoseParser parser) throws RoseException
+	void doExecute(final RoseParser parser) throws RoseException
 	{
 		parser.parseAndCreate();
 	}
