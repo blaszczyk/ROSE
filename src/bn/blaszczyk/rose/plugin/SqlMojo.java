@@ -13,8 +13,7 @@ public class SqlMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		parser.parse();
-		Creator.createSql(parser);
+		Creator.createSql(parser, parentDir);
 	}
 
 }

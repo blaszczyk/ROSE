@@ -6,6 +6,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.project.MavenProject;
 
 import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.parser.RoseParser;
@@ -14,6 +15,8 @@ abstract class AbstractRoseMojo extends AbstractMojo {
 
 	@Parameter
 	File rosefile;
+	
+	String parentDir;
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException
@@ -25,7 +28,11 @@ abstract class AbstractRoseMojo extends AbstractMojo {
 		}
 		try
 		{
+			final MavenProject project = (MavenProject) getPluginContext().get("project");
+			parentDir = project.getBasedir().getAbsolutePath();
+			
 			final RoseParser parser = new RoseParser(rosefile);
+			parser.parse();
 			doExecute(parser);
 		}
 		catch(final RoseException e)

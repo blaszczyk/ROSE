@@ -9,27 +9,25 @@ import java.util.*;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
-import bn.blaszczyk.rose.creators.*;
 import bn.blaszczyk.rose.model.*;
 
 public class RoseParser {
 
+	private final MetaData metadata = new MetaData();
 	private final List<EntityModel> entities = new ArrayList<>();
 	private final List<EnumModel> enums = new ArrayList<>();
-	private final MetaData metadata = new MetaData();
+	private final List<String> createOptions = new ArrayList<>();
 
 	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
 
 	private final InputStream stream;
-	private File file;
 
 	public RoseParser(final File file) throws RoseException
 	{
 		try
 		{
 			this.stream = new FileInputStream(file);
-			this.file = file;
 		}
 		catch (final FileNotFoundException e)
 		{
@@ -42,17 +40,7 @@ public class RoseParser {
 		this.stream = stream;
 	}
 	
-	public void parseAndCreate() throws RoseException
-	{
-		parseCreateOptional(true);
-	}
-	
 	public void parse() throws RoseException
-	{
-		parseCreateOptional(false);
-	}
-	
-	private void parseCreateOptional(final boolean executeCreate) throws RoseException
 	{
 		try(final Scanner scanner = new Scanner(stream))
 		{
@@ -71,10 +59,9 @@ public class RoseParser {
 				{
 					enums.add(enumParser.parseEnum(split[2], scanner));
 				}
-				else if(split.length > 1 && split[0].equalsIgnoreCase("create") && executeCreate)
+				else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
 				{
-					linkEntities();
-					createFile(split[1]);
+					createOptions.add(split[1]);
 				}
 			}
 			linkEntities();
@@ -99,31 +86,12 @@ public class RoseParser {
 	{
 		return metadata;
 	}
-
-	private void createFile( String filetype ) throws RoseException
-	{
-		switch(filetype.toLowerCase())
-		{
-		case "sqlcreate":
-			Creator.createSql(this);
-			break;
-		case "persistence":
-			Creator.createPersistence(this);
-			break;
-		case "javamodels":
-			Creator.createJavaModel(this);
-			break;
-		case "javaparser":
-			Creator.createJavaParser(this);
-			break;
-		case "rosefilecopy":
-			Creator.copyRoseFile(this, file);
-			break;
-		default:
-			throw new RoseException("Unknown Agrument: create " + filetype);
-		}
-	}
 	
+	public List<String> getCreateOptions()
+	{
+		return createOptions;
+	}
+
 	private void linkEntities() throws RoseException
 	{
 		Map<EntityField,EntityModel> originalFields = new LinkedHashMap<>();

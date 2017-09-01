@@ -13,8 +13,7 @@ public class JavaMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		parser.parse();
-		Creator.createJavaModel(parser);
+		Creator.createJavaModel(parser, parentDir);
 	}
 
 }

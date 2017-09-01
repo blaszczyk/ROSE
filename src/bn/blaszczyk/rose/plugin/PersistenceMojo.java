@@ -13,8 +13,7 @@ public class PersistenceMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		parser.parse();
-		Creator.createPersistence(parser);
+		Creator.createPersistence(parser, parentDir);
 	}
 
 }

@@ -22,14 +22,14 @@ public class PersistenceCreator {
 			+ "\t</persistence-unit>\r\n"
 			+ "</persistence>\r\n";
 
-	public static void create(List<EntityModel> entities, MetaData metadata) throws RoseException
+	public static void create(final List<EntityModel> entities, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		DBType dbType = DBType.getType(metadata.getDbtype());
-		String fullpath = metadata.getResourcepath() + "META-INF/persistence.xml";
-		File file = new File(fullpath);
+		final DBType dbType = DBType.getType(metadata.getDbtype());
+		final String fullpath = parentDir + "/" + metadata.getResourcepath() + "META-INF/persistence.xml";
+		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
-		try(FileWriter writer = new FileWriter(file))
+		try(final FileWriter writer = new FileWriter(file))
 		{
 			writer.write( XML_HEADER );
 			for(EntityModel entity : entities)

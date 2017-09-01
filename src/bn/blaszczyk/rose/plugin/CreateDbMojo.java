@@ -22,7 +22,6 @@ public class CreateDbMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		parser.parse();
 		final MetaData metadata = parser.getMetadata();
 		ensureDbExistence(metadata);
 		final List<EntityModel> entities = parser.getEntities();
