@@ -94,50 +94,40 @@ public class RoseParser {
 
 	private void linkEntities() throws RoseException
 	{
-		Map<EntityField,EntityModel> originalFields = new LinkedHashMap<>();
-		for(EntityModel entity : entities)
+		for(EntityModel entityModel : entities)
 		{
-			for(Field field : entity.getFields())
+			for(Field field : entityModel.getFields())
 				if(field instanceof EnumField)
 				{
-					EnumField enumField = ((EnumField)field);
+					final EnumField enumField = ((EnumField)field);
 					if(!enumField.isLinked())
 						enumField.setEnumModel(getEnumModel(enumField.getEnumName()));
 				}
-			for(EntityField entityField : entity.getEntityFields())
+			for(EntityField entityField : entityModel.getEntityFields())
 				if(!entityField.isLinked())
-					originalFields.put(entityField,entity);
+				{
+					entityField.setEntityModel(getEntityModel(entityField.getEntityName()));
+					final EntityField counterpart = new EntityField(entityModel, entityField);
+					entityField.setCouterpart(counterpart);
+					entityField.getEntityModel().addEntityField(counterpart);
+				}
 		}
-		for(Map.Entry<EntityField, EntityModel> entry : originalFields.entrySet())
-		{
-			final EntityField entityField = entry.getKey();
-			final EntityModel entityModel = entry.getValue();
-			entityField.setEntityModel(getEntityModel(entityField.getEntityName()));
-			EntityField counterpart = new EntityField(entityModel, entityField);
-			entityField.setCouterpart(counterpart);
-			entityField.getEntityModel().addEntityField(counterpart);
-		}		
-	}
-	
-	protected MetaData getMetaData()
-	{
-		return metadata;
 	}
 
-	private EntityModel getEntityModel(String name) throws RoseException
+	private EntityModel getEntityModel(final String name) throws RoseException
 	{
-		for(EntityModel entity : entities)
-			if( entity.getSimpleClassName().equalsIgnoreCase( name ) )
-				return entity;
-		throw new RoseException("Unknown Entity Type: \"" + name + "\"");
+		for(final EntityModel entityModel : entities)
+			if( entityModel.getSimpleClassName().equalsIgnoreCase( name ) )
+				return entityModel;
+		throw new RoseException("unknown entity type: \"" + name + "\"");
 	}
 	
-	private EnumModel getEnumModel(String name) throws RoseException
+	private EnumModel getEnumModel(final String name) throws RoseException
 	{
-		for(EnumModel enumModel : enums)
+		for(final EnumModel enumModel : enums)
 			if( enumModel.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumModel;
-		throw new RoseException("Unknown Enum Type: \"" + name + "\"");
+		throw new RoseException("unknown enum type: \"" + name + "\"");
 	}
 
 }

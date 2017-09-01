@@ -33,7 +33,7 @@ public class EnumField  extends AbstractField
 		return enumName;
 	}
 
-	public void setEnumModel(EnumModel enumModel)
+	public void setEnumModel(final EnumModel enumModel)
 	{
 		this.enumModel = enumModel;
 		if(defValue == null)

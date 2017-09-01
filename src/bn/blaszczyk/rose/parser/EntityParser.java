@@ -10,13 +10,13 @@ public class EntityParser {
 	
 	private final MetaData metadata;
 	
-	public EntityParser(MetaData metadata)
+	public EntityParser(final MetaData metadata)
 	{
 		this.metadata = metadata;
 	}
 	
 
-	public EntityModel parseEntity(String args, Scanner scanner ) throws ParseException
+	public EntityModel parseEntity(final String args, final Scanner scanner ) throws ParseException
 	{
 		String[] split = args.split(":");
 		ImplInterface implInterface = ImplInterface.NONE;
@@ -29,7 +29,9 @@ public class EntityParser {
 				implInterface = ImplInterface.READABLE;
 			else if(split[1].toLowerCase().contains("i"))
 				implInterface = ImplInterface.IDENTIFYABLE;
-		EntityModel entityModel = new EntityModel(split[0].trim(),metadata.getModelpackage(), implInterface);
+		
+		final EntityModel entityModel = new EntityModel(split[0].trim(),metadata.getModelpackage(), implInterface);
+		
 		String line;
 		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end entity" ) )
 		{
@@ -60,42 +62,42 @@ public class EntityParser {
 			{
 				split = split[1].split("\\s+", 3);
 					if(split.length == 3)
-						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1], split[2]) );	
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1], split[2]) );
 					else if(split.length == 2)
-						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1]) );					
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command), split[1]) );
 					else
-						entityModel.addEntityField(new EntityField(split[0], getRelationType(command) ) );			
+						entityModel.addEntityField(new EntityField(split[0], getRelationType(command) ) );
 			}
 			else if( "tostring".equalsIgnoreCase(command))
 			{
 				if(split.length == 2)
 					entityModel.setToString(split[1]);
 			}
-			else 
-				System.out.println("Invalid Field: " + line);
+			else
+				System.out.println("invalid field: " + line);
 		}
 		return entityModel;
 	}
 
-	private static boolean isPrimitiveType(String sqltype)
+	private static boolean isPrimitiveType(final String sqltype)
 	{
-		for(PrimitiveType primitiveType : PrimitiveType.values())
+		for(final PrimitiveType primitiveType : PrimitiveType.values())
 			if( sqltype.toLowerCase().startsWith( primitiveType.getSqlname().toLowerCase() ) )
 				return true;
 		return false;
 	}
 
-	private static boolean isRelationType(String name)
+	private static boolean isRelationType(final String name)
 	{
-		for(RelationType type : RelationType.values())
+		for(final RelationType type : RelationType.values())
 			if( name .equalsIgnoreCase( type.name() ) )
 				return true;
 		return false;
 	}
 	
-	private static RelationType getRelationType(String typeName)
+	private static RelationType getRelationType(final String typeName)
 	{
-		for( RelationType type : RelationType.values() )
+		for(final RelationType type : RelationType.values() )
 			if(type.name().equalsIgnoreCase(typeName))
 				return type;
 		return null;
