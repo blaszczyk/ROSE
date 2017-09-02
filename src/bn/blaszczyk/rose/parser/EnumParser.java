@@ -1,9 +1,9 @@
 package bn.blaszczyk.rose.parser;
 
-import java.text.ParseException;
 import java.util.Scanner;
 
 import bn.blaszczyk.rose.MetaData;
+import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.EnumModel;
 
 public class EnumParser {
@@ -15,15 +15,17 @@ public class EnumParser {
 		this.metadata = metadata;
 	}
 
-	public EnumModel parseEnum(final String sqlname, final Scanner scanner ) throws ParseException
+	public EnumModel parseEnum(final String sqlname, final Scanner scanner ) throws RoseException
 	{
 		final EnumModel enumType = new EnumModel(sqlname,metadata.getModelpackage());
-		String line;
-		while(scanner.hasNextLine() && !( line = scanner.nextLine().trim() ).startsWith( "end enum" ) )
+		while(scanner.hasNextLine())
 		{
+			final String line = scanner.nextLine().trim();
+			if(line.startsWith( "end enum" ))
+				return enumType;
 			enumType.addOption(line);
 		}
-		return enumType;
+		throw new RoseException("missing end enum for " + sqlname);
 	}
 	
 }

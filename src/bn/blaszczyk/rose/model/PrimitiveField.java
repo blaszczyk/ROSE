@@ -1,6 +1,6 @@
 package bn.blaszczyk.rose.model;
 
-import java.text.ParseException;
+import bn.blaszczyk.rose.RoseException;
 
 public class PrimitiveField extends AbstractField
 {
@@ -11,7 +11,7 @@ public class PrimitiveField extends AbstractField
 	private int length1 = 1;
 	private int length2 = 0;
 	
-	public PrimitiveField( String sqltype, String name, String defvalue) throws ParseException
+	public PrimitiveField( String sqltype, String name, String defvalue) throws RoseException
 	{
 		super(name);
 		this.sqlType = sqltype;
@@ -26,14 +26,14 @@ public class PrimitiveField extends AbstractField
 		case CHAR:
 			split = sqltype.split("\\(|\\)");
 			if(split.length > 1)
-				length1 = Integer.parseInt(split[1]);
+				length1 = parseInt(split[1]);
 			break;
 		case NUMERIC:
 			split = sqltype.split("\\(|\\)|\\,|\\.");
 			if(split.length > 2)
 			{
-				length1 = Integer.parseInt(split[1]);
-				length2 = Integer.parseInt(split[2]);
+				length1 = parseInt(split[1]);
+				length2 = parseInt(split[2]);
 			}
 			break;
 		case DATE:
@@ -42,10 +42,10 @@ public class PrimitiveField extends AbstractField
 			break;
 		}
 		if(type == null)
-			throw new ParseException("Unknown SQL type: " + sqltype, 0);
+			throw new RoseException("Unknown SQL type: " + sqltype);
 	}
 
-	public PrimitiveField( String sqltype, String name ) throws ParseException
+	public PrimitiveField( String sqltype, String name ) throws RoseException
 	{
 		this(sqltype,name,null);
 	}
@@ -81,6 +81,18 @@ public class PrimitiveField extends AbstractField
 	public int getLength2()
 	{
 		return length2;
+	}
+	
+	private static int parseInt(final String number) throws RoseException
+	{
+		try
+		{
+			return Integer.parseInt(number);
+		}
+		catch(final NumberFormatException e)
+		{
+			throw new RoseException("error parsing primitive type int property from " + number, e);
+		}
 	}
 	
 }

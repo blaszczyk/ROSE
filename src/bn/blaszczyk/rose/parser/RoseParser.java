@@ -68,7 +68,7 @@ public class RoseParser {
 		}
 		catch (ParseException e)
 		{
-			throw new RoseException("error parsing rose file", e);
+			throw new RoseException("error parsing meta data file", e);
 		}
 	}
 	
