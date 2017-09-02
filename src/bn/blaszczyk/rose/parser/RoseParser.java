@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.*;
+import java.util.Map.Entry;
 
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
@@ -94,23 +95,29 @@ public class RoseParser {
 
 	private void linkEntities() throws RoseException
 	{
-		for(EntityModel entityModel : entities)
+		final Map<EntityField,EntityModel> entityFieldsToLink = new HashMap<>();
+		for(final EntityModel entityModel : entities)
 		{
-			for(Field field : entityModel.getFields())
+			for(final Field field : entityModel.getFields())
 				if(field instanceof EnumField)
 				{
 					final EnumField enumField = ((EnumField)field);
 					if(!enumField.isLinked())
 						enumField.setEnumModel(getEnumModel(enumField.getEnumName()));
 				}
-			for(EntityField entityField : entityModel.getEntityFields())
+			for(final EntityField entityField : entityModel.getEntityFields())
 				if(!entityField.isLinked())
-				{
-					entityField.setEntityModel(getEntityModel(entityField.getEntityName()));
-					final EntityField counterpart = new EntityField(entityModel, entityField);
-					entityField.setCouterpart(counterpart);
-					entityField.getEntityModel().addEntityField(counterpart);
-				}
+					entityFieldsToLink.put(entityField, entityModel);
+		}
+		//actual linking delayed to prevent ConcurrentModificationException at self-relations
+		for(final Entry<EntityField, EntityModel> entry : entityFieldsToLink.entrySet())
+		{
+			final EntityField entityField = entry.getKey();
+			final EntityModel entityModel = entry.getValue();
+			entityField.setEntityModel(getEntityModel(entityField.getEntityName()));
+			final EntityField counterpart = new EntityField(entityModel, entityField);
+			entityField.setCouterpart(counterpart);
+			entityField.getEntityModel().addEntityField(counterpart);
 		}
 	}
 
