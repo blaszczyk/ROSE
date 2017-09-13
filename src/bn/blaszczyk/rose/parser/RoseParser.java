@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -66,10 +65,6 @@ public class RoseParser {
 				}
 			}
 			linkEntities();
-		}
-		catch (ParseException e)
-		{
-			throw new RoseException("error parsing meta data file", e);
 		}
 	}
 	
