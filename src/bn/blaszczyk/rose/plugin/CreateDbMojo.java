@@ -31,6 +31,7 @@ public class CreateDbMojo extends AbstractRoseMojo
 	private void executeCreateTables(final MetaData metadata, final List<EntityModel> entities) throws RoseException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
+		getLog().info("connecting to " + connectionString);
 		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		for(final EntityModel entity : entities)
 		{
@@ -45,6 +46,7 @@ public class CreateDbMojo extends AbstractRoseMojo
 				throw new RuntimeException("unexpected error", e);
 			}
 			final String sql = writer.toString();
+			getLog().info("executing: " + sql.replaceAll("\\s+", " ").trim());
 			DBConnection.executeUpdate(sql);
 		}
 		DBConnection.closeConnection();
@@ -53,10 +55,16 @@ public class CreateDbMojo extends AbstractRoseMojo
 	private void ensureDbExistence(final MetaData metadata) throws RoseException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s", metadata.getDbserver(), metadata.getDbport());
+		getLog().info("connecting to " + connectionString);
 		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		final String dbName = metadata.getDbname();
 		if(!DBConnection.databaseExists(dbName))
+		{
+			getLog().info("creating schema: " + dbName);
 			DBConnection.createDatabase(dbName);
+		}
+		else
+			getLog().info("schema exists: " + dbName);
 		DBConnection.closeConnection();
 	}
 
