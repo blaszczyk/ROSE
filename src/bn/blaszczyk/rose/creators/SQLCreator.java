@@ -31,7 +31,8 @@ public class SQLCreator {
 			{
 				createTable(entity, metadata, writer);
 				for(EntityField entityField : entity.getEntityFields() )
-					createManyToManyTable(entityField, writer);
+					if( needsManyToManyTable(entityField) )
+						createManyToManyTable(entityField, writer);
 			}
 			System.out.println( "File created: " + fullpath);
 		}
@@ -44,20 +45,31 @@ public class SQLCreator {
 	public static String getManyToManyTableName( EntityField field  )
 	{
 		String format = "%s_%s";
-		if( field.getName().compareTo(field.getCounterName()) < 0)
-			return String.format(format, field.getCapitalName(), field.getCounterCapitalName());
+		if(needsManyToManyTable(field))
+			return String.format(format, field.getName(), field.getCounterName());
 		else
-			return String.format(format, field.getCounterCapitalName(), field.getCapitalName());
+			return String.format(format, field.getCounterName(), field.getName());
 	}
 
-	private static void createManyToManyTable( EntityField field, Writer writer ) throws IOException
+	public static void createManyToManyTable( EntityField field, Writer writer ) throws RoseException
 	{
-		if( field.getType() == RelationType.MANYTOMANY && ( field.getName().compareTo(field.getCounterName()) < 0 ) )
+		try
+		{
 			writer.write("create table " + getManyToManyTableName(field) + "\r\n"
-					+ "(\r\n"
-					+ "\t" + field.getName() + "_id int,\r\n"
-					+ "\t" + field.getCounterName() + "_id int\r\n"
-					+ ");\r\n\r\n"   );
+				+ "(\r\n"
+				+ "\t" + field.getName() + "_id int,\r\n"
+				+ "\t" + field.getCounterName() + "_id int\r\n"
+				+ ");\r\n\r\n");
+		}
+		catch (IOException e)
+		{
+			throw new RoseException("error writing many to many table for " + field.getCapitalName(), e);
+		}
+	}
+
+	public static boolean needsManyToManyTable(EntityField field)
+	{
+		return field.getType() == RelationType.MANYTOMANY && ( field.getEntityName().compareTo(field.getCouterpart().getEntityName()) < 0 );
 	}
 	
 	public static void createTable(EntityModel entity, MetaData metadata, Writer writer) throws RoseException

@@ -10,6 +10,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.creators.SQLCreator;
+import bn.blaszczyk.rose.model.EntityField;
 import bn.blaszczyk.rose.model.EntityModel;
 import bn.blaszczyk.rose.parser.RoseParser;
 import bn.blaszczyk.rose.tools.DBConnection;
@@ -37,19 +38,32 @@ public class CreateDbMojo extends AbstractRoseMojo
 		{
 			final Writer writer = new StringWriter();
 			SQLCreator.createTable(entity, metadata, writer);
-			try
-			{
-				writer.flush();
-			}
-			catch (IOException e)
-			{
-				throw new RuntimeException("unexpected error", e);
-			}
-			final String sql = writer.toString();
-			getLog().info("executing: " + sql.replaceAll("\\s+", " ").trim());
-			DBConnection.executeUpdate(sql);
+			executeCreateTable(writer);
+			for(final EntityField field : entity.getEntityFields())
+				if(SQLCreator.needsManyToManyTable(field))
+				{
+					final Writer writer2 = new StringWriter();
+					SQLCreator.createManyToManyTable(field, writer2);
+					executeCreateTable(writer2);
+				}
+					
 		}
 		DBConnection.closeConnection();
+	}
+	
+	private void executeCreateTable(final Writer writer) throws RoseException
+	{
+		try
+		{
+			writer.flush();
+		}
+		catch (IOException e)
+		{
+			throw new RuntimeException("unexpected error", e);
+		}
+		final String sql = writer.toString();
+		getLog().info("executing: " + sql.replaceAll("\\s+", " ").trim());
+		DBConnection.executeUpdate(sql);
 	}
 
 	private void ensureDbExistence(final MetaData metadata) throws RoseException

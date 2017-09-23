@@ -262,10 +262,10 @@ public class JavaModelCreator {
 					+ "\t@JoinColumn( name=\"" + entityField.getName() + "_id\" )\r\n" );						
 			break;
 		case MANYTOMANY:
-			if(entityField.getName().compareTo(entityField.getCounterName()) < 0 )
+			if(SQLCreator.needsManyToManyTable(entityField))
 				writer.write("\t@ManyToMany( targetEntity=" + entityField.getEntityModel().getSimpleClassName() + optionalImpl + ".class, fetch = FetchType." + MANY_FETCH_TYPE + " )\r\n"
-					+ "\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\", "
-					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },"
+					+ "\t@JoinTable( name = \"" + SQLCreator.getManyToManyTableName(entityField) +  "\",\r\n"
+					+ "\t\tjoinColumns = { @JoinColumn(name = \"" + entityField.getCounterName() + "_id\", nullable = false, updatable = false ) },\r\n"
 					+ "\t\tinverseJoinColumns = { @JoinColumn(name = \"" + entityField.getName() + "_id\", nullable = false, updatable = false ) } )\r\n");
 			else
 				writer.write("\t@ManyToMany( targetEntity=" + entityField.getEntityModel().getSimpleClassName() + optionalImpl + ".class, fetch = FetchType." + MANY_FETCH_TYPE + ", mappedBy = \"" + entityField.getCounterName() + "\" )\r\n");							
