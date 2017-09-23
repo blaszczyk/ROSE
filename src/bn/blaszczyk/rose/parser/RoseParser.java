@@ -1,6 +1,5 @@
 package bn.blaszczyk.rose.parser;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -11,63 +10,68 @@ import bn.blaszczyk.rose.MetaData;
 import bn.blaszczyk.rose.RoseException;
 import bn.blaszczyk.rose.model.*;
 
-public class RoseParser {
+public abstract class RoseParser
+{
+	private static final ClassLoader CLASS_LOADER = RoseParser.class.getClassLoader();
+
+	public static RoseParser forFiles(final String parentPath)
+	{
+		return new RoseParser(parentPath)
+		{
+			@Override
+			InputStream stream(final String path) throws RoseException
+			{
+				try
+				{
+					return new FileInputStream(path);
+				}
+				catch (final FileNotFoundException e)
+				{
+					throw new RoseException("rosefile not found: " + path, e);
+				}
+			}
+		};
+	}
+
+	public static RoseParser forResources(final String parentPath)
+	{
+		return new RoseParser(parentPath)
+		{
+			@Override
+			InputStream stream(final String path) throws RoseException
+			{
+				final InputStream stream = CLASS_LOADER.getResourceAsStream(path);
+				if(stream == null)
+					throw new RoseException("resource not found: " + path);
+				return stream;
+			}
+		};
+	}
+	
 
 	private final MetaData metadata = new MetaData();
 	private final List<EntityModel> entities = new ArrayList<>();
 	private final List<EnumModel> enums = new ArrayList<>();
 	private final List<String> createOptions = new ArrayList<>();
+	private final List<String> rosePaths = new ArrayList<>();
 
 	private final EntityParser entityParser = new EntityParser(metadata);
 	private final EnumParser enumParser = new EnumParser(metadata);
 
-	private final InputStream stream;
-
-	public RoseParser(final File file) throws RoseException
+	private final String parentPath;
+	
+	private RoseParser(final String path)
 	{
-		try
-		{
-			this.stream = new FileInputStream(file);
-		}
-		catch (final FileNotFoundException e)
-		{
-			throw new RoseException("rosefile not found", e);
-		}
-	}
-
-	public RoseParser(final InputStream stream)
-	{
-		this.stream = stream;
+		final String normalizedPath = path.replaceAll("\\\\","/");
+		this.parentPath = normalizedPath.substring(0, normalizedPath.lastIndexOf('/') + 1);
+		rosePaths.add(normalizedPath);
 	}
 	
 	public void parse() throws RoseException
 	{
-		try(final Scanner scanner = new Scanner(stream))
-		{
-			while(scanner.hasNextLine())
-			{
-				final String[] split = scanner.nextLine().trim().split("\\s+",3);
-				if(split.length > 2 && split[0].equalsIgnoreCase("set") )
-				{
-					MetaDataParser.parseField(metadata, split[1], split[2]);
-				}
-				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("entity"))
-				{
-					entities.add(entityParser.parseEntity(split[2], scanner));
-				}
-				else if(split.length > 2 && split[0].equalsIgnoreCase("begin") && split[1].equalsIgnoreCase("enum"))
-				{
-					enums.add(enumParser.parseEnum(split[2], scanner));
-				}
-				else if(split.length > 1 && split[0].equalsIgnoreCase("create"))
-				{
-					createOptions.add(split[1]);
-				}
-			}
-			linkEntities();
-		}
+		parse(rosePaths.get(0));
+		linkEntities();
 	}
-	
 	public List<EntityModel> getEntities()
 	{
 		return entities;
@@ -88,6 +92,53 @@ public class RoseParser {
 		return createOptions;
 	}
 
+	public List<String> getRosePaths()
+	{
+		return rosePaths;
+	}
+	
+	abstract InputStream stream(final String path) throws RoseException;
+
+	private void parse(final String path) throws RoseException
+	{
+		try(final Scanner scanner = new Scanner(stream(path)))
+		{
+			while(scanner.hasNextLine())
+			{
+				final String[] split = scanner.nextLine().trim().split("\\s+",3);
+				if(matches(split,3,"set"))
+				{
+					MetaDataParser.parseField(metadata, split[1], split[2]);
+				}
+				else if(matches(split,3,"begin","entity"))
+				{
+					entities.add(entityParser.parseEntity(split[2], scanner));
+				}
+				else if(matches(split,3,"begin","enum"))
+				{
+					enums.add(enumParser.parseEnum(split[2], scanner));
+				}
+				else if(matches(split,2,"create"))
+				{
+					createOptions.add(split[1]);
+				}
+				else if(matches(split, 2, "import"))
+				{
+					parseImport(split[1]);
+				}
+			}
+		}
+	}
+
+	private void parseImport(final String subPath) throws RoseException
+	{
+		final String newPath =  parentPath + subPath;
+		if(rosePaths.contains(newPath))
+			return;
+		rosePaths.add(newPath);
+		parse(newPath);
+	}
+	
 	private void linkEntities() throws RoseException
 	{
 		final Map<EntityField,EntityModel> entityFieldsToLink = new HashMap<>();
@@ -130,6 +181,21 @@ public class RoseParser {
 			if( enumModel.getSimpleClassName().equalsIgnoreCase( name ) )
 				return enumModel;
 		throw new RoseException("unknown enum type: \"" + name + "\"");
+	}
+	
+	private boolean matches(final String[] array, final int minLenght, final String... args)
+	{
+		return array.length >= minLenght && matches(array, args);
+	}
+	
+	private boolean matches(final String[] array, final String... args )
+	{
+		if(array.length < args.length)
+			return false;
+		for(int i = 0; i < args.length; i++)
+			if(!args[i].equalsIgnoreCase(array[i]))
+				return false;
+		return true;
 	}
 
 }

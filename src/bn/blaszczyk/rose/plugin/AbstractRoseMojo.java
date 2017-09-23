@@ -31,8 +31,10 @@ abstract class AbstractRoseMojo extends AbstractMojo {
 			final MavenProject project = (MavenProject) getPluginContext().get("project");
 			parentDir = project.getBasedir().getAbsolutePath();
 			
-			final RoseParser parser = new RoseParser(rosefile);
+			final RoseParser parser = RoseParser.forFiles(rosefile.getAbsolutePath());
 			parser.parse();
+			for(final String file : parser.getRosePaths())
+				getLog().info("parsed " + file);
 			doExecute(parser);
 		}
 		catch(final RoseException e)

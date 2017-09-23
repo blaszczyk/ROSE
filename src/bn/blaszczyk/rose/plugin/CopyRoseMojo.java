@@ -13,7 +13,7 @@ public class CopyRoseMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		Creator.copyRoseFile(parser, parentDir, rosefile);
+		Creator.copyRoseFiles(parser, parentDir);
 	}
 
 }

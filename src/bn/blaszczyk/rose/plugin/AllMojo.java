@@ -13,7 +13,7 @@ public class AllMojo extends AbstractRoseMojo
 	@Override
 	void doExecute(final RoseParser parser) throws RoseException
 	{
-		Creator.createAll(parser, parentDir, rosefile);
+		Creator.createAll(parser, parentDir);
 	}
 
 }

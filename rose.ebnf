@@ -4,8 +4,9 @@ rosecommand =  setmetadata
 			| enumdef
 			| entitydef
 			| createoperation
+			| import
 
-			
+import = "import" , identifier
 			
 setmetadata = "set" , ( stringmetadata | boolmetadata )
 

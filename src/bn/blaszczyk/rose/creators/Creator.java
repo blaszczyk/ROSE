@@ -44,23 +44,34 @@ public class Creator
 			JavaParserCreator.create(entity, metadata, parentDir);
 	}
 
-	public static void copyRoseFile(final RoseParser parser, final String parentDir, final File origin) throws RoseException
+	public static void copyRoseFiles(final RoseParser parser, final String parentDir) throws RoseException
 	{
 		final MetaData metadata = parser.getMetadata();
-		final String copyName = parentDir + "/" + metadata.getResourcepath() + metadata.getResourcepackage().replaceAll("\\.", "/") + "/" + origin.getName();
-		final File copy = new File(copyName);
-		try
+		final List<String> rosePaths = parser.getRosePaths();
+		for(final String origin : rosePaths)
 		{
-			copy.getParentFile().mkdirs();
-			Files.copy(origin.toPath(), copy.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			System.out.println("File created: " + copyName);
-		}
-		catch (final IOException e)
-		{
-			throw new RoseException("error copying rosefile", e);
+			final String copyPath = new StringBuilder()
+					.append(parentDir)
+					.append("/")
+					.append(metadata.getResourcepath())
+					.append(metadata.getResourcepackage().replaceAll("\\.", "/"))
+					.append("/")
+					.append(origin.substring(origin.replaceAll("\\\\", "/").lastIndexOf('/') + 1))
+					.toString();
+			final File copyFile = new File(copyPath);
+			copyFile.getParentFile().mkdirs();
+			try
+			{
+				Files.copy(new File(origin).toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+			catch (final IOException e)
+			{
+				throw new RoseException("error copying rosefile " + origin + " to " + copyPath, e);
+			}
+			System.out.println("File created: " + copyPath);
 		}
 	}
-	
+
 	public static void createPersistence(final RoseParser parser, final String parentDir) throws RoseException
 	{
 		final List<EntityModel> entities = parser.getEntities();
@@ -75,7 +86,7 @@ public class Creator
 		SQLCreator.create(entities, metadata, parentDir);
 	}
 	
-	public static void createAll(final RoseParser parser, final String parentDir, final File roseFile) throws RoseException
+	public static void createAll(final RoseParser parser, final String parentDir) throws RoseException
 	{
 		for(final String createOption : parser.getCreateOptions())
 			switch(createOption.toLowerCase())
@@ -93,7 +104,7 @@ public class Creator
 				createJavaParser(parser, parentDir);
 				break;
 			case OPTION_ROSEFILECOPY:
-				copyRoseFile(parser, parentDir, roseFile);
+				copyRoseFiles(parser, parentDir);
 				break;
 			default:
 				throw new RoseException("unknown option: create " + createOption);
