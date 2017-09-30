@@ -48,6 +48,9 @@ public class MetaDataParser
 			case "modelpackage":
 				metaData.setModelpackage( value );
 				break;
+			case "dtopackage":
+				metaData.setDtopackage( value );
+				break;
 			case "usinginterfaces":
 				metaData.setUsingInterfaces( Boolean.parseBoolean( value ) );
 				break;
@@ -59,6 +62,12 @@ public class MetaDataParser
 				break;
 			case "parserformat":
 				metaData.setParserformat( value );
+				break;
+			case "retrofitname":
+				metaData.setRetrofitname( value );
+				break;
+			case "retrofitpackage":
+				metaData.setRetrofitpackage( value );
 				break;
 			case "resourcepackage":
 				metaData.setResourcepackage( value );

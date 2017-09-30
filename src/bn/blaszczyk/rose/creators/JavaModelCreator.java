@@ -163,12 +163,12 @@ public class JavaModelCreator {
 					+ "\t@GeneratedValue\r\n"
 					+ "\t@Column(name=\"" + entity.getObjectName() + "_id\")\r\n");
 		writer.write("\t@Override\r\n"
-				+ "\tpublic Integer getId()\r\n"
+				+ "\tpublic int getId()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn id;\r\n"
 				+ "\t}\r\n\r\n" );
 		writer.write("\t@Override\r\n"
-				+ "\tpublic void setId( Integer id )\r\n"
+				+ "\tpublic void setId( int id )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis.id = id;\r\n"
 				+ "\t}\r\n\r\n");

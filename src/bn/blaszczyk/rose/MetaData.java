@@ -18,10 +18,13 @@ public class MetaData
 	private java.lang.Boolean usingForeignKeys = false;
 	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
+	private java.lang.String dtopackage = "foo.dto";
 	private java.lang.Boolean usingInterfaces = false;
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
 	private java.lang.String parserformat = "%sParser";
+	private java.lang.String retrofitname = "FooService";
+	private java.lang.String retrofitpackage = "foo.service";
 	private java.lang.String resourcepackage = "foo.resources";
 
 	public MetaData()
@@ -148,6 +151,16 @@ public class MetaData
 		this.modelpackage = modelpackage;
 	}
 
+	public java.lang.String getDtopackage()
+	{
+		return dtopackage;
+	}
+
+	public void setDtopackage( java.lang.String dtopackage )
+	{
+		this.dtopackage = dtopackage;
+	}
+
 	public java.lang.Boolean isUsingInterfaces()
 	{
 		return usingInterfaces;
@@ -186,6 +199,26 @@ public class MetaData
 	public void setParserformat( java.lang.String parserformat )
 	{
 		this.parserformat = parserformat;
+	}
+
+	public java.lang.String getRetrofitname()
+	{
+		return retrofitname;
+	}
+
+	public void setRetrofitname( java.lang.String retrofitname )
+	{
+		this.retrofitname = retrofitname;
+	}
+
+	public java.lang.String getRetrofitpackage()
+	{
+		return retrofitpackage;
+	}
+
+	public void setRetrofitpackage( java.lang.String retrofitpackage )
+	{
+		this.retrofitpackage = retrofitpackage;
 	}
 
 	public java.lang.String getResourcepackage()

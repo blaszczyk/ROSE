@@ -1,6 +1,6 @@
 package bn.blaszczyk.rose.model;
 
 public interface Identifyable {
-	public Integer getId();
-	public void setId(Integer id);
+	public int getId();
+	public void setId(int id);
 }

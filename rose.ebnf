@@ -12,8 +12,8 @@ setmetadata = "set" , ( stringmetadata | boolmetadata )
 
 stringmetadata = stringmetadataproperty , stringvalue
 
-stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" 
-						| "modelpackage" | "parserpackage" | "parserformat" | "resourcepackage" | "resourcepath"
+stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" | "modelpackage"
+						| "dtopackage" | "parserpackage" | "parserformat" | "resourcepackage" | "resourcepath" | "retrofitname" | "retrofitpackage"
 	
 boolmetadata = boolmetadataproperty , boolvalue
 

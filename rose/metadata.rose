@@ -21,11 +21,15 @@ begin entity MetaData
 	boolean usingTimestamp false
 	
 	varchar(50) modelpackage "foo.model"
+	varchar(50) dtopackage "foo.dto"
 	boolean usingInterfaces false
 	boolean usingAnnotations false
 	
 	varchar(50) parserpackage "foo.parser"
 	varchar(50) parserformat "%sParser"
+	
+	varchar(50) retrofitname "FooService"
+	varchar(50) retrofitpackage "foo.service"
 	
 	varchar(50) resourcepackage "foo.resources"
 	

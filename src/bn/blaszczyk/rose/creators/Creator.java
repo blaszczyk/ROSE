@@ -18,6 +18,8 @@ public class Creator
 	private static final String OPTION_ROSEFILECOPY = "rosefilecopy";
 	private static final String OPTION_JAVAPARSER = "javaparser";
 	private static final String OPTION_JAVAMODELS = "javamodels";
+	private static final String OPTION_JAVADTOS = "javadtos";
+	private static final String OPTION_RETROFIT = "retrofit";
 	private static final String OPTION_PERSISTENCE = "persistence";
 	private static final String OPTION_SQLCREATE = "sqlcreate";
 
@@ -34,6 +36,21 @@ public class Creator
 				JavaInterfaceCreator.create(entity, metadata, parentDir);
 			JavaModelCreator.create(entity, metadata, parentDir);
 		}
+	}
+
+	public static void createJavaDtos(final RoseParser parser, final String parentDir) throws RoseException
+	{
+		final List<EntityModel> entities = parser.getEntities();
+		final MetaData metadata = parser.getMetadata();
+		for(final EntityModel entity : entities)
+		{
+			JavaDtoCreator.create(entity, metadata, parentDir);
+		}
+	}
+
+	private static void createRetrofit(final RoseParser parser, final String parentDir) throws RoseException
+	{
+		RetrofitCreator.create(parser.getEntities(), parser.getMetadata(), parentDir);
 	}
 	
 	public static void createJavaParser(final RoseParser parser, final String parentDir) throws RoseException
@@ -100,6 +117,12 @@ public class Creator
 			case OPTION_JAVAMODELS:
 				createJavaModel(parser, parentDir);
 				break;
+			case OPTION_JAVADTOS:
+				createJavaDtos(parser, parentDir);
+				break;
+			case OPTION_RETROFIT:
+				createRetrofit(parser, parentDir);
+				break;
 			case OPTION_JAVAPARSER:
 				createJavaParser(parser, parentDir);
 				break;
@@ -109,6 +132,6 @@ public class Creator
 			default:
 				throw new RoseException("unknown option: create " + createOption);
 			}
-	}	
+	}
 
 }
