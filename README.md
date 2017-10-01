@@ -6,8 +6,8 @@ where
 
 ROse is for Relational Object modelS languagE
 
+tool (mvn plugin) to create java models suited for rose framework
 
-A simple tool to create models and basic views and controllers in Java with SQL (Hibernate) support
-
+![build info](https://api.travis-ci.org/blaszczyk/ROSE.svg?branch=master)
 
 Work In Progress!
