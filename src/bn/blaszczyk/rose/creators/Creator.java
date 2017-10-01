@@ -48,7 +48,7 @@ public class Creator
 		}
 	}
 
-	private static void createRetrofit(final RoseParser parser, final String parentDir) throws RoseException
+	public static void createRetrofit(final RoseParser parser, final String parentDir) throws RoseException
 	{
 		RetrofitCreator.create(parser.getEntities(), parser.getMetadata(), parentDir);
 	}

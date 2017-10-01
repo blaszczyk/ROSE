@@ -248,7 +248,10 @@ public class JavaDtoCreator {
 		for(Field field : entity.getFields() )
 			sb.append(field.getName() +  ":\" + " + field.getName() + " + \", ");
 		for(EntityField field : entity.getEntityFields() )
-			sb.append(field.getName() +  ":\" + " + field.getName() + "Id" + optionalPlural(field) + " + \", ");
+			if(field.getType().isSecondMany())
+				sb.append(field.getName() +  ":\" + java.util.Arrays.toString(" + field.getName() + "Ids" + ") + \", ");
+			else
+				sb.append(field.getName() +  ":\" + " + field.getName() + "Id" + " + \", ");
 		writer.write("\t@Override\r\n"
 				+ "\tpublic String toString()\r\n"
 				+ "\t{\r\n"
