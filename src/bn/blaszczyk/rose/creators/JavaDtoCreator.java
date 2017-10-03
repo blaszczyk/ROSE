@@ -92,6 +92,8 @@ public class JavaDtoCreator {
 			writer.write(", bn.blaszczyk.rose.model.Dto");
 		else if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
 			writer.write(", bn.blaszczyk.rose.model.Identifyable");			
+//		if(timestamped)
+//			writer.write(", bn.blaszczyk.rose.model.Timestamped");
 		writer.write( "\r\n");
 	}
 	
@@ -130,11 +132,11 @@ public class JavaDtoCreator {
 				writer.write("\tprivate int " + entityfield.getName() + "Id;\r\n"
 						+ "\r\n");
 		}
-		writer.write("\t@SerializedName(\"type\")\r\n" 
-				+ "\tprivate String type = \"" + entity.getSimpleClassName() + "\";\r\n\r\n");
-		if(usingTimestamp)
-			writer.write("\t@SerializedName(\"timestamp\")\r\n" 
-					+ "\tprivate long timestamp;\r\n");
+//		writer.write("\t@SerializedName(\"type\")\r\n" 
+//				+ "\tprivate String type = \"" + entity.getSimpleClassName() + "\";\r\n\r\n");
+//		if(usingTimestamp)
+//			writer.write("\t@SerializedName(\"timestamp\")\r\n" 
+//					+ "\tprivate long timestamp;\r\n");
 	}
 	
 	private static void writeConstructors(EntityModel entity, Writer writer) throws IOException
@@ -175,7 +177,7 @@ public class JavaDtoCreator {
 				writeEntityManyGetterSetter(entityField, writer);
 			else
 				writeEntityOneGetterSetter(entityField, writer);
-		writeTimestampGetterSetter(writer);
+//		writeTimestampGetterSetter(writer);
 	}
 
 	private static void writePrimitiveGetterSetter(final PrimitiveField primitiveField, final Writer writer) throws IOException
