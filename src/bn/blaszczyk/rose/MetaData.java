@@ -19,6 +19,7 @@ public class MetaData
 	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
 	private java.lang.String dtopackage = "foo.dto";
+	private java.lang.Boolean implementDto = true;
 	private java.lang.Boolean usingInterfaces = false;
 	private java.lang.Boolean usingAnnotations = false;
 	private java.lang.String parserpackage = "foo.parser";
@@ -36,7 +37,7 @@ public class MetaData
 		return srcpath;
 	}
 
-	public void setSrcpath( java.lang.String srcpath )
+	public void setSrcpath( final java.lang.String srcpath )
 	{
 		this.srcpath = srcpath;
 	}
@@ -46,7 +47,7 @@ public class MetaData
 		return resourcepath;
 	}
 
-	public void setResourcepath( java.lang.String resourcepath )
+	public void setResourcepath( final java.lang.String resourcepath )
 	{
 		this.resourcepath = resourcepath;
 	}
@@ -56,7 +57,7 @@ public class MetaData
 		return sqlpath;
 	}
 
-	public void setSqlpath( java.lang.String sqlpath )
+	public void setSqlpath( final java.lang.String sqlpath )
 	{
 		this.sqlpath = sqlpath;
 	}
@@ -66,7 +67,7 @@ public class MetaData
 		return dbtype;
 	}
 
-	public void setDbtype( java.lang.String dbtype )
+	public void setDbtype( final java.lang.String dbtype )
 	{
 		this.dbtype = dbtype;
 	}
@@ -76,7 +77,7 @@ public class MetaData
 		return dbuser;
 	}
 
-	public void setDbuser( java.lang.String dbuser )
+	public void setDbuser( final java.lang.String dbuser )
 	{
 		this.dbuser = dbuser;
 	}
@@ -86,7 +87,7 @@ public class MetaData
 		return dbpassword;
 	}
 
-	public void setDbpassword( java.lang.String dbpassword )
+	public void setDbpassword( final java.lang.String dbpassword )
 	{
 		this.dbpassword = dbpassword;
 	}
@@ -96,7 +97,7 @@ public class MetaData
 		return dbserver;
 	}
 
-	public void setDbserver( java.lang.String dbserver )
+	public void setDbserver( final java.lang.String dbserver )
 	{
 		this.dbserver = dbserver;
 	}
@@ -106,7 +107,7 @@ public class MetaData
 		return dbport;
 	}
 
-	public void setDbport( java.lang.String dbport )
+	public void setDbport( final java.lang.String dbport )
 	{
 		this.dbport = dbport;
 	}
@@ -116,7 +117,7 @@ public class MetaData
 		return dbname;
 	}
 
-	public void setDbname( java.lang.String dbname )
+	public void setDbname( final java.lang.String dbname )
 	{
 		this.dbname = dbname;
 	}
@@ -126,7 +127,7 @@ public class MetaData
 		return usingForeignKeys;
 	}
 
-	public void setUsingForeignKeys( java.lang.Boolean usingForeignKeys )
+	public void setUsingForeignKeys( final java.lang.Boolean usingForeignKeys )
 	{
 		this.usingForeignKeys = usingForeignKeys;
 	}
@@ -136,7 +137,7 @@ public class MetaData
 		return usingTimestamp;
 	}
 
-	public void setUsingTimestamp( java.lang.Boolean usingTimestamp )
+	public void setUsingTimestamp( final java.lang.Boolean usingTimestamp )
 	{
 		this.usingTimestamp = usingTimestamp;
 	}
@@ -146,7 +147,7 @@ public class MetaData
 		return modelpackage;
 	}
 
-	public void setModelpackage( java.lang.String modelpackage )
+	public void setModelpackage( final java.lang.String modelpackage )
 	{
 		this.modelpackage = modelpackage;
 	}
@@ -156,9 +157,19 @@ public class MetaData
 		return dtopackage;
 	}
 
-	public void setDtopackage( java.lang.String dtopackage )
+	public void setDtopackage( final java.lang.String dtopackage )
 	{
 		this.dtopackage = dtopackage;
+	}
+
+	public java.lang.Boolean isImplementDto()
+	{
+		return implementDto;
+	}
+
+	public void setImplementDto( final java.lang.Boolean implementDto )
+	{
+		this.implementDto = implementDto;
 	}
 
 	public java.lang.Boolean isUsingInterfaces()
@@ -166,7 +177,7 @@ public class MetaData
 		return usingInterfaces;
 	}
 
-	public void setUsingInterfaces( java.lang.Boolean usingInterfaces )
+	public void setUsingInterfaces( final java.lang.Boolean usingInterfaces )
 	{
 		this.usingInterfaces = usingInterfaces;
 	}
@@ -176,7 +187,7 @@ public class MetaData
 		return usingAnnotations;
 	}
 
-	public void setUsingAnnotations( java.lang.Boolean usingAnnotations )
+	public void setUsingAnnotations( final java.lang.Boolean usingAnnotations )
 	{
 		this.usingAnnotations = usingAnnotations;
 	}
@@ -186,7 +197,7 @@ public class MetaData
 		return parserpackage;
 	}
 
-	public void setParserpackage( java.lang.String parserpackage )
+	public void setParserpackage( final java.lang.String parserpackage )
 	{
 		this.parserpackage = parserpackage;
 	}
@@ -196,7 +207,7 @@ public class MetaData
 		return parserformat;
 	}
 
-	public void setParserformat( java.lang.String parserformat )
+	public void setParserformat( final java.lang.String parserformat )
 	{
 		this.parserformat = parserformat;
 	}
@@ -206,7 +217,7 @@ public class MetaData
 		return retrofitname;
 	}
 
-	public void setRetrofitname( java.lang.String retrofitname )
+	public void setRetrofitname( final java.lang.String retrofitname )
 	{
 		this.retrofitname = retrofitname;
 	}
@@ -216,7 +227,7 @@ public class MetaData
 		return retrofitpackage;
 	}
 
-	public void setRetrofitpackage( java.lang.String retrofitpackage )
+	public void setRetrofitpackage( final java.lang.String retrofitpackage )
 	{
 		this.retrofitpackage = retrofitpackage;
 	}
@@ -226,7 +237,7 @@ public class MetaData
 		return resourcepackage;
 	}
 
-	public void setResourcepackage( java.lang.String resourcepackage )
+	public void setResourcepackage( final java.lang.String resourcepackage )
 	{
 		this.resourcepackage = resourcepackage;
 	}

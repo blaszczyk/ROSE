@@ -18,6 +18,7 @@ public class Creator
 	private static final String OPTION_ROSEFILECOPY = "rosefilecopy";
 	private static final String OPTION_JAVAPARSER = "javaparser";
 	private static final String OPTION_JAVAMODELS = "javamodels";
+	private static final String OPTION_JAVAENUMS = "javaenums";
 	private static final String OPTION_JAVADTOS = "javadtos";
 	private static final String OPTION_RETROFIT = "retrofit";
 	private static final String OPTION_PERSISTENCE = "persistence";
@@ -36,6 +37,14 @@ public class Creator
 				JavaInterfaceCreator.create(entity, metadata, parentDir);
 			JavaModelCreator.create(entity, metadata, parentDir);
 		}
+	}
+	
+	public static void createJavaEnums(final RoseParser parser, final String parentDir) throws RoseException
+	{
+		final List<EnumModel> enums = parser.getEnums();
+		final MetaData metadata = parser.getMetadata();
+		for(final EnumModel enumType : enums)
+			JavaEnumCreator.create(enumType, metadata, parentDir);
 	}
 
 	public static void createJavaDtos(final RoseParser parser, final String parentDir) throws RoseException
@@ -119,6 +128,9 @@ public class Creator
 				break;
 			case OPTION_JAVADTOS:
 				createJavaDtos(parser, parentDir);
+				break;
+			case OPTION_JAVAENUMS:
+				createJavaEnums(parser, parentDir);
 				break;
 			case OPTION_RETROFIT:
 				createRetrofit(parser, parentDir);

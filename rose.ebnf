@@ -17,12 +17,12 @@ stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpasswo
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
-boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp" | "usingInterfaces"
+boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp" | "usingInterfaces" | "implementDto"
 
 
 createoperation = "create" , createoption
 
-createoption = "sqlcreate" | "persistence" | "javamodels" | "javaparser" | "rosefilecopy"
+createoption = "sqlcreate" | "persistence" | "javamodels" | "javaparser" | "rosefilecopy" | "javadtos" | "javaenums" | "retrofit"
 
 
 enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"

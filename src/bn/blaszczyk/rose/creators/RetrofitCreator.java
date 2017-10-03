@@ -48,9 +48,9 @@ public class RetrofitCreator
 		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "\")\r\n"
 				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "s();\r\n\r\n");
 		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
-				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "ById(@Path(\"id\") final int id);\r\n\r\n");
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/{ids}\")\r\n"
-				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "sByIds(@Path(\"ids\") final int[] ids);\r\n\r\n");
+				+ "\tpublic Call<" + dtoClassName + "> get" + entity.getSimpleClassName() + "ById(@Path(\"id\") final int id);\r\n\r\n");
+		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "\")\r\n"
+				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "sByIds(@Query(\"id\") final int[] ids);\r\n\r\n");
 		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/id\")\r\n"
 				+ "\tpublic Call<List<Integer>> get" + entity.getSimpleClassName() + "Ids();\r\n\r\n");
 		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/count\")\r\n"

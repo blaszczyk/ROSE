@@ -168,7 +168,7 @@ public class JavaModelCreator {
 				+ "\t\treturn id;\r\n"
 				+ "\t}\r\n\r\n" );
 		writer.write("\t@Override\r\n"
-				+ "\tpublic void setId( int id )\r\n"
+				+ "\tpublic void setId( final int id )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis.id = id;\r\n"
 				+ "\t}\r\n\r\n");
@@ -203,7 +203,7 @@ public class JavaModelCreator {
 		// setter
 		if(usingInterfaces)
 			writer.write("\t@Override\r\n");
-		writer.write("\tpublic void " + getSetterName(primitiveField) + "( " + primitiveField.getType().getJavaname() + " " + primitiveField.getName() + " )\r\n"
+		writer.write("\tpublic void " + getSetterName(primitiveField) + "( final " + primitiveField.getType().getJavaname() + " " + primitiveField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + primitiveField.getName() + " = " + primitiveField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
@@ -226,7 +226,7 @@ public class JavaModelCreator {
 		// setter
 		if(usingInterfaces)
 			writer.write("\t@Override\r\n");
-		writer.write("\tpublic void " + getSetterName(enumField) + "( " + enumField.getEnumType().getSimpleClassName() + " " + enumField.getName() + " )\r\n"
+		writer.write("\tpublic void " + getSetterName(enumField) + "( final " + enumField.getEnumType().getSimpleClassName() + " " + enumField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + enumField.getName() + " = " + enumField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
@@ -286,7 +286,7 @@ public class JavaModelCreator {
 		// setter
 		if(usingInterfaces)
 			writer.write("\t@Override\r\n");
-		writer.write("\tpublic void " + getSetterName(entityField) + "( " + entityField.getEntityModel().getSimpleClassName() + " " 	+ entityField.getName() + " )\r\n"
+		writer.write("\tpublic void " + getSetterName(entityField) + "( final " + entityField.getEntityModel().getSimpleClassName() + " " 	+ entityField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
@@ -305,7 +305,7 @@ public class JavaModelCreator {
 		// setter
 		if(usingInterfaces)
 			writer.write("\t@Override\r\n");
-		writer.write("\tpublic void " + getSetterName(entityField) + "( java.util.Set<" + entityField.getEntityModel().getSimpleClassName() + "> " + entityField.getName() + " )\r\n"
+		writer.write("\tpublic void " + getSetterName(entityField) + "( final java.util.Set<" + entityField.getEntityModel().getSimpleClassName() + "> " + entityField.getName() + " )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis." + entityField.getName() + " = " + entityField.getName() + ";\r\n"
 				+ "\t}\r\n\r\n" );
@@ -322,7 +322,7 @@ public class JavaModelCreator {
 				+ "\t\treturn timestamp;\r\n"
 				+ "\t}\r\n\r\n" );
 		writer.write("\t@Override\r\n"
-				+ "\tpublic void setTimestamp( java.util.Date timestamp )\r\n"
+				+ "\tpublic void setTimestamp( final java.util.Date timestamp )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis.timestamp = timestamp;\r\n"
 				+ "\t}\r\n\r\n");

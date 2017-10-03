@@ -53,7 +53,7 @@ public class JavaDtoCreator {
 			if(metadata.isUsingAnnotations())
 				writeAnnotationHeader(entityModel, writer);
 			
-			writeClassDeclaration(entityModel, metadata.isUsingTimestamp(), writer);			
+			writeClassDeclaration(entityModel, metadata.isUsingTimestamp(), metadata.isImplementDto(), writer);			
 			
 			writer.write("{\r\n");
 			
@@ -62,9 +62,10 @@ public class JavaDtoCreator {
 			
 			writeConstructors(entityModel, writer);
 			
-			writeIdGettersSetters(entityModel, writer);
+			writeIdGettersSetters(entityModel, metadata.isImplementDto(), writer);
 			writeGettersSetters(entityModel,  writer);
-			writeDtoMethods(entityModel, writer);
+			if(metadata.isImplementDto())
+				writeDtoMethods(entityModel, writer);
 			writeToString(entityModel, writer);
 
 			if(entityModel.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
@@ -84,9 +85,13 @@ public class JavaDtoCreator {
 		writer.write("import com.google.gson.annotations.*;\r\n\r\n");
 	}
 	
-	private static void writeClassDeclaration( EntityModel entity, boolean timestamped, Writer writer) throws IOException
+	private static void writeClassDeclaration( EntityModel entity, boolean timestamped, boolean implementsDto, Writer writer) throws IOException
 	{
-		writer.write("public class " + entity.getSimpleClassName() + "Dto implements bn.blaszczyk.rose.model.Dto, Comparable<" + entity.getSimpleClassName() + "Dto>");
+		writer.write("public class " + entity.getSimpleClassName() + "Dto implements Comparable<" + entity.getSimpleClassName() + "Dto>");
+		if(implementsDto)
+			writer.write(", bn.blaszczyk.rose.model.Dto");
+		else if(entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE))
+			writer.write(", bn.blaszczyk.rose.model.Identifyable");			
 		writer.write( "\r\n");
 	}
 	
@@ -139,14 +144,16 @@ public class JavaDtoCreator {
 				+ "\t}\r\n\r\n");
 	}
 	
-	private static void writeIdGettersSetters(final EntityModel entity, final Writer writer) throws IOException
+	private static void writeIdGettersSetters(final EntityModel entity, final boolean implementsDto, final Writer writer) throws IOException
 	{
-		writer.write("\t@Override\r\n"
+		final String optionalOverride = ( implementsDto || entity.getImplInterface().doesExtend(ImplInterface.IDENTIFYABLE) ) 
+				? "\t@Override\r\n" : "";
+		writer.write(optionalOverride
 				+ "\tpublic int getId()\r\n"
 				+ "\t{\r\n"
 				+ "\t\treturn id;\r\n"
 				+ "\t}\r\n\r\n" );
-		writer.write("\t@Override\r\n"
+		writer.write(optionalOverride
 				+ "\tpublic void setId( int id )\r\n"
 				+ "\t{\r\n"
 				+ "\t\tthis.id = id;\r\n"
