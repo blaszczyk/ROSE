@@ -45,21 +45,21 @@ public class RetrofitCreator
 	private static void writeEntityMethods(final EntityModel entity, final Writer writer, final String dtoPackage) throws IOException
 	{
 		final String dtoClassName = dtoPackage + "." + entity.getSimpleClassName() + "Dto";
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "\")\r\n"
+		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "\")\r\n"
 				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "s();\r\n\r\n");
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
+		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
 				+ "\tpublic Call<" + dtoClassName + "> get" + entity.getSimpleClassName() + "ById(@Path(\"id\") final int id);\r\n\r\n");
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "\")\r\n"
+		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "\")\r\n"
 				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "sByIds(@Query(\"id\") final int[] ids);\r\n\r\n");
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/id\")\r\n"
+		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "/id\")\r\n"
 				+ "\tpublic Call<List<Integer>> get" + entity.getSimpleClassName() + "Ids();\r\n\r\n");
-		writer.write("\t@GET(\"" + entity.getObjectName().toLowerCase() + "/count\")\r\n"
+		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "/count\")\r\n"
 				+ "\tpublic Call<Integer> get" + entity.getSimpleClassName() + "Count();\r\n\r\n");
-		writer.write("\t@POST(\"" + entity.getObjectName().toLowerCase() + "\")\r\n"
+		writer.write("\t@POST(\"entity/" + entity.getObjectName().toLowerCase() + "\")\r\n"
 				+ "\tpublic Call<" + dtoClassName + "> post" + entity.getSimpleClassName() + "(@Body final " + dtoClassName + " dto);\r\n\r\n");
-		writer.write("\t@PUT(\"" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
+		writer.write("\t@PUT(\"entity/" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
 				+ "\tpublic Call<Void> put" + entity.getSimpleClassName() + "(@Path(\"id\") final int id, @Body final " + dtoClassName + " dto);\r\n\r\n");
-		writer.write("\t@DELETE(\"" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
+		writer.write("\t@DELETE(\"entity/" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
 				+ "\tpublic Call<Void> delete" + entity.getSimpleClassName() + "ById(@Path(\"id\") final int id);\r\n\r\n");
 	}
 

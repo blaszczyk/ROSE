@@ -126,10 +126,10 @@ public class JavaDtoCreator {
 		{
 			writer.write("\t@SerializedName(\"" + entityfield.getName().toLowerCase() + "\")\r\n");
 			if(entityfield.getType().isSecondMany())
-				writer.write("\tprivate int[] " + entityfield.getName() + "Ids;\r\n"
+				writer.write("\tprivate int[] " + entityfield.getName() + "Ids = new int[]{};\r\n"
 						+ "\r\n");
 			else
-				writer.write("\tprivate int " + entityfield.getName() + "Id;\r\n"
+				writer.write("\tprivate int " + entityfield.getName() + "Id = -1;\r\n"
 						+ "\r\n");
 		}
 //		writer.write("\t@SerializedName(\"type\")\r\n" 
