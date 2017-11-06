@@ -51,7 +51,7 @@ public class JavaDtoCreator {
 			writer.write("package " + metadata.getDtopackage() + ";\r\n\r\n");
 			
 			if(metadata.isUsingAnnotations())
-				writeAnnotationHeader(entityModel, writer);
+				writeAnnotationHeader(writer);
 			
 			writeClassDeclaration(entityModel, metadata.isUsingTimestamp(), metadata.isImplementDto(), writer);			
 			
@@ -80,7 +80,7 @@ public class JavaDtoCreator {
 		}
 	}
 
-	private static void writeAnnotationHeader( EntityModel entity, Writer writer) throws IOException
+	private static void writeAnnotationHeader( Writer writer) throws IOException
 	{
 		writer.write("import com.google.gson.annotations.*;\r\n\r\n");
 	}
@@ -253,14 +253,15 @@ public class JavaDtoCreator {
 	private static void writeToString(final EntityModel entity, final Writer writer ) throws IOException
 	{
 		final StringBuilder sb = new StringBuilder( entity.getSimpleClassName() + " : {");
-		sb.append(" id: \" + id + \"}");
+		sb.append("id:\" + id + \"");
 		for(Field field : entity.getFields() )
-			sb.append(field.getName() +  ":\" + " + field.getName() + " + \", ");
+			sb.append(", " + field.getName() +  ":\" + " + field.getName() + " + \"");
 		for(EntityField field : entity.getEntityFields() )
 			if(field.getType().isSecondMany())
-				sb.append(field.getName() +  ":\" + java.util.Arrays.toString(" + field.getName() + "Ids" + ") + \", ");
+				sb.append(", " + field.getName() +  ":\" + java.util.Arrays.toString(" + field.getName() + "Ids" + ") + \"");
 			else
-				sb.append(field.getName() +  ":\" + " + field.getName() + "Id" + " + \", ");
+				sb.append(", " + field.getName() +  ":\" + " + field.getName() + "Id" + " + \"");
+		sb.append("}");
 		writer.write("\t@Override\r\n"
 				+ "\tpublic String toString()\r\n"
 				+ "\t{\r\n"

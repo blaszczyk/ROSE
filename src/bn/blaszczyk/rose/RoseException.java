@@ -35,6 +35,8 @@ public class RoseException extends Exception {
 	{
 		if(cause instanceof RoseException)
 			return (RoseException)cause;
+		if(cause.getCause() instanceof RoseException)
+			return (RoseException) cause.getCause();
 		return new RoseException(message, cause);
 	}
 	

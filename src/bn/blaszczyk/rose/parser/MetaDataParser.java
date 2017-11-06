@@ -51,6 +51,9 @@ public class MetaDataParser
 			case "dtopackage":
 				metaData.setDtopackage( value );
 				break;
+			case "dtocontainername":
+				metaData.setDtocontainername( value );
+				break;
 			case "implementdto":
 				metaData.setImplementDto( Boolean.parseBoolean( value ) );
 				break;

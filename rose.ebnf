@@ -13,7 +13,7 @@ setmetadata = "set" , ( stringmetadata | boolmetadata )
 stringmetadata = stringmetadataproperty , stringvalue
 
 stringmetadataproperty = "srcpath" | "sqlpath" | "dbtype" | "dbuser" | "dbpassword" | "dbserver" | "dbport" | "dbname" | "modelpackage"
-						| "dtopackage" | "parserpackage" | "parserformat" | "resourcepackage" | "resourcepath" | "retrofitname" | "retrofitpackage"
+						| "dtopackage" | "dtocontainername" | "parserpackage" | "parserformat" | "resourcepackage" | "resourcepath" | "retrofitname" | "retrofitpackage"
 	
 boolmetadata = boolmetadataproperty , boolvalue
 
@@ -22,7 +22,7 @@ boolmetadataproperty = "usingAnnotations" | "usingForeignKeys" | "usingTimestamp
 
 createoperation = "create" , createoption
 
-createoption = "sqlcreate" | "persistence" | "javamodels" | "javaparser" | "rosefilecopy" | "javadtos" | "javaenums" | "retrofit"
+createoption = "sqlcreate" | "persistence" | "javamodels" | "javaparser" | "rosefilecopy" | "javadtos" | "javadtocontainer" | "javaenums" | "retrofit"
 
 
 enumdef = "begin enum" , identifier , "\n" , { identifier , "\n"} , "end enum"

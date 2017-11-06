@@ -19,6 +19,7 @@ public class MetaData
 	private java.lang.Boolean usingTimestamp = false;
 	private java.lang.String modelpackage = "foo.model";
 	private java.lang.String dtopackage = "foo.dto";
+	private java.lang.String dtocontainername = "FooDtoContainer";
 	private java.lang.Boolean implementDto = true;
 	private java.lang.Boolean usingInterfaces = false;
 	private java.lang.Boolean usingAnnotations = false;
@@ -160,6 +161,16 @@ public class MetaData
 	public void setDtopackage( final java.lang.String dtopackage )
 	{
 		this.dtopackage = dtopackage;
+	}
+
+	public java.lang.String getDtocontainername()
+	{
+		return dtocontainername;
+	}
+
+	public void setDtocontainername( final java.lang.String dtocontainername )
+	{
+		this.dtocontainername = dtocontainername;
 	}
 
 	public java.lang.Boolean isImplementDto()

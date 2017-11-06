@@ -20,6 +20,7 @@ public class Creator
 	private static final String OPTION_JAVAMODELS = "javamodels";
 	private static final String OPTION_JAVAENUMS = "javaenums";
 	private static final String OPTION_JAVADTOS = "javadtos";
+	private static final String OPTION_JAVADTOCONTAINER = "javadtocontainer";
 	private static final String OPTION_RETROFIT = "retrofit";
 	private static final String OPTION_PERSISTENCE = "persistence";
 	private static final String OPTION_SQLCREATE = "sqlcreate";
@@ -55,6 +56,13 @@ public class Creator
 		{
 			JavaDtoCreator.create(entity, metadata, parentDir);
 		}
+	}
+
+	public static void createJavaDtoContainer(final RoseParser parser, final String parentDir) throws RoseException
+	{
+		final List<EntityModel> entities = parser.getEntities();
+		final MetaData metadata = parser.getMetadata();
+		JavaDtoContainerCreator.create(entities, metadata, parentDir);
 	}
 
 	public static void createRetrofit(final RoseParser parser, final String parentDir) throws RoseException
@@ -128,6 +136,9 @@ public class Creator
 				break;
 			case OPTION_JAVADTOS:
 				createJavaDtos(parser, parentDir);
+				break;
+			case OPTION_JAVADTOCONTAINER:
+				createJavaDtoContainer(parser, parentDir);
 				break;
 			case OPTION_JAVAENUMS:
 				createJavaEnums(parser, parentDir);

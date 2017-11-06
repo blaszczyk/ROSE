@@ -33,7 +33,7 @@ public class EntityField  extends AbstractField
 	public EntityField( EntityModel entityModel, EntityField counterpart )
 	{
 		super( quantifedName( entityModel, counterpart ) );
-		this.entityName = counterpart.getEntityModel().getObjectName();
+		this.entityName = entityModel.getSimpleClassName();
 		this.type = counterpart.getType().getInverse();			
 		this.entityModel = entityModel;
 		setCounterName(counterpart.getName());

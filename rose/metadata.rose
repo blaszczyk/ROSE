@@ -22,6 +22,7 @@ begin entity MetaData
 	
 	varchar(50) modelpackage "foo.model"
 	varchar(50) dtopackage "foo.dto"
+	varchar(50) dtocontainername "FooDtoContainer"
 	boolean implementDto true
 	boolean usingInterfaces false
 	boolean usingAnnotations false
