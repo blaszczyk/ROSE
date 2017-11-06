@@ -122,6 +122,19 @@ public class JavaDtoContainerCreator {
 				+ "\t\t\treturn null;\r\n"
 				+ "\t\t}\r\n"
 				+ "\t}\r\n\r\n");
+
+		writer.write("\t@Override\r\n"
+				+ "\tpublic java.util.Set<Integer> getAllIds(final String type)\r\n"
+				+ "\t{\r\n"
+				+ "\t\tswitch(type.toLowerCase())\r\n"
+				+ "\t\t{\r\n");
+		for(final EntityModel entityModel : entityModels)
+			writer.write("\t\tcase \"" +entityModel.getObjectName().toLowerCase() + "\":\r\n"
+				+ "\t\t\treturn " + entityModel.getObjectName() + "s.keySet();\r\n");
+		writer.write("\t\tdefault:\r\n"
+				+ "\t\t\treturn null;\r\n"
+				+ "\t\t}\r\n"
+				+ "\t}\r\n\r\n");
 		
 		writer.write("\t@Override\r\n"
 				+ "\tpublic void put(final bn.blaszczyk.rose.model.Dto dto)\r\n"

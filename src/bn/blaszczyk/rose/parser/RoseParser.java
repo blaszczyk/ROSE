@@ -141,7 +141,7 @@ public abstract class RoseParser
 	
 	private void linkEntities() throws RoseException
 	{
-		final Map<EntityField,EntityModel> entityFieldsToLink = new HashMap<>();
+		final Map<EntityField,EntityModel> entityFieldsToLink = new LinkedHashMap<>();
 		for(final EntityModel entityModel : entities)
 		{
 			for(final Field field : entityModel.getFields())
