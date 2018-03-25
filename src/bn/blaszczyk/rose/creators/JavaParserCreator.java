@@ -12,15 +12,10 @@ public class JavaParserCreator {
 	
 	public static final String PARSE_METHOD = "parseField";
 	
-	public static String getParserName(EntityModel entity, MetaData metadata)
-	{
-		return String.format(metadata.getParserformat(), entity.getSimpleClassName());
-	}
-	
 	public static void create(final EntityModel entityModel, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String classname = getParserName(entityModel, metadata);
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getParserpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
+		final String classname = String.format(metadata.getParserformat(), entityModel.getSimpleClassName());
+		final String fullpath = getFullPath(entityModel, metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -89,6 +84,20 @@ public class JavaParserCreator {
 		}
 		
 	}
-	
+
+	private static String getFullPath(final EntityModel entityModel, final MetaData metadata, final String parentDir)
+	{
+		final String classname = String.format(metadata.getParserformat(), entityModel.getSimpleClassName());
+		return parentDir + "/" + metadata.getSrcpath() + metadata.getParserpackage().replaceAll("\\.", "/") + "/" + classname + ".java";
+		
+	}
+
+	public static void clear(final EntityModel entityModel, final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(entityModel, metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
+	}
 	
 }

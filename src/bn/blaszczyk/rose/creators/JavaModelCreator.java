@@ -32,7 +32,7 @@ public class JavaModelCreator {
 	{
 		final boolean isImplementation = metadata.isUsingInterfaces();
 		final String optionalImpl = isImplementation ? "Impl" : "";
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entityModel.getSimpleClassName() + optionalImpl +".java";
+		final String fullpath = getFullPath(entityModel, metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -84,6 +84,13 @@ public class JavaModelCreator {
 		{
 			throw new RoseException("error creating java model classes", e);
 		}
+	}
+	
+	private static String getFullPath(final EntityModel entityModel, final MetaData metadata, final String parentDir)
+	{
+		final boolean isImplementation = metadata.isUsingInterfaces();
+		final String optionalImpl = isImplementation ? "Impl" : "";
+		return parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entityModel.getSimpleClassName() + optionalImpl +".java";
 	}
 
 	private static void writeAnnotationHeader( EntityModel entity, Writer writer) throws IOException
@@ -768,6 +775,13 @@ public class JavaModelCreator {
 	{
 		writer.write("\t@Transient\r\n");
 	}
-	
+
+	public static void clear(final EntityModel entity, final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(entity, metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
+	}
 	
 }

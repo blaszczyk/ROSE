@@ -13,7 +13,7 @@ public class RetrofitCreator
 {
 	public static void create(final List<EntityModel> entities, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getRetrofitpackage().replaceAll("\\.", "/") + "/" + metadata.getRetrofitname() + ".java";
+		final String fullpath = getFullPath(metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -24,14 +24,18 @@ public class RetrofitCreator
 			
 			// package declaration
 			writer.write("package " + metadata.getRetrofitpackage() + ";\r\n\r\n"
-					+ "import retrofit2.http.*;\r\n"
 					+ "import java.util.List;\r\n"
-					+ "import retrofit2.Call;\r\n\r\n"
-					+ "public interface " + metadata.getRetrofitname() + "\r\n"
+					+ "import retrofit2.http.*;\r\n"
+					+ "import retrofit2.Call;\r\n\r\n");
+			if(!metadata.getDtopackage().equals(metadata.getRetrofitpackage()))
+				writer.write("import " + metadata.getDtopackage() + ".*;\r\n\r\n");
+			writer.write("public interface " + metadata.getRetrofitname() + "\r\n"
 					+ "{\r\n\r\n");
 			
+			writeContainerMethod(entities, metadata, writer);
+			
 			for(final EntityModel entity : entities)
-				writeEntityMethods(entity, writer, metadata.getDtopackage());
+				writeEntityMethods(entity, writer);
 
 			writer.write("}\r\n");
 			System.out.println( "File created: " + fullpath);
@@ -42,9 +46,30 @@ public class RetrofitCreator
 		}
 	}
 
-	private static void writeEntityMethods(final EntityModel entity, final Writer writer, final String dtoPackage) throws IOException
+	private static String getFullPath(final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getRetrofitpackage().replaceAll("\\.", "/") + "/" + metadata.getRetrofitname() + ".java";
+		return fullpath;
+	}
+
+	private static void writeContainerMethod(final List<EntityModel> entities, final MetaData metadata, final Writer writer) throws IOException
 	{
-		final String dtoClassName = dtoPackage + "." + entity.getSimpleClassName() + "Dto";
+		writer.write("\t@GET(\"entity" + "\")\r\n"
+				+ "\tpublic Call<" + metadata.getDtocontainername() + "> getContainer(\r\n");
+		boolean first = true;
+		for(final EntityModel entityModel : entities)
+		{
+			if(first)
+				first = false;
+			else
+				writer.write(",\r\n");
+			writer.write("\t\t@Query(\"" + entityModel.getObjectName().toLowerCase() + "\") final int[] " + entityModel.getObjectName().toLowerCase() + "Ids");
+		}
+		writer.write(");\r\n\r\n");
+	}
+
+	private static void writeEntityMethods(final EntityModel entity, final Writer writer) throws IOException
+	{
+		final String dtoClassName = entity.getSimpleClassName() + "Dto";
 		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "\")\r\n"
 				+ "\tpublic Call<List<" + dtoClassName + ">> get" + entity.getSimpleClassName() + "s();\r\n\r\n");
 		writer.write("\t@GET(\"entity/" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
@@ -61,6 +86,14 @@ public class RetrofitCreator
 				+ "\tpublic Call<Void> put" + entity.getSimpleClassName() + "(@Path(\"id\") final int id, @Body final " + dtoClassName + " dto);\r\n\r\n");
 		writer.write("\t@DELETE(\"entity/" + entity.getObjectName().toLowerCase() + "/{id}\")\r\n"
 				+ "\tpublic Call<Void> delete" + entity.getSimpleClassName() + "ById(@Path(\"id\") final int id);\r\n\r\n");
+	}
+
+	public static void clear(final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 
 }

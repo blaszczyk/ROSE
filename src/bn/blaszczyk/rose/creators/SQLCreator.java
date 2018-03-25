@@ -14,7 +14,7 @@ public class SQLCreator {
 	
 	public static void create(final List<EntityModel> entities, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String fullpath = parentDir + "/" + metadata.getSqlpath() + "createtables.sql";
+		final String fullpath = getFullPath(metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -40,6 +40,11 @@ public class SQLCreator {
 		{
 			throw new RoseException("error creating sql script", e);
 		}
+	}
+
+	private static String getFullPath(final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getSqlpath() + "createtables.sql";
+		return fullpath;
 	}
 	
 	public static String getManyToManyTableName( EntityField field  )
@@ -119,6 +124,14 @@ public class SQLCreator {
 		{
 			throw new RoseException("error writing table create", e);			
 		}
+	}
+
+	public static void clear(final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 }
 

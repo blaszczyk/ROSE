@@ -25,7 +25,7 @@ public class PersistenceCreator {
 	public static void create(final List<EntityModel> entities, final MetaData metadata, final String parentDir) throws RoseException
 	{
 		final DBType dbType = DBType.getType(metadata.getDbtype());
-		final String fullpath = parentDir + "/" + metadata.getResourcepath() + "META-INF/persistence.xml";
+		final String fullpath = getFullPath(metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -53,6 +53,11 @@ public class PersistenceCreator {
 			throw new RoseException("error creating persistence.xml", e);
 		}
 	}
+
+	private static String getFullPath(final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getResourcepath() + "META-INF/persistence.xml";
+		return fullpath;
+	}
 	
 	private static void writeProperty(String name, String value, Writer writer) throws IOException
 	{
@@ -63,6 +68,14 @@ public class PersistenceCreator {
 	{
 		String optionalImpl = metadata.isUsingInterfaces() ? "Impl" : "";
 		writer.write("\t\t<class>" + metadata.getModelpackage() + "." + entity.getSimpleClassName() + optionalImpl + "</class>\r\n");
+	}
+
+	public static void clear(final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 	
 }

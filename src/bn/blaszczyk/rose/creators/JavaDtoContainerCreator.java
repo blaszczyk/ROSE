@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.List;
 
 import bn.blaszczyk.rose.*;
@@ -12,12 +11,9 @@ import bn.blaszczyk.rose.model.*;
 
 public class JavaDtoContainerCreator {
 	
-	/*
-	 * create Entity
-	 */
 	public static void create(final List<EntityModel> entityModels, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getDtopackage().replaceAll("\\.", "/") + "/" + metadata.getDtocontainername() + ".java";
+		final String fullpath = getFullPath(metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -41,8 +37,9 @@ public class JavaDtoContainerCreator {
 			writeConstructors(metadata.getDtocontainername(), writer);
 			
 			writeGettersSetters(entityModels,  writer);
+			
 			if(metadata.isImplementDto())
-				writeDtoContainerMethods(entityModels, metadata.getDtocontainername(), writer);
+				writeDtoContainerMethods(entityModels, metadata, writer);
 
 			writer.write("}\r\n");
 			System.out.println( "File created: " + fullpath);
@@ -51,6 +48,11 @@ public class JavaDtoContainerCreator {
 		{
 			throw new RoseException("error creating java dto container", e);
 		}
+	}
+
+	private static String getFullPath(final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getDtopackage().replaceAll("\\.", "/") + "/" + metadata.getDtocontainername() + ".java";
+		return fullpath;
 	}
 
 	private static void writeAnnotationHeader(Writer writer) throws IOException
@@ -95,8 +97,9 @@ public class JavaDtoContainerCreator {
 		}
 	}
 
-	private static void writeDtoContainerMethods(final List<EntityModel> entityModels, final String dtoContainerName, final Writer writer) throws IOException
+	private static void writeDtoContainerMethods(final List<EntityModel> entityModels, final MetaData metadata, final Writer writer) throws IOException
 	{
+		final String dtoContainerName = metadata.getDtocontainername();
 		writer.write("\t@Override\r\n"
 				+ "\tpublic bn.blaszczyk.rose.model.Dto get(final String type, final int id)\r\n"
 				+ "\t{\r\n"
@@ -157,5 +160,13 @@ public class JavaDtoContainerCreator {
 			writer.write("\t\t\t" + entityModel.getObjectName() + "s.putAll(c." + entityModel.getObjectName() + "s);\r\n");
 		writer.write("\t\t}\r\n"
 				+ "\t}\r\n\r\n");
+	}
+
+	public static void clear(final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 }

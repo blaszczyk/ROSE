@@ -15,7 +15,7 @@ public class JavaEnumCreator {
 	 */
 	public static void create(final EnumModel enumModel, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + enumModel.getSimpleClassName() + ".java";
+		final String fullpath = getFullPath(enumModel, metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -51,6 +51,19 @@ public class JavaEnumCreator {
 			throw new RoseException("Error creating enum java files", e);
 		}
 		
+	}
+
+	private static String getFullPath(final EnumModel enumModel, final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + enumModel.getSimpleClassName() + ".java";
+		return fullpath;
+	}
+
+	public static void clear(final EnumModel enumModel, final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(enumModel, metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 	
 }

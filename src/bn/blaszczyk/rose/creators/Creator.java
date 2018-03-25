@@ -84,14 +84,7 @@ public class Creator
 		final List<String> rosePaths = parser.getRosePaths();
 		for(final String origin : rosePaths)
 		{
-			final String copyPath = new StringBuilder()
-					.append(parentDir)
-					.append("/")
-					.append(metadata.getResourcepath())
-					.append(metadata.getResourcepackage().replaceAll("\\.", "/"))
-					.append("/")
-					.append(origin.substring(origin.replaceAll("\\\\", "/").lastIndexOf('/') + 1))
-					.toString();
+			final String copyPath = getCopyPath(origin, metadata, parentDir);
 			final File copyFile = new File(copyPath);
 			copyFile.getParentFile().mkdirs();
 			try
@@ -104,6 +97,18 @@ public class Creator
 			}
 			System.out.println("File created: " + copyPath);
 		}
+	}
+
+	private static String getCopyPath(final String origin, final MetaData metadata, final String parentDir) {
+		final String copyPath = new StringBuilder()
+				.append(parentDir)
+				.append("/")
+				.append(metadata.getResourcepath())
+				.append(metadata.getResourcepackage().replaceAll("\\.", "/"))
+				.append("/")
+				.append(origin.substring(origin.replaceAll("\\\\", "/").lastIndexOf('/') + 1))
+				.toString();
+		return copyPath;
 	}
 
 	public static void createPersistence(final RoseParser parser, final String parentDir) throws RoseException
@@ -155,6 +160,55 @@ public class Creator
 			default:
 				throw new RoseException("unknown option: create " + createOption);
 			}
+	}
+
+	public static void clearAll(final RoseParser parser, final String parentDir)
+	{
+		final MetaData metadata = parser.getMetadata();
+		for(final String createOption : parser.getCreateOptions())
+			switch(createOption.toLowerCase())
+			{
+			case OPTION_SQLCREATE:
+				SQLCreator.clear(metadata,parentDir);
+				break;
+			case OPTION_PERSISTENCE:
+				PersistenceCreator.clear(metadata,parentDir);
+				break;
+			case OPTION_JAVAMODELS:
+				for(final EntityModel entity : parser.getEntities())
+					JavaModelCreator.clear(entity, metadata, parentDir);
+				break;
+			case OPTION_JAVADTOS:
+				for(final EntityModel entity : parser.getEntities())
+					JavaDtoCreator.clear(entity, metadata, parentDir);
+				break;
+			case OPTION_JAVADTOCONTAINER:
+				JavaDtoContainerCreator.clear(metadata, parentDir);
+				break;
+			case OPTION_JAVAENUMS:
+				for(final EnumModel enumModel : parser.getEnums())
+					JavaEnumCreator.clear(enumModel, metadata, parentDir);
+				break;
+			case OPTION_RETROFIT:
+				RetrofitCreator.clear(metadata, parentDir);
+				break;
+			case OPTION_JAVAPARSER:
+				for(final EntityModel entity : parser.getEntities())
+					JavaParserCreator.clear(entity, metadata, parentDir);
+				break;
+			case OPTION_ROSEFILECOPY:
+				for(final String origin : parser.getRosePaths())
+					clearRoseFile(parentDir, metadata, origin);
+				break;
+			default:
+				throw new RoseException("unknown option: create " + createOption);
+			}		
+	}
+
+	private static void clearRoseFile(final String parentDir, final MetaData metadata, final String origin) {
+		final File file = new File(getCopyPath(origin, metadata, parentDir));
+		if(file.exists())
+			file.delete();
 	}
 
 }
