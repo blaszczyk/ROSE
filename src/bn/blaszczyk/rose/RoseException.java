@@ -1,6 +1,6 @@
 package bn.blaszczyk.rose;
 
-public class RoseException extends Exception {
+public class RoseException extends RuntimeException {
 
 	private static final long serialVersionUID = 8175985689822621690L;
 
