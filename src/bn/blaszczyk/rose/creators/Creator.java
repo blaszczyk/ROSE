@@ -176,7 +176,11 @@ public class Creator
 				break;
 			case OPTION_JAVAMODELS:
 				for(final EntityModel entity : parser.getEntities())
+				{
+					if(metadata.isUsingInterfaces())
+						JavaInterfaceCreator.clear(entity, metadata, parentDir);
 					JavaModelCreator.clear(entity, metadata, parentDir);
+				}
 				break;
 			case OPTION_JAVADTOS:
 				for(final EntityModel entity : parser.getEntities())

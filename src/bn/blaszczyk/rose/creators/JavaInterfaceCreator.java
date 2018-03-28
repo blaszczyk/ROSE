@@ -20,7 +20,7 @@ public class JavaInterfaceCreator
 	 */
 	public static void create(final EntityModel entityModel, final MetaData metadata, final String parentDir) throws RoseException
 	{
-		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entityModel.getSimpleClassName() + ".java";
+		final String fullpath = getFullPath(entityModel, metadata, parentDir);
 		final File file = new File(fullpath);
 		if(!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
@@ -47,6 +47,11 @@ public class JavaInterfaceCreator
 		{
 			throw new RoseException("error creating java interfaces", e);
 		}
+	}
+
+	private static String getFullPath(final EntityModel entityModel, final MetaData metadata, final String parentDir) {
+		final String fullpath = parentDir + "/" + metadata.getSrcpath() + metadata.getModelpackage().replaceAll("\\.", "/") + "/" + entityModel.getSimpleClassName() + ".java";
+		return fullpath;
 	}
 
 	private static void writeConstants(List<EntityField> entityFields, Writer writer) throws IOException
@@ -125,6 +130,14 @@ public class JavaInterfaceCreator
 	
 		// setter
 		writer.write("\tpublic void " + getSetterName(entityField) + "( java.util.Set<" + entityField.getEntityModel().getSimpleClassName() + "> " + entityField.getName() + " );\r\n\r\n" );
+	}
+
+	public static void clear(final EntityModel entity, final MetaData metadata, final String parentDir)
+	{
+		final String fullPath = getFullPath(entity, metadata, parentDir);
+		final File file = new File(fullPath);
+		if(file.exists())
+			file.delete();
 	}
 	
 }
