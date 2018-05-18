@@ -43,8 +43,12 @@ public class SQLCreator {
 			for(final EntityModel entityModel : entities)
 			{
 				for(final EntityField field : entityModel.getEntityFields())
+				{
 					if(hasColumn(field))
 						createIndex(field, writer);
+					if(needsManyToManyTable(field))
+						createManyToManyIndices(field,writer);
+				}
 			}
 			System.out.println( "File created: " + fullpath);
 		}
@@ -79,6 +83,7 @@ public class SQLCreator {
 			+ "(\r\n"
 			+ "\t" + field.getName() + "_id int,\r\n"
 			+ "\t" + field.getCounterName() + "_id int\r\n"
+			+ "\tconstraint pk_" + getManyToManyTableName(field) + " primary key ( " + field.getName() + "_id, " + field.getCounterName() +"_id )\r\n"
 			+ ");\r\n");
 	}
 
@@ -136,7 +141,13 @@ public class SQLCreator {
 		final EntityModel entity = field.getCouterpart().getEntityModel();
 		writer.write("\r\ncreate index " + getTableName(entity) + "_" + field.getName() + "\r\n"
 				+ "on " + getTableName(entity) + " ( " + field.getName() + "_id );\r\n");
-		
+	}
+
+	public static void createManyToManyIndices(final EntityField field, final Writer writer) throws IOException {
+		writer.write("\r\ncreate index " + getManyToManyTableName(field) + "_" + field.getName() + "\r\n"
+				+ "on " + getManyToManyTableName(field) + " ( " + field.getName() + "_id );\r\n");
+		writer.write("\r\ncreate index " + getManyToManyTableName(field) + "_" + field.getCounterName() + "\r\n"
+				+ "on " + getManyToManyTableName(field) + " ( " + field.getCounterName() + "_id );\r\n");
 	}
 
 	public static void clear(final MetaData metadata, final String parentDir)

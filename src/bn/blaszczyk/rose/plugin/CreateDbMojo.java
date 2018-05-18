@@ -36,13 +36,37 @@ public class CreateDbMojo extends AbstractRoseMojo
 		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		for(final EntityModel entity : entities)
 		{
-			executeSql(w -> SQLCreator.createTable(entity, metadata, w));
+			// no lambdas in mvn plugins
+			executeSql(new WriterFiller() {
+				@Override
+				public void fill(Writer writer) throws IOException {
+					SQLCreator.createTable(entity, metadata, writer);
+				}
+			});
 			for(final EntityField field : entity.getEntityFields())
 			{
-				if(SQLCreator.needsManyToManyTable(field))
-					executeSql(w -> SQLCreator.createManyToManyTable(field, w));
 				if(SQLCreator.hasColumn(field))
-					executeSql(w -> SQLCreator.createIndex(field, w));
+					executeSql(new WriterFiller() {
+						@Override
+						public void fill(Writer writer) throws IOException {
+							SQLCreator.createIndex(field, writer);
+						}
+					});
+				if(SQLCreator.needsManyToManyTable(field))
+				{
+					executeSql(new WriterFiller() {
+						@Override
+						public void fill(Writer writer) throws IOException {
+							SQLCreator.createManyToManyTable(field, writer);
+						}
+					});
+					executeSql(new WriterFiller() {
+						@Override
+						public void fill(Writer writer) throws IOException {
+							SQLCreator.createManyToManyIndices(field, writer);
+						}
+					});
+				}
 			}
 		}
 		DBConnection.closeConnection();
