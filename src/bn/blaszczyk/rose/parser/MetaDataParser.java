@@ -78,6 +78,9 @@ public class MetaDataParser
 			case "resourcepackage":
 				metaData.setResourcepackage( value );
 				break;
+			case "dateformat":
+				metaData.setDateformat( value );
+				break;
 			default:
 				throw new bn.blaszczyk.rose.RoseException( "unknown primitive field: " + name + " in MetaData");
 			}

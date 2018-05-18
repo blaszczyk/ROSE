@@ -26,44 +26,43 @@ public class CreateDbMojo extends AbstractRoseMojo
 		final MetaData metadata = parser.getMetadata();
 		ensureDbExistence(metadata);
 		final List<EntityModel> entities = parser.getEntities();
-		executeCreateTables(metadata, entities);
+		executeCreateScripts(metadata, entities);
 	}
 
-	private void executeCreateTables(final MetaData metadata, final List<EntityModel> entities) throws RoseException
+	private void executeCreateScripts(final MetaData metadata, final List<EntityModel> entities) throws RoseException
 	{
 		final String connectionString = String.format("jdbc:mysql://%s:%s/%s", metadata.getDbserver(), metadata.getDbport(), metadata.getDbname());
 		getLog().info("connecting to " + connectionString);
 		DBConnection.connectToDatabase(MYSQL_DRIVER, connectionString, metadata.getDbuser(), metadata.getDbpassword());
 		for(final EntityModel entity : entities)
 		{
-			final Writer writer = new StringWriter();
-			SQLCreator.createTable(entity, metadata, writer);
-			executeCreateTable(writer);
+			executeSql(w -> SQLCreator.createTable(entity, metadata, w));
 			for(final EntityField field : entity.getEntityFields())
+			{
 				if(SQLCreator.needsManyToManyTable(field))
-				{
-					final Writer writer2 = new StringWriter();
-					SQLCreator.createManyToManyTable(field, writer2);
-					executeCreateTable(writer2);
-				}
-					
+					executeSql(w -> SQLCreator.createManyToManyTable(field, w));
+				if(SQLCreator.hasColumn(field))
+					executeSql(w -> SQLCreator.createIndex(field, w));
+			}
 		}
 		DBConnection.closeConnection();
 	}
 	
-	private void executeCreateTable(final Writer writer) throws RoseException
+	private void executeSql(final WriterFiller writerFiller)
 	{
 		try
 		{
+			final Writer writer = new StringWriter();
+			writerFiller.fill(writer);
 			writer.flush();
+			final String sql = writer.toString();
+			getLog().info("executing: " + sql.replaceAll("\\s+", " ").trim());
+			DBConnection.executeUpdate(sql);
 		}
 		catch (IOException e)
 		{
-			throw new RuntimeException("unexpected error", e);
+			throw RoseException.wrap(e, "");
 		}
-		final String sql = writer.toString();
-		getLog().info("executing: " + sql.replaceAll("\\s+", " ").trim());
-		DBConnection.executeUpdate(sql);
 	}
 
 	private void ensureDbExistence(final MetaData metadata) throws RoseException
@@ -80,6 +79,11 @@ public class CreateDbMojo extends AbstractRoseMojo
 		else
 			getLog().info("schema exists: " + dbName);
 		DBConnection.closeConnection();
+	}
+
+	private static interface WriterFiller
+	{
+		public void fill(final Writer writer) throws IOException;
 	}
 
 }

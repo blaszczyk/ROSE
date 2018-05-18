@@ -35,6 +35,7 @@ begin entity MetaData
 	
 	varchar(50) resourcepackage "foo.resources"
 	
+	varchar(50) dateformat "dd.MM.yyyy"
 end entity
 
 create javamodels

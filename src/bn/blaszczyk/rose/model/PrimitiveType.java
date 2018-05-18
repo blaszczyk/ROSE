@@ -4,7 +4,7 @@ public enum PrimitiveType {
 	VARCHAR("varchar",String.class,String.class,"\"\"","%s"),
 	CHAR("char",String.class,String.class,"\"\"","%s"),
 	INT("int",Integer.class,int.class,"0","%s"),
-	DATE("date",java.util.Date.class,long.class," ","new java.util.Date(%s)"),
+	DATE("date",java.util.Date.class,String.class," ","new java.util.Date(%s)"),
 	NUMERIC("numeric",java.math.BigDecimal.class,String.class,"0","new java.math.BigDecimal(%s)"),
 	BOOLEAN("boolean",Boolean.class,boolean.class,"false","%s");
 	

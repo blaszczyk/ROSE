@@ -6,7 +6,7 @@ import bn.blaszczyk.rose.parser.RoseParser;
 
 public class Rose {
 	
-	public static final String VERSION_ID = "0.137";
+	public static final String VERSION_ID = "0.139";
 	
 	public static void main(final String[] args) 
 	{

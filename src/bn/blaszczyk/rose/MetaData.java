@@ -28,6 +28,7 @@ public class MetaData
 	private java.lang.String retrofitname = "FooService";
 	private java.lang.String retrofitpackage = "foo.service";
 	private java.lang.String resourcepackage = "foo.resources";
+	private java.lang.String dateformat = "dd.MM.yyyy";
 
 	public MetaData()
 	{
@@ -251,6 +252,16 @@ public class MetaData
 	public void setResourcepackage( final java.lang.String resourcepackage )
 	{
 		this.resourcepackage = resourcepackage;
+	}
+
+	public java.lang.String getDateformat()
+	{
+		return dateformat;
+	}
+
+	public void setDateformat( final java.lang.String dateformat )
+	{
+		this.dateformat = dateformat;
 	}
 
 	@Override
